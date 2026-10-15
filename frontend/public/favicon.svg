@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#F6F1E8"/>
+  <!-- Soft ring -->
+  <circle cx="16" cy="16" r="11" stroke="#C65D3A" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- Inner dot -->
+  <circle cx="16" cy="16" r="4" fill="#C65D3A"/>
+</svg>

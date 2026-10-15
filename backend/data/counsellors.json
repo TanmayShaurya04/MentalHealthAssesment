@@ -1,0 +1,125 @@
+[
+  {
+    "_id": "counsellor-01",
+    "name": "Dr. Ananya Sen, Ph.D.",
+    "title": "Lead Student Well-Being Psychologist",
+    "specialties": [
+      "Academic Burnout",
+      "Exam Pressure",
+      "Perfectionism & Overwhelm"
+    ],
+    "bio": "Over 12 years supporting college students through rigorous academic pressures. Her approach blends Cognitive Behavioral techniques with compassionate pacing.",
+    "languages": [
+      "English",
+      "Hindi",
+      "Bengali"
+    ],
+    "experience_years": 12,
+    "avatar": "AS",
+    "available_days": [
+      "Mon",
+      "Wed",
+      "Thu",
+      "Fri"
+    ],
+    "available_slots": [
+      "09:30 AM",
+      "11:00 AM",
+      "02:00 PM",
+      "04:00 PM"
+    ],
+    "is_accepting_students": true
+  },
+  {
+    "_id": "counsellor-02",
+    "name": "Dr. Rohan Mehta, M.D.",
+    "title": "Consultant Mental Health Specialist",
+    "specialties": [
+      "Anxiety Management",
+      "Sleep & Circadian Rhythm",
+      "Panic & Stress Regulation"
+    ],
+    "bio": "Specializes in stress physiology, circadian rhythm realignment, and practical grounding tools for high-stress university departments.",
+    "languages": [
+      "English",
+      "Hindi",
+      "Gujarati"
+    ],
+    "experience_years": 10,
+    "avatar": "RM",
+    "available_days": [
+      "Tue",
+      "Wed",
+      "Fri",
+      "Sat"
+    ],
+    "available_slots": [
+      "10:00 AM",
+      "11:30 AM",
+      "03:00 PM",
+      "05:00 PM"
+    ],
+    "is_accepting_students": true
+  },
+  {
+    "_id": "counsellor-03",
+    "name": "Meera Nambiar, M.Sc.",
+    "title": "Senior Counseling Psychologist",
+    "specialties": [
+      "Student Life Transition",
+      "Social Isolation",
+      "Imposter Syndrome"
+    ],
+    "bio": "Dedicated to helping first-generation and relocating university students navigate new environments, identity questions, and interpersonal relationships.",
+    "languages": [
+      "English",
+      "Hindi",
+      "Malayalam"
+    ],
+    "experience_years": 8,
+    "avatar": "MN",
+    "available_days": [
+      "Mon",
+      "Tue",
+      "Thu",
+      "Fri"
+    ],
+    "available_slots": [
+      "10:30 AM",
+      "01:30 PM",
+      "03:30 PM",
+      "05:30 PM"
+    ],
+    "is_accepting_students": true
+  },
+  {
+    "_id": "counsellor-04",
+    "name": "Dr. Kabir Rao, M.Phil.",
+    "title": "Mindfulness & Somatic Health Counsellor",
+    "specialties": [
+      "Mindfulness-Based Stress Reduction",
+      "Emotional Grounding",
+      "Attention & Focus"
+    ],
+    "bio": "Focuses on evidence-backed mindfulness routines, breathing techniques, and somatic awareness to ease nervous system overload.",
+    "languages": [
+      "English",
+      "Hindi",
+      "Kannada"
+    ],
+    "experience_years": 9,
+    "avatar": "KR",
+    "available_days": [
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "available_slots": [
+      "11:00 AM",
+      "02:30 PM",
+      "04:30 PM"
+    ],
+    "is_accepting_students": true
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "session_id": "ac9cf05b-f572-4680-b63a-9bbe9fbde67f",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "user",
+    "content": "I feel anxious about whether I can pass my exams.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:14:22.553947+00:00",
+    "_id": "c9cf7532-8d20-41c9-b588-38dce15b4326"
+  },
+  {
+    "session_id": "ac9cf05b-f572-4680-b63a-9bbe9fbde67f",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "assistant",
+    "content": "Academic pressure can feel relentless, especially when deadlines pile up all at once. Remember that your capacity on any given day doesn't define your intelligence or your future.\n\nTry breaking down what's ahead into just the next 20 minutes. What is one small, manageable step you could take right now \u2014 or would taking a 10-minute breath first serve you better?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:14:22.554034+00:00",
+    "_id": "24394b77-0cd0-4d34-99c2-0d8634cd9d8f"
+  },
+  {
+    "session_id": "ac9cf05b-f572-4680-b63a-9bbe9fbde67f",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "user",
+    "content": "I feel hopeless and want to end my life.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:14:22.554552+00:00",
+    "_id": "80282b98-e91a-4930-9fc2-43e9b67769d0"
+  },
+  {
+    "session_id": "ac9cf05b-f572-4680-b63a-9bbe9fbde67f",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "assistant",
+    "content": "I'm hearing how much pain and weight you're carrying right now, and I want you to know that you don't have to navigate this alone.\n\nBecause your safety and life matter deeply, please connect directly with people who are trained to support you through this exact moment. These free, confidential resources are available right now:\n\n\u2022 **Tele-MANAS (Govt. of India)**: Dial `14416` or `1800-891-4416` (24x7, Toll-Free, Multiple Languages)\n\u2022 **KIRAN Mental Health Helpline**: Dial `1800-599-0019` (24x7, Toll-Free)\n\u2022 **iCall Psychosocial Helpline**: Call `9152987821` (Mon\u2013Sat, 10 AM \u2013 8 PM)\n\u2022 **Vandrevala Foundation**: Call `9999 666 555` or WhatsApp available (24x7)\n\u2022 **Emergency Services**: Dial `112` or visit your campus health clinic immediately.\n\nPlease consider reaching out to a friend, family member, or university counsellor today. You deserve care, understanding, and support.",
+    "safety_flagged": true,
+    "timestamp": "2026-10-13T16:14:22.554642+00:00",
+    "_id": "71c01612-f8a5-4aef-9028-85d8ce7361a8"
+  },
+  {
+    "session_id": "7f1566be-92d2-4ac5-a447-53599cf40be9",
+    "user_id": "0b8ec1a1-1721-4e28-a217-db52ef54b619",
+    "role": "user",
+    "content": "I feel a bit overwhelmed by exams and need a grounding breath.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:27:36.524199+00:00",
+    "_id": "8753d295-7a34-4aea-95a3-e3c5aaf8bb14"
+  },
+  {
+    "session_id": "7f1566be-92d2-4ac5-a447-53599cf40be9",
+    "user_id": "0b8ec1a1-1721-4e28-a217-db52ef54b619",
+    "role": "assistant",
+    "content": "Academic pressure can feel relentless, especially when deadlines pile up all at once. Remember that your capacity on any given day doesn't define your intelligence or your future.\n\nTry breaking down what's ahead into just the next 20 minutes. What is one small, manageable step you could take right now \u2014 or would taking a 10-minute breath first serve you better?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:27:36.525216+00:00",
+    "_id": "5a84cd20-5631-4257-9d7e-3b7afb3df6b0"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "hi bro",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:16.282599+00:00",
+    "_id": "79ebe8e9-edc5-41f2-9bb9-bbd54116ed0b"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Thank you for sharing that with me. It takes vulnerability to pause and put your feelings into words.\n\nWhatever you're sitting with right now, you don't have to solve everything all at once. What feels like the heaviest part of this today?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:16.283737+00:00",
+    "_id": "cfe5176c-bc48-41a1-9db6-bc71b96272cd"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "im stressed",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:27.551797+00:00",
+    "_id": "5e606d43-fb20-4f81-a50b-07615be33355"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Thank you for sharing that with me. It takes vulnerability to pause and put your feelings into words.\n\nWhatever you're sitting with right now, you don't have to solve everything all at once. What feels like the heaviest part of this today?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:27.552333+00:00",
+    "_id": "5420aff0-1f57-4ed8-aab9-ea54d987a183"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "im ded",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:43.610372+00:00",
+    "_id": "4d3a3e78-a530-4957-b629-02f65d678137"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Thank you for sharing that with me. It takes vulnerability to pause and put your feelings into words.\n\nWhatever you're sitting with right now, you don't have to solve everything all at once. What feels like the heaviest part of this today?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-13T16:47:43.611658+00:00",
+    "_id": "de945891-f7b3-46ea-88ef-86e241e84611"
+  }
+]

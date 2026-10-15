@@ -1,0 +1,28 @@
+[
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-10-13T16:14:06.234018+00:00",
+    "updated_at": "2026-10-13T16:14:06.234018+00:00",
+    "_id": "f1c2c3ff-b4f4-499d-b262-7cc05e78b70e"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-10-13T16:14:22.545305+00:00",
+    "updated_at": "2026-10-13T16:14:22.545305+00:00",
+    "_id": "e4215588-b039-4a27-b7b2-f2ab1fd811a5"
+  }
+]

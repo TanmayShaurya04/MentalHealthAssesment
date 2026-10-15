@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "res-01",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "When Exam Pressure Becomes Too Much",
+    "read_time": "4 min read",
+    "summary": "Practical somatic grounding and task triage when deadlines feel paralyzing.",
+    "content": "### Breaking the Panic-Paralysis Loop\nWhen exams loom, your brain's threat-detection network interprets academic deadlines as physical danger. This triggers fight-or-flight, shutting down working memory and focus.\n\n#### 1. The 10-Minute Reset\nBefore attempting to study, spend 10 minutes resetting your nervous system:\n- Inhale for 4 counts through your nose.\n- Exhale slowly for 7 counts through your mouth.\n- Place your feet flat on the floor and feel the ground holding your weight.\n\n#### 2. Micro-Triage Your Work\nInstead of trying to 'study biology for 6 hours', select one sub-topic for 25 minutes. Give yourself permission to pause as soon as the timer ends.\n\nRemember: Your worth as a human is entirely distinct from any academic test.",
+    "tags": [
+      "Exams",
+      "Focus",
+      "Grounding"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-02",
+    "category": "sleep",
+    "category_label": "Rest & Recovery",
+    "title": "Building a Sleep Rhythm that Actually Works in University",
+    "read_time": "5 min read",
+    "summary": "Realistic circadian shifts for students dealing with late study sessions and dorm schedules.",
+    "content": "### Quality Rest in Unforgiving Environments\nLate nights, blue light, and racing thoughts make restful sleep difficult for students.\n\n#### 1. Anchor Your Wake Time First\nRather than forcing yourself to fall asleep early when you aren't tired, fix your morning wake-up time within a 30-minute window every day. Your circadian drive will naturally shift.\n\n#### 2. The 30-Minute Brain Dump\nKeep a journal next to your bed. If tomorrow's to-do list loops in your mind, write every item onto paper. Externalizing the thoughts signals to your brain that it can safely stop rehearsing them.\n\n#### 3. Low-Stimulus Buffer\nStop reading course material 30 minutes before bed. Switch to warm, non-fluorescent lighting.",
+    "tags": [
+      "Sleep",
+      "Habits",
+      "Recovery"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-03",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Why Feeling Lost Doesn't Mean You're Failing",
+    "read_time": "4 min read",
+    "summary": "Reframing disorientation, career anxiety, and the pressure to have everything figured out.",
+    "content": "### Navigating University Transitions\nAlmost every student encounters a quiet season of questioning: *Am I in the right major? Do I belong here? Why does everyone else seem so put-together?*\n\n#### 1. The Comparison Mirage\nSocial circles display curated achievements. You compare your internal mess to everyone else's public highlight reel.\n\n#### 2. Value Orientation vs. Fixed Outcomes\nFocus on small daily values rather than distant 5-year plans. Are you being curious today? Are you being kind to your physical body? The path clarifies through steady, small steps.",
+    "tags": [
+      "Identity",
+      "Transition",
+      "Self-Compassion"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-04",
+    "category": "crisis",
+    "category_label": "Verified Helplines",
+    "title": "Verified 24x7 Student Support Helplines",
+    "read_time": "Immediate support",
+    "summary": "National mental health hotlines, university clinic guides, and crisis hotlines.",
+    "content": "### Immediate, Confidential Support\nIf you or someone you know is in severe distress or thinking of self-harm, please connect immediately with these verified, free services:\n\n- **Tele-MANAS (Govt of India)**: Dial `14416` or `1800-891-4416` (24x7, Toll-Free)\n- **KIRAN Helpline**: Dial `1800-599-0019` (24x7, Ministry of Social Justice)\n- **iCall Psychosocial Helpline**: Dial `9152987821` (Mon\u2013Sat, 10 AM \u2013 8 PM)\n- **Vandrevala Foundation**: Dial `9999 666 555` (24x7, Multi-lingual)\n- **National Emergency Response**: Dial `112`\n\nAll calls are confidential and handled by compassionate counselors.",
+    "tags": [
+      "Helpline",
+      "Emergency",
+      "Support"
+    ],
+    "is_crisis_helpline": true
+  }
+]
