@@ -21,6 +21,20 @@ export const Login = {
               <p class="auth-subtitle">Your reflections and records are confidential and secure.</p>
             </div>
 
+            <!-- Demo Account Helper Banner -->
+            <div class="demo-credentials-banner" style="background: rgba(198, 93, 58, 0.08); border: 1px solid rgba(198, 93, 58, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <strong style="color: var(--color-ink);">🔑 Quick Demo Login</strong>
+                <button type="button" id="btn-fill-demo" style="background: var(--color-accent); color: #fff; border: none; border-radius: 4px; padding: 3px 10px; font-size: 0.75rem; cursor: pointer;">
+                  Autofill Demo
+                </button>
+              </div>
+              <p style="margin: 0; color: var(--color-ink-80); line-height: 1.4;">
+                Email: <code>student@university.edu</code><br>
+                Password: <code>password123</code>
+              </p>
+            </div>
+
             <form class="auth-form" id="login-form" novalidate>
               <div id="auth-error-alert" class="auth-alert" style="display:none;" role="alert"></div>
 
@@ -86,6 +100,16 @@ export const Login = {
       const isPwd = pwdInput.type === 'password';
       pwdInput.type = isPwd ? 'text' : 'password';
       toggleBtn.textContent = isPwd ? 'Hide' : 'Show';
+    });
+
+    // Autofill demo credentials
+    document.getElementById('btn-fill-demo')?.addEventListener('click', () => {
+      if (emailInput && pwdInput) {
+        emailInput.value = 'student@university.edu';
+        pwdInput.value = 'password123';
+        pwdInput.type = 'text';
+        if (toggleBtn) toggleBtn.textContent = 'Hide';
+      }
     });
 
     form?.addEventListener('submit', async (e) => {

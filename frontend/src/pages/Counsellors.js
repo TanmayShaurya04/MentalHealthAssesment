@@ -23,14 +23,14 @@ export const Counsellors = {
             <span class="section-eyebrow">Professional Guidance</span>
             <h1 class="page-title">University Counselling & Psychological Support</h1>
             <p class="page-subtitle">
-              Confidential, student-centered consultations with certified campus psychologists and well-being specialists.
+              Confidential, student-centered consultations with certified campus psychologists and well-being specialists. Affordable student rates (all under ₹2,000) with instant video consultation support.
             </p>
           </div>
 
           <!-- Navigation Tabs -->
           <div class="counsellors-tabs-bar" role="tablist">
             <button type="button" class="tab-btn active" id="tab-counsellors-btn" role="tab" aria-selected="true" aria-controls="panel-counsellors">
-              Available Counsellors
+              Verified Counsellors Directory
             </button>
             <button type="button" class="tab-btn" id="tab-appointments-btn" role="tab" aria-selected="false" aria-controls="panel-appointments">
               My Appointments & Consultations
@@ -47,12 +47,12 @@ export const Counsellors = {
                   type="text"
                   id="counsellor-search-input"
                   class="form-input"
-                  placeholder="Search by name, concern, or specialty (e.g. Burnout, Sleep, Imposter Syndrome)..."
+                  placeholder="Search by name, context, or specialty (e.g. Burnout, Sleep, Imposter Syndrome)..."
                 />
               </div>
               <div class="filter-select-wrap">
                 <select id="specialty-filter-select" class="form-select">
-                  <option value="">All Specialties</option>
+                  <option value="">All Contexts & Specialties</option>
                   <option value="Academic Burnout">Academic Burnout</option>
                   <option value="Exam Pressure">Exam Pressure</option>
                   <option value="Anxiety Management">Anxiety Management</option>
@@ -63,9 +63,9 @@ export const Counsellors = {
               </div>
             </div>
 
-            <!-- Counsellor Grid -->
-            <div id="counsellors-grid" class="counsellors-grid">
-              <div class="loading-spinner">Loading verified counsellors...</div>
+            <!-- Counsellor Table Container -->
+            <div id="counsellors-table-wrapper" class="counsellors-table-container">
+              <div class="loading-spinner">Loading verified counsellors directory...</div>
             </div>
           </section>
 
@@ -87,6 +87,53 @@ export const Counsellors = {
             `}
           </section>
 
+        </div>
+
+        <!-- Video Call Launcher Modal -->
+        <div class="modal-backdrop" id="video-call-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+          <div class="modal-card modal-card--video">
+            <div class="modal-header">
+              <div>
+                <span class="modal-eyebrow text-success">● Live Consultation Room</span>
+                <h3 id="video-modal-title" class="modal-title">Secure Video Consultation</h3>
+              </div>
+              <button type="button" class="modal-close-btn" id="close-video-modal-btn" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="video-modal-body">
+              <div class="video-counsellor-profile" id="video-counsellor-details">
+                <!-- Dynamically populated -->
+              </div>
+
+              <div class="video-preview-screen">
+                <div class="video-cam-box">
+                  <div class="video-cam-placeholder">
+                    <span class="video-cam-icon">📹</span>
+                    <p class="font-medium text-ink">Encrypted 1-on-1 Consultation Space</p>
+                    <span class="text-xs text-ink-60 mt-1">End-to-end private • No recordings • Peer-to-peer audio & video</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="video-room-guidelines mt-4">
+                <div class="guideline-item">
+                  <span class="guideline-badge">✓</span>
+                  <span><strong>Microphone & Camera:</strong> Ensure your browser permissions are allowed.</span>
+                </div>
+                <div class="guideline-item">
+                  <span class="guideline-badge">✓</span>
+                  <span><strong>Confidentiality:</strong> Everything discussed is strictly covered by student-patient privacy.</span>
+                </div>
+              </div>
+
+              <div class="video-modal-actions mt-6">
+                <button type="button" class="btn btn-secondary" id="cancel-video-modal-btn">Close</button>
+                <a id="btn-enter-video-room" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-video">
+                  Start Video Call Now →
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Booking Modal -->
@@ -161,9 +208,16 @@ export const Counsellors = {
     this._cleanupNavbar = initNavbar();
 
     let allCounsellors = [];
-    const grid = document.getElementById('counsellors-grid');
+    const tableWrapper = document.getElementById('counsellors-table-wrapper');
     const searchInput = document.getElementById('counsellor-search-input');
     const specialtySelect = document.getElementById('specialty-filter-select');
+
+    // Modals
+    const videoModal = document.getElementById('video-call-modal');
+    const closeVideoBtn = document.getElementById('close-video-modal-btn');
+    const cancelVideoBtn = document.getElementById('cancel-video-modal-btn');
+    const videoCounsellorDetails = document.getElementById('video-counsellor-details');
+    const enterVideoRoomBtn = document.getElementById('btn-enter-video-room');
 
     // Tabs
     const tabCounsBtn = document.getElementById('tab-counsellors-btn');
@@ -189,54 +243,160 @@ export const Counsellors = {
     tabCounsBtn?.addEventListener('click', () => switchTab(false));
     tabApptBtn?.addEventListener('click', () => switchTab(true));
 
+    function openVideoModal(c) {
+      if (!c || !videoModal) return;
+      const fee = c.fee || 800;
+      const meetLink = c.video_meet_link || `https://meet.jit.si/serenova-consultation-${c.id}`;
+
+      videoCounsellorDetails.innerHTML = `
+        <div class="flex items-center gap-4">
+          <div class="counsellor-avatar-circle" style="width:48px;height:48px;font-size:1rem;flex-shrink:0;">${c.avatar}</div>
+          <div>
+            <h4 class="font-bold text-lg text-ink">${c.name}</h4>
+            <p class="text-xs text-ink-60">${c.title} • ${c.experience_years} Years Exp.</p>
+            <p class="text-xs text-accent mt-0.5 font-medium">${c.context || c.specialties.join(', ')}</p>
+          </div>
+        </div>
+        <div class="video-fee-badge mt-3">
+          <span class="badge badge-surface">Standard Consultation Fee: <strong>₹${fee}</strong></span>
+          <span class="badge badge-sage ml-2">Video Enabled</span>
+        </div>
+      `;
+
+      enterVideoRoomBtn.href = meetLink;
+      videoModal.classList.add('open');
+      videoModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeVideoModal() {
+      videoModal?.classList.remove('open');
+      videoModal?.setAttribute('aria-hidden', 'true');
+    }
+
+    closeVideoBtn?.addEventListener('click', closeVideoModal);
+    cancelVideoBtn?.addEventListener('click', closeVideoModal);
+    videoModal?.addEventListener('click', (e) => {
+      if (e.target === videoModal) closeVideoModal();
+    });
+
     // Load counsellors
     async function loadCounsellors() {
       try {
         allCounsellors = await counsellorsApi.listCounsellors();
-        renderCounsellors(allCounsellors);
+        renderCounsellorsTable(allCounsellors);
       } catch (e) {
-        grid.innerHTML = `<p class="error-text">Unable to load counsellors at this time.</p>`;
+        tableWrapper.innerHTML = `<p class="error-text">Unable to load counsellors at this time.</p>`;
       }
     }
 
-    function renderCounsellors(list) {
+    // Render Table View with Experience, Context, Fee (< 2000), and Working Video Chat
+    function renderCounsellorsTable(list) {
       if (!list || list.length === 0) {
-        grid.innerHTML = `<p class="empty-text">No counsellors found matching your criteria.</p>`;
+        tableWrapper.innerHTML = `<p class="empty-text p-6">No counsellors found matching your search criteria.</p>`;
         return;
       }
 
-      grid.innerHTML = list.map(c => `
-        <article class="card counsellor-card" id="counsellor-${c.id}">
-          <div class="counsellor-card-header">
-            <div class="counsellor-avatar-circle">${c.avatar || 'DR'}</div>
-            <div>
-              <h3 class="counsellor-name">${c.name}</h3>
-              <p class="counsellor-title">${c.title}</p>
-              <p class="counsellor-exp">${c.experience_years} years experience • ${c.languages.join(', ')}</p>
-            </div>
-          </div>
+      tableWrapper.innerHTML = `
+        <div class="table-responsive">
+          <table class="counsellors-table" aria-label="Counsellors Directory">
+            <thead>
+              <tr>
+                <th scope="col" style="min-width: 220px;">Counsellor</th>
+                <th scope="col" style="min-width: 200px;">Context & Specialisation</th>
+                <th scope="col" style="min-width: 110px;">Experience</th>
+                <th scope="col" style="min-width: 140px;">Languages</th>
+                <th scope="col" style="min-width: 120px;">Fee (Student Rate)</th>
+                <th scope="col" style="min-width: 130px;">Availability</th>
+                <th scope="col" style="min-width: 230px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(c => {
+                const fee = c.fee || 800;
+                const contextText = c.context || c.specialties.join(', ');
 
-          <p class="counsellor-bio">${c.bio}</p>
+                return `
+                  <tr id="counsellor-row-${c.id}">
+                    <td>
+                      <div class="counsellor-profile-cell">
+                        <div class="counsellor-avatar-circle" style="width: 40px; height: 40px; font-size: 0.875rem;">
+                          ${c.avatar || 'DR'}
+                        </div>
+                        <div>
+                          <strong class="counsellor-table-name">${c.name}</strong>
+                          <span class="counsellor-table-title">${c.title}</span>
+                        </div>
+                      </div>
+                    </td>
 
-          <div class="counsellor-specialties">
-            ${c.specialties.map(s => `<span class="badge badge-surface">${s}</span>`).join('')}
-          </div>
+                    <td>
+                      <div class="counsellor-context-cell">
+                        <span class="context-primary-label">${contextText}</span>
+                        <div class="specialties-micro-tags mt-1">
+                          ${c.specialties.slice(0, 2).map(s => `<span class="badge badge-surface badge-xs">${s}</span>`).join('')}
+                        </div>
+                      </div>
+                    </td>
 
-          <div class="counsellor-schedule-info">
-            <span class="schedule-label">Available:</span>
-            <span class="schedule-days">${c.available_days.join(', ')}</span>
-          </div>
+                    <td>
+                      <span class="experience-pill font-medium text-ink">${c.experience_years} Years</span>
+                    </td>
 
-          <div class="counsellor-card-footer">
-            <button type="button" class="btn btn-primary btn-sm btn-book" data-id="${c.id}">
-              Book Consultation
-            </button>
-          </div>
-        </article>
-      `).join('');
+                    <td>
+                      <span class="text-xs text-ink-80">${c.languages.join(', ')}</span>
+                    </td>
+
+                    <td>
+                      <div class="fee-badge-wrap">
+                        <strong class="fee-amount text-accent">₹${fee}</strong>
+                        <span class="fee-period text-xs text-ink-60">/ session</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="schedule-days-pill text-xs">${c.available_days.join(', ')}</span>
+                      <span class="text-xs text-ink-60 block mt-0.5">${c.available_slots.length} daily slots</span>
+                    </td>
+
+                    <td>
+                      <div class="table-actions-cell">
+                        <button
+                          type="button"
+                          class="btn btn-video btn-sm btn-video-chat"
+                          data-id="${c.id}"
+                          title="Start live video consultation with ${c.name}"
+                        >
+                          📹 Video Chat
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm btn-book"
+                          data-id="${c.id}"
+                          title="Book an appointment"
+                        >
+                          📅 Book
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      // Wire Video Chat buttons
+      tableWrapper.querySelectorAll('.btn-video-chat').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cId = btn.dataset.id;
+          const counsellor = allCounsellors.find(item => item.id === cId);
+          openVideoModal(counsellor);
+        });
+      });
 
       // Wire Book buttons
-      document.querySelectorAll('.btn-book').forEach(btn => {
+      tableWrapper.querySelectorAll('.btn-book').forEach(btn => {
         btn.addEventListener('click', () => {
           if (!store.isAuthenticated()) {
             Toast.info('Please sign in or create an account to book an appointment.');
@@ -258,6 +418,7 @@ export const Counsellors = {
       const filtered = allCounsellors.filter(c => {
         const matchesQuery = !q ||
           c.name.toLowerCase().includes(q) ||
+          (c.context && c.context.toLowerCase().includes(q)) ||
           c.specialties.some(s => s.toLowerCase().includes(q)) ||
           c.bio.toLowerCase().includes(q);
 
@@ -265,7 +426,7 @@ export const Counsellors = {
         return matchesQuery && matchesSpec;
       });
 
-      renderCounsellors(filtered);
+      renderCounsellorsTable(filtered);
     }
 
     searchInput?.addEventListener('input', applyFilters);
@@ -283,7 +444,6 @@ export const Counsellors = {
     const dateInput = document.getElementById('booking-date');
     const slotSelect = document.getElementById('booking-time-slot');
 
-    // Set min date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const minDateStr = tomorrow.toISOString().split('T')[0];
@@ -295,15 +455,20 @@ export const Counsellors = {
     function openBookingModal(c) {
       if (!c || !modal) return;
       counsellorIdInput.value = c.id;
+      const fee = c.fee || 800;
+
       counsellorInfoBox.innerHTML = `
         <div class="counsellor-avatar-circle" style="width:36px;height:36px;font-size:0.875rem;">${c.avatar}</div>
-        <div>
+        <div style="flex-grow:1;">
           <strong>${c.name}</strong>
-          <span class="text-xs text-ink-60 block">${c.title}</span>
+          <span class="text-xs text-ink-60 block">${c.title} • ${c.experience_years} Years Exp.</span>
+        </div>
+        <div class="text-right">
+          <strong class="text-accent">₹${fee}</strong>
+          <span class="text-xs text-ink-60 block">Fee per session</span>
         </div>
       `;
 
-      // Populate counsellor slots if available
       if (c.available_slots && c.available_slots.length > 0) {
         slotSelect.innerHTML = c.available_slots.map(s => `<option value="${s}">${s}</option>`).join('');
       }
@@ -405,18 +570,27 @@ export const Counsellors = {
                 </div>
               ` : ''}
 
-              ${!isCancelled ? `
-                <div class="appointment-actions-row">
+              <div class="appointment-actions-row">
+                ${!isCancelled ? `
+                  <a
+                    href="https://meet.jit.si/serenova-consultation-${a.counsellor_id}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-video btn-sm"
+                  >
+                    📹 Join Video Call
+                  </a>
                   <button type="button" class="btn btn-ghost btn-sm btn-cancel-appt text-error" data-id="${a.id}">
                     Cancel appointment
                   </button>
-                </div>
-              ` : ''}
+                ` : `
+                  <span class="text-xs text-ink-60">Consultation cancelled</span>
+                `}
+              </div>
             </div>
           `;
         }).join('');
 
-        // Wire Cancel buttons
         container.querySelectorAll('.btn-cancel-appt').forEach(btn => {
           btn.addEventListener('click', async () => {
             if (!confirm('Are you sure you wish to cancel this appointment request?')) return;

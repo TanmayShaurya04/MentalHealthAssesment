@@ -7,6 +7,7 @@ import { appointmentsApi } from '../api/appointments.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { renderMoodArtwork } from './MoodTracker.js';
 
 export const Dashboard = {
   _cleanupNavbar: null,
@@ -57,23 +58,23 @@ export const Dashboard = {
 
                 <div class="mood-selector-bar" role="radiogroup" aria-label="Select mood level">
                   <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="Very Low">
-                    <span class="mood-dot dot-very-low"></span>
+                    <div class="mood-image-wrapper">${renderMoodArtwork('very_low', 40)}</div>
                     <span class="mood-pick-label">Very Low</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="Low">
-                    <span class="mood-dot dot-low"></span>
+                    <div class="mood-image-wrapper">${renderMoodArtwork('low', 40)}</div>
                     <span class="mood-pick-label">Low</span>
                   </button>
                   <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="Neutral">
-                    <span class="mood-dot dot-neutral"></span>
+                    <div class="mood-image-wrapper">${renderMoodArtwork('neutral', 40)}</div>
                     <span class="mood-pick-label">Neutral</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="Good">
-                    <span class="mood-dot dot-good"></span>
+                    <div class="mood-image-wrapper">${renderMoodArtwork('good', 40)}</div>
                     <span class="mood-pick-label">Good</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="Very Good">
-                    <span class="mood-dot dot-very-good"></span>
+                    <div class="mood-image-wrapper">${renderMoodArtwork('very_good', 40)}</div>
                     <span class="mood-pick-label">Very Good</span>
                   </button>
                 </div>

@@ -54,5 +54,19 @@
     "created_at": "2026-10-14T05:50:07.677907+00:00",
     "updated_at": "2026-10-14T05:50:12.872761+00:00",
     "_id": "8e7b5b9f-e97f-46cf-bd25-3fda4d661741"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "counsellor_id": "counsellor-01",
+    "counsellor_name": "Dr. Ananya Sen, Ph.D.",
+    "counsellor_title": "Lead Student Well-Being Psychologist",
+    "support_type": "academic_stress",
+    "preferred_date": "2026-10-20",
+    "time_slot": "11:00 AM",
+    "student_notes": "Would appreciate guidance on managing thesis pressure.",
+    "status": "cancelled",
+    "created_at": "2026-10-21T14:32:22.123796+00:00",
+    "updated_at": "2026-10-21T14:32:22.125247+00:00",
+    "_id": "6669b9ab-f4b8-4d47-935c-28c8e41b0522"
   }
 ]

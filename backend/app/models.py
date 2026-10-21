@@ -90,10 +90,13 @@ class CounsellorResponse(BaseModel):
     id: str
     name: str
     title: str
+    context: Optional[str] = None
     specialties: List[str]
     bio: str
     languages: List[str]
     experience_years: int
+    fee: int = 500
+    video_meet_link: str = ""
     avatar: str
     available_days: List[str]
     available_slots: List[str]

@@ -106,5 +106,113 @@
     "safety_flagged": false,
     "timestamp": "2026-10-13T16:47:43.611658+00:00",
     "_id": "de945891-f7b3-46ea-88ef-86e241e84611"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "hi",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:29:28.373239+00:00",
+    "_id": "87fd33fe-ae49-4db7-a0e1-7482129b5b27"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Hello! I'm Serenova, your private mental well-being companion.\n\nWhether you're feeling weighed down by classes, navigating student life, or simply needing a quiet place to unload your thoughts without judgment, I'm right here with you.\n\nHow is your mind feeling in this exact moment?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:29:28.375982+00:00",
+    "_id": "1d0e95ae-0a15-493a-8e5a-923f128d96a2"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "im depressed",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:29:35.538915+00:00",
+    "_id": "f6a6f443-99ac-4fc8-950a-4f8882a1f938"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Thank you for sharing this with me. When sadness or numbness lingers, just getting through the day is a quiet victory that deserves acknowledgment.\n\nBe very patient with yourself right now. If getting out of bed or attending class feels too steep today, what is the simplest, kindest thing you could do for yourself in the next hour?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:29:35.539639+00:00",
+    "_id": "b7f42635-e576-4d35-8153-d5ecd8ea5731"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "i am feeling insecure about my body",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:00.493743+00:00",
+    "_id": "2bb86175-dda7-4ca0-92d4-15e9134ac3eb"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "I hear how heavy things feel right now. It takes courage to put into words when you're feeling low, empty, or disconnected from joy.\n\nPlease remember that having days where everything feels grey does not mean your life will always feel this way. Emotional seasons shift, even when it feels impossible in the thick of it.\n\nYou don't have to put on a brave face here. Have you been able to eat a meal or drink some water today? Sometimes meeting basic physical needs is the gentlest first step.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:00.495035+00:00",
+    "_id": "09379e88-dd5f-458d-aecc-6a8f05170741"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "user",
+    "content": "i have acne",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:13.810664+00:00",
+    "_id": "5aabc1fd-c12f-4638-8ba9-64bf64c9a049"
+  },
+  {
+    "session_id": "b231b91c-ec24-439a-b8cc-ec0c3f31e586",
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "role": "assistant",
+    "content": "Thank you for sharing this with me. When sadness or numbness lingers, just getting through the day is a quiet victory that deserves acknowledgment.\n\nBe very patient with yourself right now. If getting out of bed or attending class feels too steep today, what is the simplest, kindest thing you could do for yourself in the next hour?",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:13.811773+00:00",
+    "_id": "aa93d88a-80ec-4e5c-a63c-f797b632cda1"
+  },
+  {
+    "session_id": "767dbf3e-43f5-42a8-825a-1f8032ea51ef",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "user",
+    "content": "I feel anxious about whether I can pass my exams.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:22.127661+00:00",
+    "_id": "de0fa99a-6cbd-4f14-87e4-c699dfc8d4a6"
+  },
+  {
+    "session_id": "767dbf3e-43f5-42a8-825a-1f8032ea51ef",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "assistant",
+    "content": "Academic deadlines have a way of feeling like an avalanche where everything demands your focus at the exact same time. First, take a gentle breath: **Your worth as a human being is not measured by your grades or your daily productivity.**\n\nWhen everything feels urgent, our brain freezes. Let's do a micro-triage: What is the single smallest assignment or slide deck you could look at for just **15 minutes** today? You don't have to finish it\u2014just take that first step.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:22.127878+00:00",
+    "_id": "4c970abc-8434-48aa-baef-30002285acd0"
+  },
+  {
+    "session_id": "767dbf3e-43f5-42a8-825a-1f8032ea51ef",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "user",
+    "content": "I feel hopeless and want to end my life.",
+    "safety_flagged": false,
+    "timestamp": "2026-10-21T14:32:22.128766+00:00",
+    "_id": "4fda2238-e011-487c-93c5-97753d91f299"
+  },
+  {
+    "session_id": "767dbf3e-43f5-42a8-825a-1f8032ea51ef",
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "role": "assistant",
+    "content": "I'm hearing how much pain and weight you're carrying right now, and I want you to know that you don't have to navigate this alone.\n\nBecause your safety and life matter deeply, please connect directly with people who are trained to support you through this exact moment. These free, confidential resources are available right now:\n\n\u2022 **Tele-MANAS (Govt. of India)**: Dial `14416` or `1800-891-4416` (24x7, Toll-Free, Multiple Languages)\n\u2022 **KIRAN Mental Health Helpline**: Dial `1800-599-0019` (24x7, Toll-Free)\n\u2022 **iCall Psychosocial Helpline**: Call `9152987821` (Mon\u2013Sat, 10 AM \u2013 8 PM)\n\u2022 **Vandrevala Foundation**: Call `9999 666 555` or WhatsApp available (24x7)\n\u2022 **Emergency Services**: Dial `112` or visit your campus health clinic immediately.\n\nPlease consider reaching out to a friend, family member, or university counsellor today. You deserve care, understanding, and support.",
+    "safety_flagged": true,
+    "timestamp": "2026-10-21T14:32:22.128927+00:00",
+    "_id": "5ac87265-ff94-468e-8047-3fa620e78ad9"
   }
 ]

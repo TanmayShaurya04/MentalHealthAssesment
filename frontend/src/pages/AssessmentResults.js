@@ -58,11 +58,11 @@ export const AssessmentResults = {
           <div class="score-display-row">
             <div>
               <span class="score-number">${a.total_score}</span>
-              <span class="score-total">/ 30</span>
+              <span class="score-total">/ 45</span>
             </div>
             <div class="score-category-wrap">
               <span class="badge badge-lg badge-${a.category}">${a.level_label}</span>
-              <p class="score-scale-hint">Calculated across 10 reflective dimensions</p>
+              <p class="score-scale-hint">Calculated across 15 generalized well-being dimensions</p>
             </div>
           </div>
 
@@ -85,6 +85,7 @@ export const AssessmentResults = {
           <div class="results-actions-row mt-8">
             <a href="/chat" class="btn btn-primary">Talk with AI Companion</a>
             <a href="/counsellors" class="btn btn-secondary">Consult a Counsellor</a>
+            <button type="button" class="btn btn-secondary" id="btn-print-report">🖨️ Print Report</button>
             <a href="/assessment" class="btn btn-ghost btn-sm">Retake Screening</a>
           </div>
         </div>
@@ -94,6 +95,10 @@ export const AssessmentResults = {
           <p>Need immediate support? Connect with our 24x7 verified helpline at <a href="tel:14416" class="underline">14416 (Tele-MANAS)</a>.</p>
         </div>
       `;
+
+      document.getElementById('btn-print-report')?.addEventListener('click', () => {
+        window.print();
+      });
     } catch (err) {
       container.innerHTML = `<p class="error-text">Could not load results. Please try again.</p>`;
     }

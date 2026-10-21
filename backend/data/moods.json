@@ -40,5 +40,193 @@
     "tags": [],
     "recorded_at": "2026-10-13T16:40:29.794697+00:00",
     "_id": "f38d102a-2c63-49cf-94de-c39aa4005057"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-10-21T14:31:26.148225+00:00",
+    "_id": "06321dd2-95ee-4883-ad7f-9c681bc7a913"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-10-21T14:32:22.114907+00:00",
+    "_id": "65c9f94f-92e5-42e8-94ac-89855973e362"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:33:56.330648+00:00",
+    "_id": "bae9f2dc-a331-4c66-bd48-503a338589c4"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "good",
+    "score": 4,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:33:58.863348+00:00",
+    "_id": "c7230bcf-7fa5-4f1a-8966-f7fba59ebc21"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:01.064627+00:00",
+    "_id": "e6dc4bcd-5604-4e9e-8f4b-359fe73d5cff"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "low",
+    "score": 2,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:03.209292+00:00",
+    "_id": "a1d213f4-4ab8-405b-80f7-99517580b1e5"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_low",
+    "score": 1,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:05.375648+00:00",
+    "_id": "15b44ea9-bd3e-4aec-b3d2-058b6449e9c3"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_low",
+    "score": 1,
+    "note": null,
+    "tags": [
+      "Friends"
+    ],
+    "recorded_at": "2026-10-21T14:34:17.311344+00:00",
+    "_id": "fd4b52c8-ccb0-4731-afe2-afcb0af26ba3"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:19.680540+00:00",
+    "_id": "6ea321c4-7cf1-41a9-aa89-19f5e11fcecf"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:24.514061+00:00",
+    "_id": "eae59baf-fc91-4af1-932c-22a80929eaad"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:29.493182+00:00",
+    "_id": "e5d7353e-9552-48ab-a778-8daa6a67325f"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:31.230115+00:00",
+    "_id": "1efde5b6-559c-4b6c-b52d-4d2fda98ef22"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:31.747111+00:00",
+    "_id": "e6bb6c23-6408-43d5-940a-06daf78a1a43"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:32.247042+00:00",
+    "_id": "d7d69802-5e63-4c15-a10a-bb8ae941ffd7"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:32.630708+00:00",
+    "_id": "336428fb-ed47-458c-933e-e5fcd3a15a69"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:32.846627+00:00",
+    "_id": "d01a4a21-483a-4013-a71b-e61bc6e95244"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:33.046502+00:00",
+    "_id": "e60bf436-79bd-4fe8-8d4f-d28bd23ccb14"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:33.211119+00:00",
+    "_id": "190100c7-d6e0-4461-ba7b-a6f1ab766172"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:33.393929+00:00",
+    "_id": "605c40d8-cef9-410c-be3f-5b9f9daf8f19"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-21T14:34:33.730507+00:00",
+    "_id": "da6fd134-86f1-4aeb-83a2-c0536c278ca2"
   }
 ]

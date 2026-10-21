@@ -112,5 +112,161 @@
     ],
     "taken_at": "2026-10-13T16:14:22.547532+00:00",
     "_id": "0ab77b96-0c9f-4121-8352-05da6353227d"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "total_score": 15,
+    "category": "mild",
+    "level_label": "Mild Concern / Early Fatigue",
+    "interpretation": "You are showing signs of mild emotional fatigue, occasional anxious worry, or elevated stress. While common during busy academic seasons, this is a proactive moment to protect your mental energy before burnout sets in.",
+    "recommendations": [
+      "Review your sleep hygiene: limit phone/screen exposure 30 minutes before bed.",
+      "Try the 4-4-4-4 Box Breathing exercise with the Serenova AI Companion.",
+      "Break looming academic tasks down into 20-minute focused intervals.",
+      "Speak with friends, family, or explore campus wellness resources."
+    ],
+    "disclaimer": "This screening is for general self-reflection and well-being awareness. It is not a clinical medical diagnosis and does not replace a consultation with a certified healthcare professional.",
+    "answers": [
+      {
+        "question_id": 1,
+        "score": 0
+      },
+      {
+        "question_id": 2,
+        "score": 0
+      },
+      {
+        "question_id": 3,
+        "score": 1
+      },
+      {
+        "question_id": 4,
+        "score": 2
+      },
+      {
+        "question_id": 5,
+        "score": 0
+      },
+      {
+        "question_id": 6,
+        "score": 2
+      },
+      {
+        "question_id": 7,
+        "score": 3
+      },
+      {
+        "question_id": 8,
+        "score": 1
+      },
+      {
+        "question_id": 9,
+        "score": 0
+      },
+      {
+        "question_id": 10,
+        "score": 2
+      },
+      {
+        "question_id": 11,
+        "score": 2
+      },
+      {
+        "question_id": 12,
+        "score": 1
+      },
+      {
+        "question_id": 13,
+        "score": 0
+      },
+      {
+        "question_id": 14,
+        "score": 0
+      },
+      {
+        "question_id": 15,
+        "score": 1
+      }
+    ],
+    "taken_at": "2026-10-21T14:29:19.712670+00:00",
+    "_id": "99989983-17bd-4abe-8ab6-4f5f3d2eaef2"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "total_score": 15,
+    "category": "mild",
+    "level_label": "Mild Concern / Early Fatigue",
+    "interpretation": "You are showing signs of mild emotional fatigue, occasional anxious worry, or elevated stress. While common during busy academic seasons, this is a proactive moment to protect your mental energy before burnout sets in.",
+    "recommendations": [
+      "Review your sleep hygiene: limit phone/screen exposure 30 minutes before bed.",
+      "Try the 4-4-4-4 Box Breathing exercise with the Serenova AI Companion.",
+      "Break looming academic tasks down into 20-minute focused intervals.",
+      "Speak with friends, family, or explore campus wellness resources."
+    ],
+    "disclaimer": "This screening is for general self-reflection and well-being awareness. It is not a clinical medical diagnosis and does not replace a consultation with a certified healthcare professional.",
+    "answers": [
+      {
+        "question_id": 1,
+        "score": 1
+      },
+      {
+        "question_id": 2,
+        "score": 1
+      },
+      {
+        "question_id": 3,
+        "score": 1
+      },
+      {
+        "question_id": 4,
+        "score": 1
+      },
+      {
+        "question_id": 5,
+        "score": 1
+      },
+      {
+        "question_id": 6,
+        "score": 1
+      },
+      {
+        "question_id": 7,
+        "score": 1
+      },
+      {
+        "question_id": 8,
+        "score": 1
+      },
+      {
+        "question_id": 9,
+        "score": 1
+      },
+      {
+        "question_id": 10,
+        "score": 1
+      },
+      {
+        "question_id": 11,
+        "score": 1
+      },
+      {
+        "question_id": 12,
+        "score": 1
+      },
+      {
+        "question_id": 13,
+        "score": 1
+      },
+      {
+        "question_id": 14,
+        "score": 1
+      },
+      {
+        "question_id": 15,
+        "score": 1
+      }
+    ],
+    "taken_at": "2026-10-21T14:32:22.120414+00:00",
+    "_id": "f809b550-da28-4b6e-9119-42176fa1d684"
   }
 ]

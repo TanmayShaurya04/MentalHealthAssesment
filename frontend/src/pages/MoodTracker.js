@@ -4,6 +4,79 @@ import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import Chart from 'chart.js/auto';
 
+/**
+ * Expressive Vector Artwork Images for Mood States
+ * Hand-crafted SVG illustrations representing emotional states.
+ */
+export function renderMoodArtwork(level, size = 48) {
+  const s = size;
+  switch (level) {
+    case 'very_low':
+      return `
+        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--very-low" aria-label="Very Low mood illustration">
+          <circle cx="32" cy="32" r="30" fill="#E8EEF5" stroke="#4A6FA5" stroke-width="2.5"/>
+          <path d="M22 26C24 23 27 24 27 24" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M42 26C40 23 37 24 37 24" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="30" r="3" fill="#2B4C7E"/>
+          <circle cx="40" cy="30" r="3" fill="#2B4C7E"/>
+          <path d="M43 36C43 36 45 39 45 40.5C45 41.8 44 43 42.5 43C41 43 40 41.8 40 40.5C40 39 42 36 42 36" fill="#64B5F6"/>
+          <path d="M24 44C27 40 37 40 40 44" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      `;
+
+    case 'low':
+      return `
+        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--low" aria-label="Low mood illustration">
+          <circle cx="32" cy="32" r="30" fill="#EDEAF2" stroke="#7E6B8F" stroke-width="2.5"/>
+          <circle cx="23" cy="29" r="3" fill="#58456B"/>
+          <circle cx="41" cy="29" r="3" fill="#58456B"/>
+          <path d="M25 41C29 39 35 39 39 41" stroke="#58456B" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="20" cy="35" r="3" fill="#D7C9E3" opacity="0.6"/>
+          <circle cx="44" cy="35" r="3" fill="#D7C9E3" opacity="0.6"/>
+        </svg>
+      `;
+
+    case 'neutral':
+      return `
+        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--neutral" aria-label="Neutral mood illustration">
+          <circle cx="32" cy="32" r="30" fill="#EBF2ED" stroke="#5B8266" stroke-width="2.5"/>
+          <circle cx="23" cy="30" r="3" fill="#385440"/>
+          <circle cx="41" cy="30" r="3" fill="#385440"/>
+          <line x1="25" y1="41" x2="39" y2="41" stroke="#385440" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="19" cy="36" r="3" fill="#A8D5BA" opacity="0.5"/>
+          <circle cx="45" cy="36" r="3" fill="#A8D5BA" opacity="0.5"/>
+        </svg>
+      `;
+
+    case 'good':
+      return `
+        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--good" aria-label="Good mood illustration">
+          <circle cx="32" cy="32" r="30" fill="#FBF3E8" stroke="#D97706" stroke-width="2.5"/>
+          <path d="M21 28C22 26 25 26 26 28" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M38 28C39 26 42 26 43 28" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M23 37C25 43 39 43 41 37" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="18" cy="35" r="4" fill="#FCD34D" opacity="0.7"/>
+          <circle cx="46" cy="35" r="4" fill="#FCD34D" opacity="0.7"/>
+        </svg>
+      `;
+
+    case 'very_good':
+    default:
+      return `
+        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--very-good" aria-label="Very Good mood illustration">
+          <circle cx="32" cy="32" r="30" fill="#FFF1EE" stroke="#C65D3A" stroke-width="2.5"/>
+          <path d="M20 27C21 24 25 24 26 27" stroke="#872E15" stroke-width="3" stroke-linecap="round"/>
+          <path d="M38 27C39 24 43 24 44 27" stroke="#872E15" stroke-width="3" stroke-linecap="round"/>
+          <path d="M22 36C24 45 40 45 42 36" stroke="#872E15" stroke-width="3" stroke-linecap="round" fill="#C65D3A"/>
+          <circle cx="17" cy="36" r="4.5" fill="#F87171" opacity="0.6"/>
+          <circle cx="47" cy="36" r="4.5" fill="#F87171" opacity="0.6"/>
+          <path d="M12 16L14 12L16 16L20 18L16 20L14 24L12 20L8 18L12 16Z" fill="#FBBF24"/>
+          <path d="M50 14L51.5 11L53 14L56 15.5L53 17L51.5 20L50 17L47 15.5L50 14Z" fill="#FBBF24"/>
+        </svg>
+      `;
+  }
+}
+
 export const MoodTracker = {
   _cleanupNavbar: null,
   _chartInstance: null,
@@ -17,9 +90,9 @@ export const MoodTracker = {
 
           <header class="page-header">
             <span class="section-eyebrow">Emotional Rhythm</span>
-            <h1 class="page-title">Mood Journal & Reflections</h1>
+            <h1 class="page-title">Mood Journal & Emotional Weather</h1>
             <p class="page-subtitle">
-              Observing your emotional state with gentle honesty. No pressure, no judgment.
+              Visualise and observe your emotional state with gentle honesty. No pressure, no judgment.
             </p>
           </header>
 
@@ -27,34 +100,49 @@ export const MoodTracker = {
 
             <!-- Log Form Card -->
             <section class="card mood-entry-card" aria-labelledby="new-mood-heading">
-              <span class="card-eyebrow">Record right now</span>
-              <h2 id="new-mood-heading" class="card-title">How does your mind feel in this moment?</h2>
+              <span class="card-eyebrow">Visual Check-in</span>
+              <h2 id="new-mood-heading" class="card-title">How does your mind feel right now?</h2>
 
-              <div class="mood-selector-bar mt-4" role="radiogroup" aria-label="Select mood">
+              <!-- Visual Mood Selector Bar with Images -->
+              <div class="mood-selector-bar mt-4" role="radiogroup" aria-label="Select mood state">
                 <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="Very Low">
-                  <span class="mood-dot dot-very-low"></span>
+                  <div class="mood-image-wrapper">
+                    ${renderMoodArtwork('very_low', 48)}
+                  </div>
                   <span class="mood-pick-label">Very Low</span>
                 </button>
+
                 <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="Low">
-                  <span class="mood-dot dot-low"></span>
+                  <div class="mood-image-wrapper">
+                    ${renderMoodArtwork('low', 48)}
+                  </div>
                   <span class="mood-pick-label">Low</span>
                 </button>
+
                 <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="Neutral">
-                  <span class="mood-dot dot-neutral"></span>
+                  <div class="mood-image-wrapper">
+                    ${renderMoodArtwork('neutral', 48)}
+                  </div>
                   <span class="mood-pick-label">Neutral</span>
                 </button>
+
                 <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="Good">
-                  <span class="mood-dot dot-good"></span>
+                  <div class="mood-image-wrapper">
+                    ${renderMoodArtwork('good', 48)}
+                  </div>
                   <span class="mood-pick-label">Good</span>
                 </button>
+
                 <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="Very Good">
-                  <span class="mood-dot dot-very-good"></span>
+                  <div class="mood-image-wrapper">
+                    ${renderMoodArtwork('very_good', 48)}
+                  </div>
                   <span class="mood-pick-label">Very Good</span>
                 </button>
               </div>
 
               <!-- Tags Selector -->
-              <div class="mood-tags-selector mt-4">
+              <div class="mood-tags-selector mt-6">
                 <label class="form-label">What's influencing this feeling? (Optional)</label>
                 <div class="tag-pills" id="tag-pills-container">
                   <button type="button" class="tag-toggle-btn" data-tag="Exams">Exams</button>
@@ -74,12 +162,12 @@ export const MoodTracker = {
                   id="mood-note-input"
                   class="form-textarea"
                   style="min-height: 80px;"
-                  placeholder="What's on your mind? (e.g. Stayed up late studying, feeling foggy but relieved)"
+                  placeholder="What's on your mind? (e.g. Turned in my assignment, feeling relieved but exhausted)"
                 ></textarea>
               </div>
 
               <button type="button" class="btn btn-primary btn-block mt-3" id="submit-mood-btn">
-                Record Entry
+                Record Visual Entry
               </button>
             </section>
 
@@ -108,7 +196,7 @@ export const MoodTracker = {
             </div>
 
             <div id="mood-history-list" class="mood-history-list mt-4">
-              <div class="loading-spinner">Loading mood logs...</div>
+              <div class="loading-spinner">Loading mood records...</div>
             </div>
           </section>
 
@@ -178,7 +266,7 @@ export const MoodTracker = {
         Toast.error(err.message || 'Could not save mood entry.');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Record Entry';
+        submitBtn.textContent = 'Record Visual Entry';
       }
     });
 
@@ -202,7 +290,6 @@ export const MoodTracker = {
             : 'No logs yet';
         }
 
-        // Render List
         if (history.length === 0) {
           listEl.innerHTML = `<p class="empty-text">No mood records yet. Make your first entry above.</p>`;
         } else {
@@ -210,11 +297,15 @@ export const MoodTracker = {
             const dateStr = new Date(m.recorded_at).toLocaleDateString(undefined, {
               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
             });
+            const moodIllustration = renderMoodArtwork(m.level, 40);
+
             return `
               <div class="card mood-history-item" id="mood-item-${m.id}">
                 <div class="mood-item-left">
-                  <span class="mood-dot dot-${m.level.replace('_', '-')}"></span>
-                  <div>
+                  <div class="mood-history-image">
+                    ${moodIllustration}
+                  </div>
+                  <div style="flex-grow:1;">
                     <div class="mood-item-header">
                       <strong>${m.level.replace('_', ' ').toUpperCase()}</strong>
                       <span class="mood-item-date">${dateStr}</span>
@@ -232,7 +323,6 @@ export const MoodTracker = {
             `;
           }).join('');
 
-          // Wire delete
           listEl.querySelectorAll('.btn-delete-item').forEach(btn => {
             btn.addEventListener('click', async () => {
               if (!confirm('Delete this mood entry?')) return;
@@ -247,7 +337,6 @@ export const MoodTracker = {
           });
         }
 
-        // Render Chart.js
         if (canvas) {
           if (this._chartInstance) {
             this._chartInstance.destroy();
