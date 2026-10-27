@@ -228,5 +228,68 @@
     "tags": [],
     "recorded_at": "2026-10-21T14:34:33.730507+00:00",
     "_id": "da6fd134-86f1-4aeb-83a2-c0536c278ca2"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:27.783869+00:00",
+    "_id": "ca92bd16-12b4-40f8-9926-9d185478c55e"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_low",
+    "score": 1,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:35.739468+00:00",
+    "_id": "3084e58f-883f-4480-97de-e66efbe9f55d"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_low",
+    "score": 1,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:36.120413+00:00",
+    "_id": "00848c44-1a64-4f54-9368-484392cb80b4"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "low",
+    "score": 2,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:38.588486+00:00",
+    "_id": "1fda51d9-9f0a-4ef7-869d-e0c7b69d497f"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:40.554903+00:00",
+    "_id": "0364253f-0de0-4d24-8b5e-61dcd431aa5d"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "good",
+    "score": 4,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:42.884694+00:00",
+    "_id": "466465d4-731f-4590-8c95-b1bc2cbb0ed2"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "level": "very_low",
+    "score": 1,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-22T08:19:45.017950+00:00",
+    "_id": "cfbefd4d-bd8c-420f-9ba4-83c5318fdc76"
   }
 ]

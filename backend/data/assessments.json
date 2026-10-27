@@ -268,5 +268,83 @@
     ],
     "taken_at": "2026-10-21T14:32:22.120414+00:00",
     "_id": "f809b550-da28-4b6e-9119-42176fa1d684"
+  },
+  {
+    "user_id": "4cf3b92d-ed9b-41fe-87e1-42a2ec4858f1",
+    "total_score": 37,
+    "category": "elevated",
+    "level_label": "Elevated Concern / High Distress",
+    "interpretation": "You are carrying a significant emotional burden right now. Having a difficult or painful season does not mean you have failed. Reaching out for professional human support is one of the strongest and most courageous steps you can take for yourself.",
+    "recommendations": [
+      "We strongly encourage booking an appointment or video consultation with one of our certified counsellors.",
+      "If you need immediate support, dial Tele-MANAS (14416 - 24x7 Toll-Free) or iCall (9152987821).",
+      "Give yourself explicit permission to pause non-essential deadlines today.",
+      "Reach out to someone you trust\u2014a friend, family member, or mentor\u2014to share what you are experiencing."
+    ],
+    "disclaimer": "This screening is for general self-reflection and well-being awareness. It is not a clinical medical diagnosis and does not replace a consultation with a certified healthcare professional.",
+    "answers": [
+      {
+        "question_id": 1,
+        "score": 2
+      },
+      {
+        "question_id": 2,
+        "score": 2
+      },
+      {
+        "question_id": 3,
+        "score": 2
+      },
+      {
+        "question_id": 4,
+        "score": 3
+      },
+      {
+        "question_id": 5,
+        "score": 2
+      },
+      {
+        "question_id": 6,
+        "score": 3
+      },
+      {
+        "question_id": 7,
+        "score": 2
+      },
+      {
+        "question_id": 8,
+        "score": 3
+      },
+      {
+        "question_id": 9,
+        "score": 2
+      },
+      {
+        "question_id": 10,
+        "score": 3
+      },
+      {
+        "question_id": 11,
+        "score": 3
+      },
+      {
+        "question_id": 12,
+        "score": 3
+      },
+      {
+        "question_id": 13,
+        "score": 2
+      },
+      {
+        "question_id": 14,
+        "score": 3
+      },
+      {
+        "question_id": 15,
+        "score": 2
+      }
+    ],
+    "taken_at": "2026-10-21T14:39:16.997095+00:00",
+    "_id": "b9ceaf5e-e461-4717-ae1d-62b91fa3d6b5"
   }
 ]
