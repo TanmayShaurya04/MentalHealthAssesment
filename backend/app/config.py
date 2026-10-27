@@ -1,5 +1,9 @@
 import os
 from typing import List
+from dotenv import load_dotenv
+
+# Automatically load environment variables from .env file
+load_dotenv()
 
 class Settings:
     def __init__(self):

@@ -4,12 +4,12 @@
 # ==============================================================================
 
 # ── Stage 1: Build Frontend SPA ────────────────────────────────────────────────
-FROM node:20-alpine AS frontend-builder
+FROM node:20-slim AS frontend-builder
 WORKDIR /build
 
-# Install dependencies first for efficient layer caching
+# Copy dependency definitions and install cleanly with glibc compatibility
 COPY frontend/package*.json ./
-RUN npm ci --prefer-offline --no-audit
+RUN npm install --no-audit
 
 # Copy frontend source and build optimized production bundle
 COPY frontend/ ./
@@ -26,27 +26,28 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Install system dependencies
+# Install minimal system utilities (curl for health check)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
 COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
+# Copy backend code & default seed data
 COPY backend/ ./
 
 # Copy built frontend assets from stage 1 into dist/
 COPY --from=frontend-builder /build/dist ./dist
 
-# Expose standard port
+# Expose default port
 EXPOSE 8000
 
-# Health check
+# Health check using IPv4 loopback to prevent dual-stack resolution failures
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT}/api/health || exit 1
+    CMD curl -f http://127.0.0.1:${PORT:-8000}/api/health || exit 1
 
-# Start FastAPI server using uvicorn
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start FastAPI server using uvicorn via python module
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

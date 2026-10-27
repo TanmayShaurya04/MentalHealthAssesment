@@ -81,12 +81,18 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 # ── Serve Built Frontend SPA in Production ───────────────────────
-frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))
-if not os.path.exists(frontend_dist):
-    # Check alternate location for containerized deployments (backend/dist or ./dist)
-    alt_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dist"))
-    if os.path.exists(alt_dist):
-        frontend_dist = alt_dist
+frontend_dist = os.getenv("FRONTEND_DIST")
+if not frontend_dist or not os.path.exists(frontend_dist):
+    candidates = [
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dist")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")),
+        os.path.abspath(os.path.join(os.getcwd(), "dist")),
+        "/app/dist",
+    ]
+    for candidate in candidates:
+        if os.path.exists(candidate):
+            frontend_dist = candidate
+            break
 
 if os.path.exists(frontend_dist):
     assets_dir = os.path.join(frontend_dist, "assets")
