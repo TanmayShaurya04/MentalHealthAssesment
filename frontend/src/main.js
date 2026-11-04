@@ -8,6 +8,7 @@
 import './styles/global.css';
 import './styles/components.css';
 import './styles/app.css';
+import './styles/polish.css';
 
 import { router } from './router.js';
 import { store } from './store.js';

@@ -3,6 +3,7 @@ import { router } from '../router.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { photo } from '../assets/images.js';
 
 export const Login = {
   _cleanupNavbar: null,
@@ -12,7 +13,13 @@ export const Login = {
       ${Navbar.render()}
 
       <main class="auth-page page-root" id="main-content">
-        <div class="container auth-container">
+        <div class="container auth-container auth-container--split">
+          <aside class="auth-photo" aria-hidden="true">
+            ${photo('walk', { w: 900, eager: true })}
+            <div class="auth-photo-caption">
+              <p>Your space to pause, write and be heard.</p>
+            </div>
+          </aside>
           <div class="auth-card">
             
             <div class="auth-header">

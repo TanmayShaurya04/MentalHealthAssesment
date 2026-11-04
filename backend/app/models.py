@@ -74,10 +74,23 @@ class AnswerItem(BaseModel):
 class AssessmentSubmit(BaseModel):
     answers: List[AnswerItem]
 
+class AssessmentSection(BaseModel):
+    id: str
+    title: str
+    instrument: str
+    validated: bool = True
+    score: int
+    max: int
+    severity: str
+    rank: int = 0
+
 class AssessmentResponse(BaseModel):
     id: str
     user_id: str
     total_score: int
+    max_score: Optional[int] = None
+    sections: Optional[List[AssessmentSection]] = None
+    safety_flag: bool = False
     category: str
     level_label: str
     interpretation: str
@@ -134,6 +147,8 @@ class ChatSessionResponse(BaseModel):
     id: str
     user_id: str
     title: str
+    topic: str = "general"
+    has_crisis: bool = False
     created_at: str
     updated_at: str
     message_count: int = 0

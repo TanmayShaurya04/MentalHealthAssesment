@@ -25,10 +25,15 @@ export const Navbar = {
     const isAuth = store.isAuthenticated();
     const user = store.getUser();
     const userName = user?.name ? user.name.split(' ')[0] : 'Student';
+    const path = window.location.pathname;
+    const active = (href) => {
+      const on = href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+      return on ? ' is-active" aria-current="page' : '';
+    };
 
     return `
       <nav
-        class="navbar${transparent ? ' navbar--transparent' : ''}"
+        class="navbar navbar--${isAuth ? 'auth' : 'guest'}${transparent ? ' navbar--transparent' : ''}"
         aria-label="Main navigation"
         id="site-navbar"
       >
@@ -43,13 +48,13 @@ export const Navbar = {
           <!-- Desktop links -->
           <div class="navbar-links" role="list">
             ${isAuth ? `
-              <a href="/dashboard" class="navbar-link" role="listitem">Dashboard</a>
-              <a href="/mood" class="navbar-link" role="listitem">Mood</a>
-              <a href="/journal" class="navbar-link" role="listitem">Journal</a>
-              <a href="/assessment" class="navbar-link" role="listitem">Screening</a>
-              <a href="/chat" class="navbar-link" role="listitem">Companion</a>
-              <a href="/counsellors" class="navbar-link" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link" role="listitem">Resources</a>
+              <a href="/dashboard" class="navbar-link${active('/dashboard')}" role="listitem">Dashboard</a>
+              <a href="/mood" class="navbar-link${active('/mood')}" role="listitem">Mood</a>
+              <a href="/journal" class="navbar-link${active('/journal')}" role="listitem">Journal</a>
+              <a href="/assessment" class="navbar-link${active('/assessment')}" role="listitem">Screening</a>
+              <a href="/chat" class="navbar-link${active('/chat')}" role="listitem">Companion</a>
+              <a href="/counsellors" class="navbar-link${active('/counsellors')}" role="listitem">Counsellors</a>
+              <a href="/resources" class="navbar-link${active('/resources')}" role="listitem">Resources</a>
               
               <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
                 <span class="helpline-dot" aria-hidden="true"></span>
@@ -64,8 +69,8 @@ export const Navbar = {
               <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">Logout</button>
             ` : `
               <a href="/#how-it-works" class="navbar-link" role="listitem">How it works</a>
-              <a href="/counsellors" class="navbar-link" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link" role="listitem">Resources</a>
+              <a href="/counsellors" class="navbar-link${active('/counsellors')}" role="listitem">Counsellors</a>
+              <a href="/resources" class="navbar-link${active('/resources')}" role="listitem">Resources</a>
               
               <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
                 <span class="helpline-dot" aria-hidden="true"></span>
@@ -84,6 +89,7 @@ export const Navbar = {
             aria-controls="mobile-nav"
             aria-label="Open navigation menu"
             id="navbar-toggle-btn"
+            type="button"
           >
             <span class="navbar-toggle-bar" aria-hidden="true"></span>
             <span class="navbar-toggle-bar" aria-hidden="true"></span>
@@ -93,31 +99,38 @@ export const Navbar = {
       </nav>
 
       <!-- Mobile navigation drawer -->
+      <div class="navbar-backdrop" id="navbar-backdrop" aria-hidden="true"></div>
       <div
         class="navbar-mobile"
         id="mobile-nav"
-        aria-hidden="true"
-        role="navigation"
+        inert
+        role="dialog"
+        aria-modal="false"
         aria-label="Mobile navigation"
       >
         ${isAuth ? `
-          <a href="/dashboard" class="navbar-mobile-link">Dashboard</a>
-          <a href="/mood" class="navbar-mobile-link">Mood Tracker</a>
-          <a href="/journal" class="navbar-mobile-link">Private Journal</a>
-          <a href="/assessment" class="navbar-mobile-link">Self-Assessment</a>
-          <a href="/chat" class="navbar-mobile-link">AI Companion</a>
-          <a href="/counsellors" class="navbar-mobile-link">Counsellors & Appointments</a>
-          <a href="/resources" class="navbar-mobile-link">Well-Being Resources</a>
-          <a href="/profile" class="navbar-mobile-link">My Profile (${userName})</a>
-          <button class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Verified Helplines</button>
-          <button class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">Log out</button>
+          <p class="navbar-mobile-greeting">Hello, ${userName}</p>
+          <a href="/dashboard" class="navbar-mobile-link" style="--i:0">Dashboard</a>
+          <a href="/mood" class="navbar-mobile-link" style="--i:1">Mood Tracker</a>
+          <a href="/journal" class="navbar-mobile-link" style="--i:2">Private Journal</a>
+          <a href="/assessment" class="navbar-mobile-link" style="--i:3">Well-Being Screening</a>
+          <a href="/chat" class="navbar-mobile-link" style="--i:4">AI Companion</a>
+          <a href="/counsellors" class="navbar-mobile-link" style="--i:5">Counsellors</a>
+          <a href="/resources" class="navbar-mobile-link" style="--i:6">Resources</a>
+          <a href="/profile" class="navbar-mobile-link" style="--i:7">My Profile</a>
+          <div class="navbar-mobile-actions">
+            <button type="button" class="btn btn-primary navbar-mobile-cta" id="mobile-helpline-btn">Helplines · 24x7</button>
+            <button type="button" class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">Log out</button>
+          </div>
         ` : `
-          <a href="/#how-it-works" class="navbar-mobile-link">How it works</a>
-          <a href="/counsellors" class="navbar-mobile-link">Counsellors & Support</a>
-          <a href="/resources" class="navbar-mobile-link">Resources</a>
-          <a href="/auth/login" class="navbar-mobile-link">Sign in</a>
-          <button class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Verified Helplines</button>
-          <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">Get started</a>
+          <a href="/#how-it-works" class="navbar-mobile-link" style="--i:0">How it works</a>
+          <a href="/counsellors" class="navbar-mobile-link" style="--i:1">Counsellors</a>
+          <a href="/resources" class="navbar-mobile-link" style="--i:2">Resources</a>
+          <a href="/auth/login" class="navbar-mobile-link" style="--i:3">Sign in</a>
+          <div class="navbar-mobile-actions">
+            <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">Get started</a>
+            <button type="button" class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Helplines · 24x7</button>
+          </div>
         `}
       </div>
 
@@ -196,17 +209,37 @@ export function initNavbar() {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // Mobile menu
-  function toggleMenu(open) {
+  // Mobile menu (slide-in drawer, scroll lock, focus return, Esc / backdrop / resize close)
+  const backdrop = document.getElementById('navbar-backdrop');
+  const DESKTOP_MQ = window.matchMedia(
+    navbar.classList.contains('navbar--auth') ? '(min-width: 1100px)' : '(min-width: 820px)'
+  );
+
+  function toggleMenu(open, { returnFocus = true } = {}) {
+    if (!toggleBtn || !mobileNav) return;
     const isOpen = open ?? (toggleBtn.getAttribute('aria-expanded') !== 'true');
+    const wasOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
     toggleBtn.setAttribute('aria-expanded', String(isOpen));
-    mobileNav?.classList.toggle('open', isOpen);
-    mobileNav?.setAttribute('aria-hidden', String(!isOpen));
+    toggleBtn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    mobileNav.classList.toggle('open', isOpen);
+    backdrop?.classList.toggle('open', isOpen);
+    navbar.classList.toggle('navbar--open', isOpen);
+    document.body.classList.toggle('nav-open', isOpen);
+    if (isOpen) {
+      mobileNav.removeAttribute('inert');
+      mobileNav.querySelector('a, button')?.focus({ preventScroll: true });
+    } else {
+      mobileNav.setAttribute('inert', '');
+      if (wasOpen && returnFocus) toggleBtn.focus({ preventScroll: true });
+    }
   }
   toggleBtn?.addEventListener('click', () => toggleMenu());
+  backdrop?.addEventListener('click', () => toggleMenu(false));
   mobileNav?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => toggleMenu(false));
+    link.addEventListener('click', () => toggleMenu(false, { returnFocus: false }));
   });
+  const onBreakpoint = (e) => { if (e.matches) toggleMenu(false, { returnFocus: false }); };
+  DESKTOP_MQ.addEventListener('change', onBreakpoint);
 
   // Helpline modal logic
   const modal = document.getElementById('helpline-modal');
@@ -230,7 +263,7 @@ export function initNavbar() {
 
   openBtn?.addEventListener('click', openHelpline);
   mobileOpenBtn?.addEventListener('click', () => {
-    toggleMenu(false);
+    toggleMenu(false, { returnFocus: false });
     openHelpline();
   });
   closeBtn?.addEventListener('click', closeHelpline);
@@ -258,5 +291,7 @@ export function initNavbar() {
   return function cleanup() {
     window.removeEventListener('scroll', onScroll);
     document.removeEventListener('keydown', onKeydown);
+    DESKTOP_MQ.removeEventListener('change', onBreakpoint);
+    document.body.classList.remove('nav-open');
   };
 }

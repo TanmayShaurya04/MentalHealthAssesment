@@ -8,6 +8,19 @@ import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import { renderMoodArtwork } from './MoodTracker.js';
+import { photo } from '../assets/images.js';
+import { esc } from '../utils/html.js';
+
+const DAILY_TIPS = [
+  { title: 'Name it to tame it', body: 'Putting a label on a feeling ("this is dread", "this is tiredness") measurably lowers its intensity. Try it once today.' },
+  { title: 'Twenty-minute rule', body: 'Overwhelmed by a big task? Set a timer for 20 minutes, work on only the first piece, then decide whether to continue.' },
+  { title: 'Protect your wind-down', body: 'Dim the screen and put your phone away 30 minutes before bed. Sleep is the cheapest mood medicine there is.' },
+  { title: 'Move for ten', body: 'A 10-minute walk outside lifts mood and focus for the next couple of hours. It does not need to be exercise.' },
+  { title: 'Tell one person', body: 'You do not need to explain everything. A simple "today was heavy" to a friend can lighten the load.' },
+  { title: 'Lower the bar', body: 'On a hard day, a "good enough" version of your to-do list is still progress. Pick the one thing that matters most.' },
+  { title: 'Breathe longer out', body: 'Breathe in for 4, out for 6, five times. A longer exhale tells your nervous system it is safe to settle.' },
+];
+
 
 export const Dashboard = {
   _cleanupNavbar: null,
@@ -27,18 +40,44 @@ export const Dashboard = {
       <main class="dashboard-page page-root" id="main-content">
         <div class="container dashboard-container">
           
-          <!-- Top Greeting Section -->
-          <header class="dashboard-header">
-            <div>
-              <span class="dashboard-eyebrow">Student Sanctuary</span>
-              <h1 class="dashboard-greeting">${greeting}, ${firstName}.</h1>
-              <p class="dashboard-tagline">How is your mind feeling today? There are no right or wrong answers.</p>
-            </div>
-            <div class="dashboard-header-actions">
-              <a href="/chat" class="btn btn-primary btn-sm">Talk with AI Companion</a>
-              <a href="/counsellors" class="btn btn-secondary btn-sm">Counselling & Support</a>
+          <!-- Hero banner -->
+          <header class="dash-hero">
+            ${photo('sunrise', { w: 1400, cls: 'dash-hero-photo', eager: true })}
+            <div class="dash-hero-overlay"></div>
+            <div class="dash-hero-content">
+              <span class="dashboard-eyebrow dash-hero-eyebrow">Student Sanctuary</span>
+              <h1 class="dash-hero-title">${greeting}, ${esc(firstName)}.</h1>
+              <p class="dash-hero-tagline">How is your mind feeling today? There are no right or wrong answers.</p>
+              <div class="dash-hero-actions">
+                <a href="/chat" class="btn btn-primary btn-sm">Talk with AI Companion</a>
+                <a href="/counsellors" class="btn btn-glass btn-sm">Counselling &amp; Support</a>
+              </div>
             </div>
           </header>
+
+          <!-- At-a-glance stats -->
+          <section class="stat-strip" aria-label="Your week at a glance" data-stagger>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Check-in streak</span>
+              <span class="stat-value"><span id="stat-streak" data-count="0">0</span><small> days</small></span>
+              <span class="stat-hint" id="stat-streak-hint">Log a mood to start</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Average mood</span>
+              <span class="stat-value"><span id="stat-avg" data-count="0">0</span><small> / 5</small></span>
+              <span class="stat-hint" id="stat-avg-hint">No logs yet</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Well-being check</span>
+              <span class="stat-value stat-value--text" id="stat-check">—</span>
+              <span class="stat-hint" id="stat-check-hint">Not taken yet</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Next session</span>
+              <span class="stat-value stat-value--text" id="stat-session">—</span>
+              <span class="stat-hint" id="stat-session-hint">None booked</span>
+            </div>
+          </section>
 
           <!-- Core Grid Layout -->
           <div class="dashboard-grid">
@@ -111,6 +150,16 @@ export const Dashboard = {
                 </div>
               </section>
 
+              <!-- Gentle reminder of the day -->
+              <section class="card dashboard-card tip-card" aria-labelledby="tip-title">
+                <div class="tip-photo">${photo('walk', { w: 700 })}</div>
+                <div class="tip-body">
+                  <span class="card-eyebrow">Today's gentle reminder</span>
+                  <h2 id="tip-title" class="card-title">${DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length].title}</h2>
+                  <p class="tip-text">${DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length].body}</p>
+                </div>
+              </section>
+
               <!-- AI Companion Quick Prompts -->
               <section class="card dashboard-card ai-prompts-card" aria-labelledby="ai-prompts-title">
                 <div class="card-header-row">
@@ -139,9 +188,9 @@ export const Dashboard = {
               <!-- Self-Assessment Screening Card -->
               <section class="card dashboard-card assessment-widget" aria-labelledby="screening-widget-title">
                 <span class="card-eyebrow">Self-reflection</span>
-                <h3 id="screening-widget-title" class="card-title">10-Question Well-Being Screening</h3>
+                <h3 id="screening-widget-title" class="card-title">Well-Being Screening</h3>
                 <p class="assessment-widget-desc">
-                  A gentle non-diagnostic tool to check your stress, sleep, and emotional balance.
+                  20 questions based on the PHQ-9 and GAD-7 screening scales, plus a short student-life check. About 4 minutes.
                 </p>
                 <div id="latest-assessment-status" class="assessment-status-box">
                   <span class="status-loading">Checking history...</span>
@@ -241,6 +290,7 @@ export const Dashboard = {
         saveMoodBtn.disabled = false;
         saveMoodBtn.textContent = "Log today's mood";
         loadLatestMood();
+        if (typeof loadMoodStats === 'function') loadMoodStats();
       } catch (err) {
         Toast.error(err.message || 'Failed to save mood log.');
         saveMoodBtn.disabled = false;
@@ -259,7 +309,7 @@ export const Dashboard = {
           latestBadge.style.display = 'block';
           latestBadge.innerHTML = `
             <span>Last logged: <strong>${m.level.replace('_', ' ')}</strong> (${dateStr})</span>
-            ${m.note ? `<p class="italic text-xs mt-1">"${m.note}"</p>` : ''}
+            ${m.note ? `<p class="italic text-xs mt-1">"${esc(m.note)}"</p>` : ''}
           `;
         }
       } catch (e) { /* ignore */ }
@@ -280,12 +330,12 @@ export const Dashboard = {
           journalBox.innerHTML = `
             <div class="journal-preview-item">
               <div class="flex-between">
-                <h4 class="journal-preview-title">${j.title}</h4>
+                <h4 class="journal-preview-title">${esc(j.title)}</h4>
                 <span class="journal-preview-date">${dateStr}</span>
               </div>
-              <p class="journal-preview-snippet">${j.content.slice(0, 140)}${j.content.length > 140 ? '...' : ''}</p>
+              <p class="journal-preview-snippet">${esc(j.content.slice(0, 140))}${j.content.length > 140 ? '…' : ''}</p>
               <div class="journal-preview-tags">
-                ${(j.tags || []).map(t => `<span class="badge badge-surface">#${t}</span>`).join('')}
+                ${(j.tags || []).map(t => `<span class="badge badge-surface">#${esc(t)}</span>`).join('')}
               </div>
             </div>
           `;
@@ -311,12 +361,22 @@ export const Dashboard = {
           const dateStr = new Date(a.taken_at).toLocaleDateString(undefined, {
             month: 'short', day: 'numeric'
           });
+          const scoreText = a.max_score ? `${a.total_score}/${a.max_score}` : `${a.total_score}`;
           assessBox.innerHTML = `
             <div class="assessment-status-badge badge-${a.category}">
-              <strong>${a.level_label}</strong> (${a.total_score}/30)
+              <strong>${esc(a.level_label)}</strong> (${scoreText})
             </div>
+            ${(a.sections || []).length ? `
+              <ul class="status-sections">
+                ${a.sections.map(sec => `<li><span>${esc(sec.instrument)}</span><strong>${sec.score}/${sec.max}</strong><em>${esc(sec.severity)}</em></li>`).join('')}
+              </ul>` : ''}
             <p class="text-xs text-ink-60 mt-1">Last taken on ${dateStr}</p>
           `;
+          const checkEl = document.getElementById('stat-check');
+          if (checkEl) {
+            checkEl.textContent = a.category.charAt(0).toUpperCase() + a.category.slice(1);
+            document.getElementById('stat-check-hint').textContent = `Taken ${dateStr}`;
+          }
         } else {
           assessBox.innerHTML = `
             <p class="text-xs text-ink-60">You haven't taken a well-being check yet.</p>
@@ -335,11 +395,15 @@ export const Dashboard = {
       try {
         const list = await appointmentsApi.listAppointments();
         const active = list.filter(a => a.status !== 'cancelled').slice(0, 2);
+        if (active.length) {
+          document.getElementById('stat-session').textContent = active[0].preferred_date;
+          document.getElementById('stat-session-hint').textContent = `${active[0].time_slot} · ${active[0].counsellor_name || 'Counsellor'}`;
+        }
         if (active.length > 0) {
           apptBox.innerHTML = active.map(a => `
             <div class="dash-appt-item">
               <div class="flex-between">
-                <strong>${a.counsellor_name || 'Counsellor'}</strong>
+                <strong>${esc(a.counsellor_name || 'Counsellor')}</strong>
                 <span class="badge badge-${a.status === 'confirmed' ? 'sage' : 'saffron'}">${a.status}</span>
               </div>
               <p class="text-xs text-ink-60 mt-1">${a.preferred_date} at ${a.time_slot}</p>
@@ -355,6 +419,32 @@ export const Dashboard = {
       }
     }
     loadAppointments();
+
+    // 5. Mood stats + streak for the at-a-glance strip
+    async function loadMoodStats() {
+      try {
+        const [stats, list] = await Promise.all([moodsApi.getStats(), moodsApi.listMoods(60)]);
+        const avgEl = document.getElementById('stat-avg');
+        if (stats.total_logs > 0 && avgEl) {
+          avgEl.setAttribute('data-count', String(stats.average_score));
+          avgEl.textContent = stats.average_score.toFixed(1);
+          document.getElementById('stat-avg-hint').textContent = `across ${stats.total_logs} check-ins`;
+        }
+        const days = new Set(list.map(m => new Date(m.recorded_at).toDateString()));
+        let streak = 0;
+        const cursor = new Date();
+        if (!days.has(cursor.toDateString())) cursor.setDate(cursor.getDate() - 1); // today may not be logged yet
+        while (days.has(cursor.toDateString())) { streak++; cursor.setDate(cursor.getDate() - 1); }
+        const streakEl = document.getElementById('stat-streak');
+        if (streakEl) {
+          streakEl.setAttribute('data-count', String(streak));
+          streakEl.textContent = String(streak);
+        }
+        document.getElementById('stat-streak-hint').textContent =
+          streak === 0 ? 'Log a mood to start' : streak === 1 ? 'Nice start' : 'Keep it going';
+      } catch (e) { /* stats are optional */ }
+    }
+    loadMoodStats();
 
     // Wire emergency modal button in dashboard
     document.getElementById('dash-open-helpline-btn')?.addEventListener('click', () => {

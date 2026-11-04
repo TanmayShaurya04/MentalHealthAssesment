@@ -1,6 +1,8 @@
 import { resourcesApi } from '../api/resources.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { photo, RESOURCE_PHOTO } from '../assets/images.js';
+import { esc } from '../utils/html.js';
 
 export const Resources = {
   _cleanupNavbar: null,
@@ -124,14 +126,15 @@ export const Resources = {
       }
 
       grid.innerHTML = filtered.map(r => `
-        <article class="card resource-full-card ${r.is_crisis_helpline ? 'card-crisis-highlight' : ''}" id="resource-${r.id}">
+        <article class="card resource-full-card ${r.is_crisis_helpline ? 'card-crisis-highlight' : ''}" id="resource-${esc(r.id)}">
+          ${photo(RESOURCE_PHOTO[r.category] || 'sunrise', { w: 640, cls: 'resource-thumb' })}
           <div class="card-header-row">
             <span class="badge ${r.is_crisis_helpline ? 'badge-accent' : 'badge-surface'}">${r.category_label || r.category}</span>
             <span class="text-xs text-ink-60">${r.read_time}</span>
           </div>
 
-          <h3 class="resource-card-heading mt-3">${r.title}</h3>
-          <p class="resource-card-summary text-ink-70 mt-2">${r.summary}</p>
+          <h3 class="resource-card-heading mt-3">${esc(r.title)}</h3>
+          <p class="resource-card-summary text-ink-70 mt-2">${esc(r.summary)}</p>
 
           <div class="resource-card-tags mt-4">
             ${(r.tags || []).map(t => `<span class="tag-pill-xs">#${t}</span>`).join('')}

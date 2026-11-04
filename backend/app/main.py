@@ -94,7 +94,7 @@ if not frontend_dist or not os.path.exists(frontend_dist):
             frontend_dist = candidate
             break
 
-if os.path.exists(frontend_dist):
+if frontend_dist and os.path.exists(frontend_dist):
     assets_dir = os.path.join(frontend_dist, "assets")
     if os.path.exists(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")

@@ -5,6 +5,7 @@
  */
 
 import { store } from './store.js';
+import { initAnimations } from './utils/animations.js';
 import { Landing } from './pages/Landing.js';
 import { Login } from './pages/Login.js';
 import { Register } from './pages/Register.js';
@@ -120,6 +121,9 @@ class Router {
     if (page.afterRender) {
       page.afterRender(targetRoute.params || {});
     }
+
+    // Shared entrance / scroll-reveal animations
+    initAnimations(this.appEl);
   }
 
   match(path) {

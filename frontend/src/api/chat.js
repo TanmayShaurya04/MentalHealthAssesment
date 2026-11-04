@@ -1,12 +1,16 @@
 import { apiClient } from './client.js';
 
 export const chatApi = {
-  createSession(title = 'New Reflection') {
+  createSession(title = 'New Conversation') {
     return apiClient.post('/api/chat/sessions', { title });
   },
 
-  listSessions() {
-    return apiClient.get('/api/chat/sessions');
+  listSessions(topic) {
+    return apiClient.get('/api/chat/sessions', topic ? { topic } : undefined);
+  },
+
+  listTopics() {
+    return apiClient.get('/api/chat/topics');
   },
 
   getMessages(sessionId) {

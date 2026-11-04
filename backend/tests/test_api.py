@@ -83,14 +83,26 @@ async def test_full_student_journey():
         # 6. Assessment questions & submission
         q_res = await client.get("/api/assessments/questions")
         assert q_res.status_code == 200
-        assert len(q_res.json()["questions"]) == 15
-        
-        assess_submit = await client.post("/api/assessments", json={
-            "answers": [{"question_id": i, "score": 1} for i in range(1, 16)]
+        assert len(q_res.json()["questions"]) == 20
+        assert [s["id"] for s in q_res.json()["sections"]] == ["phq9", "gad7", "stress"]
+
+        # Incomplete submissions are rejected
+        partial = await client.post("/api/assessments", json={
+            "answers": [{"question_id": i, "score": 1} for i in range(1, 10)]
         }, headers=headers)
+        assert partial.status_code == 422
+
+        assess_submit = await client.post("/api/assessments", json={
+            "answers": [{"question_id": i, "score": 1} for i in range(1, 21)]
+        }, headers=headers)
+        assess_body = assess_submit.json()
         assert assess_submit.status_code == 200
-        assert assess_submit.json()["total_score"] == 15
-        assert assess_submit.json()["category"] == "mild"
+        assert assess_body["total_score"] == 20
+        assert assess_body["max_score"] == 60
+        # PHQ-9 = 9 (mild), GAD-7 = 7 (mild), student = 4 (some strain)
+        assert assess_body["category"] == "mild"
+        assert assess_body["safety_flag"] is True  # item 9 answered above zero
+        assert {s["id"]: s["score"] for s in assess_body["sections"]} == {"phq9": 9, "gad7": 7, "stress": 4}
         
         # 7. Counsellor Directory
         couns_res = await client.get("/api/counsellors")
@@ -147,6 +159,16 @@ async def test_full_student_journey():
         assert crisis_msg_res.status_code == 200
         assert crisis_msg_res.json()["safety_flagged"] is True
         assert "Tele-MANAS" in crisis_msg_res.json()["content"]
+
+        # Conversation is filed under a topic and flagged for crisis content
+        sessions_after = await client.get("/api/chat/sessions", headers=headers)
+        filed = next(x for x in sessions_after.json() if x["id"] == session_id)
+        assert filed["topic"] in ("academic", "anxiety")  # message mentions both exams and anxiety
+        assert filed["has_crisis"] is True
+        by_topic = await client.get(f"/api/chat/sessions?topic={filed['topic']}", headers=headers)
+        assert any(x["id"] == session_id for x in by_topic.json())
+        topics = await client.get("/api/chat/topics", headers=headers)
+        assert topics.status_code == 200
         
         # 10. Curated resources
         res_list = await client.get("/api/resources")
