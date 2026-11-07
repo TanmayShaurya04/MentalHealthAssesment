@@ -34,6 +34,11 @@ const PATHS = {
   refresh: '<path d="M21 12a9 9 0 0 0-15-6.7L3 8"/><path d="M3 3v5h5M3 12a9 9 0 0 0 15 6.7L21 16"/><path d="M16 16h5v5"/>',
   wifi_off: '<path d="M2 2l20 20M8.5 16.5a5 5 0 0 1 7 0M2 8.8a15 15 0 0 1 4.2-2.6M10.7 5.1a15 15 0 0 1 11.3 3.7M5 12.9a10 10 0 0 1 5.2-2.7M16.9 11.2A10 10 0 0 1 19 12.9M12 20h.01"/>',
   compass: '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  'chevron-left': '<path d="m15 18-6-6 6-6"/>',
+  'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+  rupee: '<path d="M6 3h12M6 8h12M6 13h4a4 4 0 0 0 0-5M6 13l9 8"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="m15.5 13.5 1 8.5-4.5-2.5L7.5 22l1-8.5"/>',
   menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',
 };
 

@@ -8,6 +8,9 @@ import './styles/app.css';
 import './styles/polish.css';
 import './styles/platform.css';
 import './styles/experience.css';
+import './styles/counsellors.css';
+import './styles/journal.css';
+import './styles/screening.css';
 
 import { router } from './router.js';
 import { store } from './store.js';
