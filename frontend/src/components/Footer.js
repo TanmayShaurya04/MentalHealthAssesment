@@ -5,6 +5,10 @@
  * The disclaimer is critical — this platform is NOT a medical service.
  */
 
+import { t } from '../i18n/index.js';
+import { store } from '../store.js';
+
+
 export const Footer = {
   render() {
     const year = new Date().getFullYear();
@@ -21,29 +25,34 @@ export const Footer = {
                 <span class="footer-logo-mark"><img class="brand-mark-image" src="/serenova-mark.svg" alt="" aria-hidden="true" /></span>
                 <span class="footer-logo-text">Serenova</span>
               </div>
-              <p class="footer-tagline">
-                A private digital space for student well-being.
-                Not a medical service.
-              </p>
+              <p class="footer-tagline">${t('footer.tagline')}</p>
             </div>
 
-            <!-- Navigation column -->
             <nav aria-label="Footer navigation">
-              <p class="footer-heading">Platform</p>
+              <p class="footer-heading">${t('footer.platform')}</p>
               <ul class="footer-links">
-                <li><a href="/#how-it-works" class="footer-link">How it works</a></li>
-                <li><a href="/resources"      class="footer-link">Resources</a></li>
-                <li><a href="/auth/register"  class="footer-link">Get started</a></li>
-                <li><a href="/auth/login"     class="footer-link">Sign in</a></li>
+                <li><a href="/#how-it-works" class="footer-link">${t('nav.howItWorks')}</a></li>
+                <li><a href="/about" class="footer-link">${t('footer.about')}</a></li>
+                ${store.isAuthenticated()
+                  ? `<li><a href="/settings" class="footer-link">${t('nav.settings')}</a></li>`
+                  : `<li><a href="/auth/register" class="footer-link">${t('nav.getStarted')}</a></li><li><a href="/auth/login" class="footer-link">${t('nav.signIn')}</a></li>`}
               </ul>
             </nav>
 
-            <!-- Support column -->
             <nav aria-label="Support navigation">
-              <p class="footer-heading">Support</p>
+              <p class="footer-heading">${t('footer.support')}</p>
               <ul class="footer-links">
-                <li><a href="/resources" class="footer-link">Well-being resources</a></li>
-                <li><a href="/appointments" class="footer-link">Book support</a></li>
+                <li><a href="/resources" class="footer-link">${t('footer.resources')}</a></li>
+                <li><a href="/counsellors" class="footer-link">${t('footer.bookSupport')}</a></li>
+                <li><a href="/resources#helplines" class="footer-link">${t('footer.helplines')}</a></li>
+              </ul>
+            </nav>
+
+            <nav aria-label="Legal">
+              <p class="footer-heading">${t('footer.legal')}</p>
+              <ul class="footer-links">
+                <li><a href="/privacy" class="footer-link">${t('footer.privacy')}</a></li>
+                <li><a href="/terms" class="footer-link">${t('footer.terms')}</a></li>
               </ul>
             </nav>
 
@@ -51,14 +60,8 @@ export const Footer = {
 
           <!-- Bottom bar -->
           <div class="footer-bottom">
-            <p class="footer-copyright">© ${year} Serenova. All rights reserved.</p>
-            <p class="footer-disclaimer">
-              Serenova is a well-being support tool, not a medical or clinical service.
-              AI responses are general supportive information only and do not constitute
-              professional mental health advice, diagnosis, or treatment.
-              If you are in crisis or need immediate help, please contact a qualified
-              professional or emergency service.
-            </p>
+            <p class="footer-copyright">© ${year} Serenova. ${t('footer.rights')}</p>
+            <p class="footer-disclaimer">${t('footer.disclaimer')}</p>
           </div>
 
         </div>

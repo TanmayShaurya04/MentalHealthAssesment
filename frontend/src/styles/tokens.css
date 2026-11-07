@@ -13,17 +13,22 @@
   --color-ink:          #20201D;   /* near-black charcoal — primary text */
   --color-surface:      #F2EDE5;   /* slightly darker ivory — cards, panels */
   --color-border:       #E0D9CF;   /* subtle warm border */
-  --color-white:        #FFFFFF;
+  --color-white:        #FFFFFF;   /* card / input background (darkens in dark mode) */
+  --color-on-accent:    #FFFFFF;   /* text on terracotta buttons */
+  --color-on-ink:       #FFFFFF;   /* text on ink-coloured chips */
 
   /* Accent palette — use restrained, not equally */
   --color-accent:       #C65D3A;   /* terracotta — primary CTA, highlights */
   --color-saffron:      #D8A447;   /* warm gold — secondary accent, mood */
   --color-rose:         #C98F86;   /* dusty rose — soft accent */
   --color-sage:         #8A9E8A;   /* muted sage — success, calm states */
+  --color-sage-deep:    #4F6B58;   /* deeper sage — text on light backgrounds */
+  --color-night:        #1F2A26;   /* deep green-black — hero overlays */
 
   /* Ink at opacity — for secondary text, placeholders */
   --color-ink-80:       rgba(32, 32, 29, 0.80);
-  --color-ink-60:       rgba(32, 32, 29, 0.60);
+  --color-ink-70:       rgba(32, 32, 29, 0.70);
+  --color-ink-60:       rgba(32, 32, 29, 0.66);
   --color-ink-40:       rgba(32, 32, 29, 0.40);
   --color-ink-20:       rgba(32, 32, 29, 0.20);
   --color-ink-10:       rgba(32, 32, 29, 0.10);
@@ -40,7 +45,7 @@
 
   /* ── Typography ──────────────────────────────────────────── */
 
-  --font-display:  'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-display:  'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body:     'DM Sans', system-ui, -apple-system, sans-serif;
 
   /* ── Font sizes (major third scale, 16px base) ───────────── */
@@ -62,8 +67,9 @@
 
   /* ── Font weights ────────────────────────────────────────── */
 
-  --weight-light:    300;
+  --weight-light:    350;
   --weight-regular:  400;
+  --weight-normal:   400;
   --weight-medium:   500;
   --weight-semibold: 600;
 
@@ -134,6 +140,8 @@
   --ease-out:   cubic-bezier(0.0, 0.0, 0.2, 1.0);
   --ease-in:    cubic-bezier(0.4, 0.0, 1.0, 1.0);
   --ease-inout: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 
   --duration-fast:   150ms;
   --duration-base:   220ms;

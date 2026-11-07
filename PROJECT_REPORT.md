@@ -17,7 +17,7 @@ Unlike generic mental health apps, Serenova combines:
 3. A **student-subsidized tele-counselling module** offering verified professional consultations (capped under ₹2,000) with integrated one-click encrypted Jitsi video meetings.
 4. An **expressive mood & journal tracker** with custom vector visual artwork and temporal emotional trend graphing via Chart.js.
 
-The system is architected as an asynchronous, containerized micro-monolith with a high-performance **FastAPI (Python)** backend and a reactive **Vite SPA (React)** frontend, backed by a dual-layer persistence engine (MongoDB with auto-fallback to zero-dependency transactional JSON storage).
+The system is architected as an asynchronous, containerized micro-monolith with a high-performance **FastAPI (Python)** backend and a lightweight **Vite single-page app (vanilla JavaScript, no framework)**, backed by a dual-layer persistence engine (MongoDB with auto-fallback to zero-dependency transactional JSON storage).
 
 ---
 
@@ -41,7 +41,7 @@ Serenova provides an immediate, accessible, and resilient first line of psycholo
 
 | Component | Technology | Version | Purpose / Rationale |
 | :--- | :--- | :--- | :--- |
-| **Frontend Framework** | React / Vanilla SPA | 18.x | Lightweight, component-driven client architecture |
+| **Frontend** | Vanilla JavaScript SPA (Vite, Chart.js) | Vite 5 | Lightweight, component-driven client architecture |
 | **Frontend Build Tool** | Vite | 5.4.x | Sub-second Hot Module Replacement (HMR) and optimized rollup production bundles |
 | **Data Visualization** | Chart.js | 4.4.x | Responsive HTML5 canvas rendering for weekly emotional trends |
 | **Styling & Artwork** | CSS3 & Custom SVG | Modern | Responsive design, high-contrast dark/light tones, zero CSS runtime bloat |
@@ -60,7 +60,7 @@ Serenova provides an immediate, accessible, and resilient first line of psycholo
 ## 4. System Architecture & Information Flow
 
 ### 4.1 Architecture Overview
-- **Unified Micro-Monolith:** The React SPA is compiled by Vite into static bundles (`dist/`) and served directly by FastAPI under `/assets` and a root fallback route. In development, Vite provides hot-reloading on port 5173 with proxying to port 8000.
+- **Unified Micro-Monolith:** The vanilla-JS SPA is compiled by Vite into static bundles (`dist/`) and served directly by FastAPI under `/assets` and a root fallback route. In development, Vite provides hot-reloading on port 5173 with proxying to port 8000.
 - **Dual Persistence:** The `DatabaseManager` dynamically inspects the `MONGODB_URL`. If present, it connects via `motor.motor_asyncio`. If missing or offline, it transparently routes queries through atomic JSON files stored in `backend/data/`.
 - **Security & Authorization:** Cryptographic salting with `bcrypt` prevents credential leaks. Stateless JWT tokens ensure horizontal scalability with zero server-side session overhead.
 

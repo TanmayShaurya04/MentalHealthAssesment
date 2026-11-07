@@ -1,4 +1,5 @@
 import { journalsApi } from '../api/journals.js';
+import { confirmDialog } from '../components/Dialog.js';
 import { Toast } from '../components/Toast.js';
 import { navigate } from '../navigation.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
@@ -174,7 +175,7 @@ export const JournalEntry = {
     });
 
     deleteBtn?.addEventListener('click', async () => {
-      if (!confirm('Are you certain you wish to delete this entry?')) return;
+      if (!(await confirmDialog({ title: 'Delete this entry?', message: 'This cannot be undone.', confirmLabel: 'Delete', danger: true }))) return;
       try {
         await journalsApi.deleteJournal(params.id);
         Toast.info('Journal entry removed.');

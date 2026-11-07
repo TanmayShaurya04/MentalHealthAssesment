@@ -1,90 +1,44 @@
 /**
  * store.js — Serenova minimal global state
  *
- * v1 Architecture Note (Phase 2 Decision):
- *   JWT is stored in sessionStorage. This is a deliberate v1 choice:
- *   - Safer than localStorage (cleared on tab close, not accessible to other tabs)
- *   - Auth logic is isolated here so the storage strategy can be changed later
- *     without touching any other module.
+ * Sign-in is carried by an httpOnly cookie that the server sets. JavaScript on the page can never
+ * read it, so a script injected into the page can't steal the session. This store only remembers the
+ * signed-in user's public profile (name, role) so the interface can render; it holds no secret.
  */
 
-const TOKEN_KEY = 'serenova_token';
 const USER_KEY = 'serenova_user';
 
 function createStore() {
-  const initialToken = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(TOKEN_KEY) : null;
-  let initialUser = null;
+  let user = null;
   try {
-    const rawUser = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(USER_KEY) : null;
-    if (rawUser) initialUser = JSON.parse(rawUser);
+    const raw = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(USER_KEY) : null;
+    if (raw) user = JSON.parse(raw);
   } catch (e) {
-    initialUser = null;
+    user = null;
   }
-
-  let state = {
-    token: initialToken,
-    user: initialUser,
-    isAuthenticated: !!initialToken,
-  };
 
   const listeners = new Set();
-
-  function notify() {
-    listeners.forEach((fn) => fn({ ...state }));
-  }
+  const notify = () => listeners.forEach((fn) => fn({ user }));
 
   return {
-    // ── Auth (v1: sessionStorage) ─────────────────────────────
-    setToken(token) {
-      state.token = token;
-      state.isAuthenticated = !!token;
-      if (token) {
-        sessionStorage.setItem(TOKEN_KEY, token);
-      } else {
-        sessionStorage.removeItem(TOKEN_KEY);
-        sessionStorage.removeItem(USER_KEY);
-        state.user = null;
-      }
+    setUser(next) {
+      user = next;
+      try {
+        if (next) sessionStorage.setItem(USER_KEY, JSON.stringify(next));
+        else sessionStorage.removeItem(USER_KEY);
+      } catch (e) { /* storage unavailable: the cookie still works */ }
       notify();
     },
 
-    getToken() {
-      return state.token;
-    },
+    getUser() { return user; },
+    isAuthenticated() { return !!user; },
+    getRole() { return user?.role || 'student'; },
+    logout() { this.setUser(null); },
 
-    setUser(user) {
-      state.user = user;
-      state.isAuthenticated = !!state.token;
-      if (user) {
-        try { sessionStorage.setItem(USER_KEY, JSON.stringify(user)); } catch (e) {}
-      } else {
-        sessionStorage.removeItem(USER_KEY);
-      }
-      notify();
-    },
-
-    getUser() {
-      return state.user;
-    },
-
-    isAuthenticated() {
-      return !!(state.token);
-    },
-
-    logout() {
-      this.setToken(null);
-    },
-
-    // ── Subscriptions ─────────────────────────────────────────
     subscribe(fn) {
       listeners.add(fn);
-      fn({ ...state });
+      fn({ user });
       return () => listeners.delete(fn);
-    },
-
-    // ── Read snapshot ─────────────────────────────────────────
-    getState() {
-      return { ...state };
     },
   };
 }

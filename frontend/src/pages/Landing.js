@@ -22,6 +22,7 @@
 import '../styles/landing.css';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { photo } from '../assets/images.js';
 
 /* ──────────────────────────────────────────────────────────────
    EMOTIONAL WEATHER CANVAS
@@ -314,6 +315,33 @@ function philosophySection() {
           when you need to pause, understand yourself a little better,
           and find a gentle path forward — on your own terms.
         </p>
+      </div>
+    </section>
+  `;
+}
+
+function momentsSection() {
+  return `
+    <section class="moments section" aria-labelledby="moments-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-eyebrow">Made for student life</span>
+          <h2 class="section-heading" id="moments-heading">Small moments of calm,<br>between everything else.</h2>
+        </div>
+        <div class="moments-grid" data-stagger>
+          <figure class="moment moment--tall reveal">
+            ${photo('meditation', { w: 900 })}
+            <figcaption><strong>Pause</strong><span>Two-minute grounding between lectures.</span></figcaption>
+          </figure>
+          <figure class="moment reveal">
+            ${photo('journal', { w: 800 })}
+            <figcaption><strong>Write</strong><span>A private journal that stays yours.</span></figcaption>
+          </figure>
+          <figure class="moment reveal">
+            ${photo('students', { w: 800 })}
+            <figcaption><strong>Connect</strong><span>Counsellors who understand campus life.</span></figcaption>
+          </figure>
+        </div>
       </div>
     </section>
   `;
@@ -792,6 +820,7 @@ export const Landing = {
       <main id="main-content" class="page-root">
         ${heroSection()}
         ${philosophySection()}
+        ${momentsSection()}
         ${howItWorksSection()}
         ${moduleGallerySection()}
         ${moodFeatureSection()}

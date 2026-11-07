@@ -8,12 +8,11 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    # All secrets come from a .env file next to this one (copy .env.example). Nothing sensitive is stored in this file.
+    env_file:
+      - .env
     environment:
-      - ENVIRONMENT=production
       - PORT=8000
-      - JWT_SECRET=serenova-production-secure-key-32chars
-      # - MONGODB_URL=mongodb+srv://... (optional: falls back to file-backed storage if omitted)
-      # - AI_API_KEY=gsk_... (optional: falls back to rich rule-based engine if omitted)
     volumes:
       - serenova-data:/app/data
 

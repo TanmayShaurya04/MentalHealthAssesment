@@ -1,4 +1,5 @@
 import { journalsApi } from '../api/journals.js';
+import { confirmDialog } from '../components/Dialog.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
@@ -175,7 +176,7 @@ export const Journal = {
       // Wire delete
       grid.querySelectorAll('.btn-delete-journal').forEach(btn => {
         btn.addEventListener('click', async () => {
-          if (!confirm('Are you sure you want to delete this journal entry? This action cannot be undone.')) return;
+          if (!(await confirmDialog({ title: 'Delete this entry?', message: 'This cannot be undone.', confirmLabel: 'Delete', danger: true }))) return;
           try {
             await journalsApi.deleteJournal(btn.dataset.id);
             Toast.info('Journal entry deleted.');

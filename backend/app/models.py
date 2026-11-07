@@ -1,14 +1,69 @@
 import datetime
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 # ── User Models ───────────────────────────────────────────────
+def _check_password_strength(value: str) -> str:
+    if not any(c.isalpha() for c in value) or not any(c.isdigit() for c in value):
+        raise ValueError("Password must contain at least one letter and one number")
+    return value
+
+
 class UserRegister(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=128)
     university: Optional[str] = None
     year_of_study: Optional[str] = None
+
+    @field_validator("password")
+    @classmethod
+    def strong(cls, v):
+        return _check_password_strength(v)
+
+
+class ForgotPassword(BaseModel):
+    email: EmailStr
+
+
+class ResetPassword(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8, max_length=128)
+
+    @field_validator("new_password")
+    @classmethod
+    def strong(cls, v):
+        return _check_password_strength(v)
+
+
+class VerifyEmail(BaseModel):
+    token: str
+
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str = Field(..., min_length=8, max_length=128)
+
+    @field_validator("new_password")
+    @classmethod
+    def strong(cls, v):
+        return _check_password_strength(v)
+
+
+class DeleteAccount(BaseModel):
+    password: str
+
+
+class ConsentUpdate(BaseModel):
+    version: str = Field(..., max_length=20)
+
+
+class CounsellorAccountCreate(BaseModel):
+    counsellor_id: str
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -19,6 +74,8 @@ class UserProfileUpdate(BaseModel):
     university: Optional[str] = None
     year_of_study: Optional[str] = None
     avatar_color: Optional[str] = None
+    daily_reminder: Optional[bool] = None
+    language: Optional[str] = Field(None, pattern="^(en|hi)$")
 
 class UserResponse(BaseModel):
     id: str
@@ -74,14 +131,26 @@ class AnswerItem(BaseModel):
 class AssessmentSubmit(BaseModel):
     answers: List[AnswerItem]
 
+class AssessmentSection(BaseModel):
+    id: str
+    title: str
+    instrument: str
+    validated: bool = True
+    score: int
+    max: int
+    severity: str
+    rank: int = 0
+
 class AssessmentResponse(BaseModel):
     id: str
     user_id: str
     total_score: int
+    max_score: Optional[int] = None
+    sections: Optional[List[AssessmentSection]] = None
+    safety_flag: bool = False
     score_schema_version: Optional[int] = None
     phq9_score: Optional[int] = None
     gad7_score: Optional[int] = None
-    student_life_answers: Optional[List[Dict[str, int]]] = None
     safety_item_score: Optional[int] = None
     category: str
     level_label: str
@@ -106,6 +175,7 @@ class CounsellorResponse(BaseModel):
     available_days: List[str]
     available_slots: List[str]
     is_accepting_students: bool = True
+    is_demo: bool = False
 
 class AppointmentCreate(BaseModel):
     counsellor_id: str
@@ -116,6 +186,23 @@ class AppointmentCreate(BaseModel):
 
 class AppointmentStatusUpdate(BaseModel):
     status: str = Field(..., pattern="^(pending|confirmed|cancelled)$")
+
+
+class CounsellorAppointmentUpdate(BaseModel):
+    status: Optional[str] = Field(None, pattern="^(confirmed|declined|completed)$")
+    preferred_date: Optional[str] = None   # reschedule
+    time_slot: Optional[str] = None
+    message: Optional[str] = Field(None, max_length=500)  # optional note to the student
+
+
+class SessionNote(BaseModel):
+    note: str = Field("", max_length=4000)
+
+
+class AvailabilityUpdate(BaseModel):
+    available_days: List[str]
+    available_slots: List[str]
+    is_accepting_students: bool = True
 
 class AppointmentResponse(BaseModel):
     id: str
@@ -128,6 +215,8 @@ class AppointmentResponse(BaseModel):
     time_slot: str
     student_notes: Optional[str] = None
     status: str
+    counsellor_message: Optional[str] = None
+    video_meet_link: Optional[str] = None
     created_at: str
     updated_at: str
 
@@ -139,6 +228,8 @@ class ChatSessionResponse(BaseModel):
     id: str
     user_id: str
     title: str
+    topic: str = "general"
+    has_crisis: bool = False
     created_at: str
     updated_at: str
     message_count: int = 0

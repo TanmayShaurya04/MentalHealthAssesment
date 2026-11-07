@@ -10,72 +10,100 @@
 
 import { store } from '../store.js';
 import { authApi } from '../api/auth.js';
-import { navigate } from '../navigation.js';
+import { router, homeFor } from '../router.js';
+import { icon } from './icons.js';
+import { t, getLang, setLang, LANGS } from '../i18n/index.js';
+import { getTheme, toggleTheme } from '../utils/theme.js';
+import { apiClient } from '../api/client.js';
+import { esc } from '../utils/html.js';
+
+
+/** Links per role: [href, i18n key (desktop), i18n key or label (drawer)] */
+function linksFor(user) {
+  if (user?.role === 'counsellor') return [['/counsellor', 'nav.myPortal', 'nav.myPortal'], ['/resources', 'nav.resources', 'nav.resources']];
+  if (user?.role === 'admin') return [['/admin', 'nav.insights', 'nav.insights'], ['/counsellors', 'nav.counsellors', 'nav.counsellors']];
+  return [
+    ['/dashboard', 'nav.dashboard', 'nav.dashboard'], ['/mood', 'nav.mood', 'nav.mobile.mood'],
+    ['/journal', 'nav.journal', 'nav.mobile.journal'], ['/assessment', 'nav.screening', 'nav.mobile.screening'],
+    ['/chat', 'nav.companion', 'nav.mobile.companion'], ['/counsellors', 'nav.counsellors', 'nav.counsellors'],
+    ['/resources', 'nav.resources', 'nav.resources'],
+  ];
+}
+
+function toolButtons() {
+  const dark = getTheme() === 'dark';
+  const other = LANGS.find((l) => l.code !== getLang()) || LANGS[0];
+  return `
+    <button class="navbar-icon-btn" type="button" data-action="theme" aria-label="${esc(t('nav.theme'))}" title="${esc(t('nav.theme'))}">
+      ${icon(dark ? 'sun' : 'moon', { size: 18 })}
+    </button>
+    <button class="navbar-icon-btn navbar-lang-btn" type="button" data-action="lang" data-lang="${other.code}" aria-label="${esc(t('nav.language'))}: ${esc(other.label)}" title="${esc(t('nav.language'))}">
+      ${icon('globe', { size: 18 })}<span>${esc(other.label)}</span>
+    </button>`;
+}
 
 export const Navbar = {
   render({ transparent = false } = {}) {
     const isAuth = store.isAuthenticated();
     const user = store.getUser();
     const userName = user?.name ? user.name.split(' ')[0] : 'Student';
+    const path = window.location.pathname;
+    const active = (href) => {
+      const on = href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+      return on ? ' is-active" aria-current="page' : '';
+    };
+    const links = isAuth ? linksFor(user) : [];
+    const home = isAuth ? homeFor(user) : '/';
 
     return `
       <nav
-        class="navbar${transparent ? ' navbar--transparent' : ''}"
+        class="navbar navbar--${isAuth ? 'auth' : 'guest'}${transparent ? ' navbar--transparent' : ''}"
         aria-label="Main navigation"
         id="site-navbar"
       >
         <div class="container navbar-inner">
 
-          <!-- Logo -->
-          <a href="${isAuth ? '/dashboard' : '/'}" class="navbar-logo" aria-label="Serenova — Home">
+          <a href="${home}" class="navbar-logo" aria-label="Serenova — Home">
             <span class="navbar-logo-mark"><img class="brand-mark-image" src="/serenova-mark.svg" alt="" aria-hidden="true" /></span>
             <span class="navbar-logo-text">Serenova</span>
           </a>
 
-          <!-- Desktop links -->
-          <div class="navbar-links" role="list">
+          <div class="navbar-links">
             ${isAuth ? `
-              <a href="/dashboard" class="navbar-link" role="listitem">Dashboard</a>
-              <a href="/mood" class="navbar-link" role="listitem">Mood</a>
-              <a href="/journal" class="navbar-link" role="listitem">Journal</a>
-              <a href="/assessment" class="navbar-link" role="listitem">Screening</a>
-              <a href="/chat" class="navbar-link" role="listitem">Companion</a>
-              <a href="/counsellors" class="navbar-link" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link" role="listitem">Resources</a>
-              
-              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
-                <span class="helpline-dot" aria-hidden="true"></span>
-                <span>Helpline</span>
-              </button>
+              ${links.map(([href, key]) => `<a href="${href}" class="navbar-link${active(href)}">${t(key)}</a>`).join('')}
 
-              <a href="/profile" class="navbar-user-badge" title="My Profile">
-                <span class="user-avatar-circle">${userName.charAt(0).toUpperCase()}</span>
-                <span class="user-name-text">${userName}</span>
+              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="${esc(t('nav.helplines247'))}">
+                <span class="helpline-dot" aria-hidden="true"></span>
+                <span>${t('nav.helpline')}</span>
+              </button>
+              ${toolButtons()}
+              <a href="/settings" class="navbar-user-badge" title="${esc(t('nav.settings'))}">
+                <span class="user-avatar-circle">${esc(userName.charAt(0).toUpperCase())}</span>
+                <span class="user-name-text">${esc(userName)}</span>
               </a>
-
-              <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">Logout</button>
+              <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">${t('nav.logout')}</button>
             ` : `
-              <a href="/#how-it-works" class="navbar-link" role="listitem">How it works</a>
-              <a href="/counsellors" class="navbar-link" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link" role="listitem">Resources</a>
-              
-              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
-                <span class="helpline-dot" aria-hidden="true"></span>
-                <span>Helpline</span>
-              </button>
+              <a href="/#how-it-works" class="navbar-link">${t('nav.howItWorks')}</a>
+              <a href="/counsellors" class="navbar-link${active('/counsellors')}">${t('nav.counsellors')}</a>
+              <a href="/resources" class="navbar-link${active('/resources')}">${t('nav.resources')}</a>
 
-              <a href="/auth/login" class="navbar-link" role="listitem">Sign in</a>
-              <a href="/auth/register" class="btn btn-primary btn-sm" role="listitem">Get started</a>
+              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="${esc(t('nav.helplines247'))}">
+                <span class="helpline-dot" aria-hidden="true"></span>
+                <span>${t('nav.helpline')}</span>
+              </button>
+              ${toolButtons()}
+              <a href="/auth/login" class="navbar-link">${t('nav.signIn')}</a>
+              <a href="/auth/register" class="btn btn-primary btn-sm">${t('nav.getStarted')}</a>
             `}
           </div>
 
-          <!-- Mobile toggle -->
           <button
             class="navbar-toggle"
             aria-expanded="false"
             aria-controls="mobile-nav"
-            aria-label="Open navigation menu"
+            aria-label="${esc(t('nav.openMenu'))}"
             id="navbar-toggle-btn"
+            type="button"
           >
             <span class="navbar-toggle-bar" aria-hidden="true"></span>
             <span class="navbar-toggle-bar" aria-hidden="true"></span>
@@ -84,32 +112,34 @@ export const Navbar = {
         </div>
       </nav>
 
-      <!-- Mobile navigation drawer -->
+      <div class="navbar-backdrop" id="navbar-backdrop" aria-hidden="true"></div>
       <div
         class="navbar-mobile"
         id="mobile-nav"
-        aria-hidden="true"
-        role="navigation"
+        inert
+        role="dialog"
+        aria-modal="false"
         aria-label="Mobile navigation"
       >
         ${isAuth ? `
-          <a href="/dashboard" class="navbar-mobile-link">Dashboard</a>
-          <a href="/mood" class="navbar-mobile-link">Mood Tracker</a>
-          <a href="/journal" class="navbar-mobile-link">Private Journal</a>
-          <a href="/assessment" class="navbar-mobile-link">Self-Assessment</a>
-          <a href="/chat" class="navbar-mobile-link">AI Companion</a>
-          <a href="/counsellors" class="navbar-mobile-link">Counsellors & Appointments</a>
-          <a href="/resources" class="navbar-mobile-link">Well-Being Resources</a>
-          <a href="/profile" class="navbar-mobile-link">My Profile (${userName})</a>
-          <button class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Verified Helplines</button>
-          <button class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">Log out</button>
+          <p class="navbar-mobile-greeting">${esc(t('nav.hello', { name: userName }))}</p>
+          ${links.map(([href, , key], i) => `<a href="${href}" class="navbar-mobile-link" style="--i:${i}">${t(key)}</a>`).join('')}
+          <a href="/settings" class="navbar-mobile-link" style="--i:${links.length}">${t('nav.settings')}</a>
+          <div class="navbar-mobile-tools">${toolButtons()}</div>
+          <div class="navbar-mobile-actions">
+            <button type="button" class="btn btn-primary navbar-mobile-cta" id="mobile-helpline-btn">${t('nav.helplines247')}</button>
+            <button type="button" class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">${t('nav.logout')}</button>
+          </div>
         ` : `
-          <a href="/#how-it-works" class="navbar-mobile-link">How it works</a>
-          <a href="/counsellors" class="navbar-mobile-link">Counsellors & Support</a>
-          <a href="/resources" class="navbar-mobile-link">Resources</a>
-          <a href="/auth/login" class="navbar-mobile-link">Sign in</a>
-          <button class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Verified Helplines</button>
-          <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">Get started</a>
+          <a href="/#how-it-works" class="navbar-mobile-link" style="--i:0">${t('nav.howItWorks')}</a>
+          <a href="/counsellors" class="navbar-mobile-link" style="--i:1">${t('nav.counsellors')}</a>
+          <a href="/resources" class="navbar-mobile-link" style="--i:2">${t('nav.resources')}</a>
+          <a href="/auth/login" class="navbar-mobile-link" style="--i:3">${t('nav.signIn')}</a>
+          <div class="navbar-mobile-tools">${toolButtons()}</div>
+          <div class="navbar-mobile-actions">
+            <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">${t('nav.getStarted')}</a>
+            <button type="button" class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">${t('nav.helplines247')}</button>
+          </div>
         `}
       </div>
 
@@ -121,7 +151,7 @@ export const Navbar = {
               <span class="helpline-badge">Immediate 24x7 Support</span>
               <h3 id="helpline-title" class="helpline-modal-title">You don't have to carry this alone</h3>
             </div>
-            <button class="modal-close-btn" id="close-helpline-btn" aria-label="Close dialog">✕</button>
+            <button class="modal-close-btn" id="close-helpline-btn" aria-label="Close dialog">${icon('x', { size: 18 })}</button>
           </div>
           <p class="helpline-modal-desc">
             If you are in deep distress, feeling unsafe, or needing an immediate human voice, please reach out to these free, verified services:
@@ -188,17 +218,37 @@ export function initNavbar() {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // Mobile menu
-  function toggleMenu(open) {
+  // Mobile menu (slide-in drawer, scroll lock, focus return, Esc / backdrop / resize close)
+  const backdrop = document.getElementById('navbar-backdrop');
+  const DESKTOP_MQ = window.matchMedia(
+    navbar.classList.contains('navbar--auth') ? '(min-width: 1100px)' : '(min-width: 820px)'
+  );
+
+  function toggleMenu(open, { returnFocus = true } = {}) {
+    if (!toggleBtn || !mobileNav) return;
     const isOpen = open ?? (toggleBtn.getAttribute('aria-expanded') !== 'true');
+    const wasOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
     toggleBtn.setAttribute('aria-expanded', String(isOpen));
-    mobileNav?.classList.toggle('open', isOpen);
-    mobileNav?.setAttribute('aria-hidden', String(!isOpen));
+    toggleBtn.setAttribute('aria-label', isOpen ? t('nav.closeMenu') : t('nav.openMenu'));
+    mobileNav.classList.toggle('open', isOpen);
+    backdrop?.classList.toggle('open', isOpen);
+    navbar.classList.toggle('navbar--open', isOpen);
+    document.body.classList.toggle('nav-open', isOpen);
+    if (isOpen) {
+      mobileNav.removeAttribute('inert');
+      mobileNav.querySelector('a, button')?.focus({ preventScroll: true });
+    } else {
+      mobileNav.setAttribute('inert', '');
+      if (wasOpen && returnFocus) toggleBtn.focus({ preventScroll: true });
+    }
   }
   toggleBtn?.addEventListener('click', () => toggleMenu());
+  backdrop?.addEventListener('click', () => toggleMenu(false));
   mobileNav?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => toggleMenu(false));
+    link.addEventListener('click', () => toggleMenu(false, { returnFocus: false }));
   });
+  const onBreakpoint = (e) => { if (e.matches) toggleMenu(false, { returnFocus: false }); };
+  DESKTOP_MQ.addEventListener('change', onBreakpoint);
 
   // Helpline modal logic
   const modal = document.getElementById('helpline-modal');
@@ -222,7 +272,7 @@ export function initNavbar() {
 
   openBtn?.addEventListener('click', openHelpline);
   mobileOpenBtn?.addEventListener('click', () => {
-    toggleMenu(false);
+    toggleMenu(false, { returnFocus: false });
     openHelpline();
   });
   closeBtn?.addEventListener('click', closeHelpline);
@@ -233,8 +283,25 @@ export function initNavbar() {
   // Logout handlers
   const handleLogout = async () => {
     await authApi.logout();
-    navigate('/');
+    router.navigate('/');
   };
+
+  // Theme and language toggles (desktop bar + drawer)
+  const onTools = async (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'theme') {
+      toggleTheme();
+      const dark = getTheme() === 'dark';
+      document.querySelectorAll('[data-action="theme"]').forEach((b) => { b.innerHTML = icon(dark ? 'sun' : 'moon', { size: 18 }); });
+    } else if (btn.dataset.action === 'lang') {
+      setLang(btn.dataset.lang);
+      if (store.isAuthenticated()) apiClient.patch('/api/users/me', { language: btn.dataset.lang }).catch(() => {});
+      router.navigate(location.pathname + location.search, false);
+    }
+  };
+  navbar.addEventListener('click', onTools);
+  mobileNav?.addEventListener('click', onTools);
 
   document.getElementById('navbar-logout-btn')?.addEventListener('click', handleLogout);
   document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);
@@ -250,5 +317,7 @@ export function initNavbar() {
   return function cleanup() {
     window.removeEventListener('scroll', onScroll);
     document.removeEventListener('keydown', onKeydown);
+    DESKTOP_MQ.removeEventListener('change', onBreakpoint);
+    document.body.classList.remove('nav-open');
   };
 }

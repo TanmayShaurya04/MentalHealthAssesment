@@ -1,10 +1,11 @@
 import { resourcesApi } from '../api/resources.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { photo, RESOURCE_PHOTO } from '../assets/images.js';
+import { esc } from '../utils/html.js';
 
 export const Resources = {
   _cleanupNavbar: null,
-  _resourceObserver: null,
 
   render() {
     return `
@@ -28,11 +29,6 @@ export const Resources = {
             <button type="button" class="res-filter-btn" data-cat="sleep">Rest & Recovery</button>
             <button type="button" class="res-filter-btn" data-cat="emotional_balance">Emotional Health</button>
             <button type="button" class="res-filter-btn" data-cat="crisis">Verified Helplines</button>
-          </div>
-
-          <div class="resources-tools-row">
-            <label class="resources-search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="resources-search" class="form-input" placeholder="Search topics, guides, or tags…" aria-label="Search well-being guides" /></label>
-            <span class="resources-result-count" id="resources-result-count" aria-live="polite">Loading guides…</span>
           </div>
 
           <!-- Resources Grid -->
@@ -68,14 +64,10 @@ export const Resources = {
 
   async afterRender() {
     this._cleanupNavbar = initNavbar();
-    const page = this;
 
     let allResources = [];
     let currentCategory = '';
-    let searchQuery = '';
     const grid = document.getElementById('resources-grid');
-    const searchInput = document.getElementById('resources-search');
-    const resultCount = document.getElementById('resources-result-count');
     const filterBtns = document.querySelectorAll('.res-filter-btn');
 
     const modal = document.getElementById('reader-modal');
@@ -127,24 +119,22 @@ export const Resources = {
       const filtered = currentCategory
         ? allResources.filter(r => r.category === currentCategory)
         : allResources;
-      const matching = filtered.filter(r => !searchQuery || `${r.title} ${r.summary} ${(r.tags || []).join(' ')}`.toLowerCase().includes(searchQuery));
 
-      if (resultCount) resultCount.textContent = `${matching.length} ${matching.length === 1 ? 'guide' : 'guides'}${searchQuery ? ' found' : ''}`;
-      if (matching.length === 0) {
+      if (filtered.length === 0) {
         grid.innerHTML = `<p class="empty-text">No guides found in this category.</p>`;
         return;
       }
 
-      grid.innerHTML = matching.map(r => `
-        <article class="card resource-full-card resource-reveal ${r.is_crisis_helpline ? 'card-crisis-highlight' : ''}" id="resource-${r.id}">
-          <div class="resource-card-art" style="background-image:linear-gradient(0deg,rgba(28,31,27,.18),rgba(28,31,27,0)),url('${resourceImage(r.category)}')" aria-hidden="true"><span>${resourceArtLabel(r.category)}</span></div>
+      grid.innerHTML = filtered.map(r => `
+        <article class="card resource-full-card ${r.is_crisis_helpline ? 'card-crisis-highlight' : ''}" id="resource-${esc(r.id)}">
+          ${photo(RESOURCE_PHOTO[r.category] || 'sunrise', { w: 640, cls: 'resource-thumb' })}
           <div class="card-header-row">
             <span class="badge ${r.is_crisis_helpline ? 'badge-accent' : 'badge-surface'}">${r.category_label || r.category}</span>
             <span class="text-xs text-ink-60">${r.read_time}</span>
           </div>
 
-          <h3 class="resource-card-heading mt-3">${r.title}</h3>
-          <p class="resource-card-summary text-ink-70 mt-2">${r.summary}</p>
+          <h3 class="resource-card-heading mt-3">${esc(r.title)}</h3>
+          <p class="resource-card-summary text-ink-70 mt-2">${esc(r.summary)}</p>
 
           <div class="resource-card-tags mt-4">
             ${(r.tags || []).map(t => `<span class="tag-pill-xs">#${t}</span>`).join('')}
@@ -164,26 +154,6 @@ export const Resources = {
           openReader(r);
         });
       });
-      page._resourceObserver?.disconnect();
-      page._resourceObserver = new IntersectionObserver(entries => entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('resource-reveal--visible');
-          page._resourceObserver.unobserve(entry.target);
-        }
-      }), { threshold: 0.12 });
-      grid.querySelectorAll('.resource-reveal').forEach(card => page._resourceObserver.observe(card));
-    }
-
-    function resourceImage(category) {
-      return ({
-        study_stress: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=80',
-        sleep: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80',
-        emotional_balance: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80',
-        crisis: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80',
-      })[category] || 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=900&q=80';
-    }
-    function resourceArtLabel(category) {
-      return ({ study_stress: 'Study & focus', sleep: 'Rest & recovery', emotional_balance: 'Emotional wellbeing', crisis: 'Support & connection' })[category] || 'A gentle guide';
     }
 
     filterBtns.forEach(btn => {
@@ -195,16 +165,10 @@ export const Resources = {
       });
     });
 
-    searchInput?.addEventListener('input', () => {
-      searchQuery = searchInput.value.trim().toLowerCase();
-      renderResources();
-    });
-
     loadResources();
   },
 
   destroy() {
     if (this._cleanupNavbar) this._cleanupNavbar();
-    this._resourceObserver?.disconnect();
   }
 };

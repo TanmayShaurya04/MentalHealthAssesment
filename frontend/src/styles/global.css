@@ -53,7 +53,7 @@ body {
 /* ── Typography ──────────────────────────────────────────────── */
 
 /*
-  Display font (Cormorant Garamond):
+  Display font (Fraunces):
     - Hero headings
     - Major editorial section headings
     - Pull quotes / important emotional statements
@@ -65,6 +65,8 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   color: var(--color-ink);
+  font-variation-settings: 'SOFT' 60, 'WONK' 0;
+  text-wrap: balance;
 }
 
 h1 { font-size: var(--text-5xl); }

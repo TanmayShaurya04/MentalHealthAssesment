@@ -1,8 +1,9 @@
 import { authApi } from '../api/auth.js';
-import { navigate } from '../navigation.js';
+import { router } from '../router.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { photo } from '../assets/images.js';
 
 export const Register = {
   _cleanupNavbar: null,
@@ -12,7 +13,13 @@ export const Register = {
       ${Navbar.render()}
 
       <main class="auth-page page-root" id="main-content">
-        <div class="container auth-container">
+        <div class="container auth-container auth-container--split">
+          <aside class="auth-photo" aria-hidden="true">
+            ${photo('students', { w: 900, eager: true })}
+            <div class="auth-photo-caption">
+              <p>A calmer way to look after your mind at university.</p>
+            </div>
+          </aside>
           <div class="auth-card">
             
             <div class="auth-header">
@@ -150,8 +157,8 @@ export const Register = {
         return;
       }
 
-      if (password.length < 8) {
-        alertBox.textContent = 'Password must be at least 8 characters long.';
+      if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+        alertBox.textContent = 'Password must be at least 8 characters and include a letter and a number.';
         alertBox.style.display = 'block';
         return;
       }
@@ -172,15 +179,16 @@ export const Register = {
       submitBtn.innerHTML = '<span>Creating account...</span>';
 
       try {
-        await authApi.register({
+        const res = await authApi.register({
           name,
           email,
           password,
           university,
           year_of_study
         });
-        Toast.success('Account created successfully! Welcome to Serenova.');
-        navigate('/dashboard');
+        Toast.success('Account created. We sent a confirmation link to your email.', 6000);
+        if (res.dev_verify_link) console.info('[Serenova demo] confirmation link:', res.dev_verify_link);
+        router.navigate('/dashboard');
       } catch (err) {
         alertBox.textContent = err.message || 'Registration failed. Email might already be taken.';
         alertBox.style.display = 'block';

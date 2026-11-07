@@ -40,3 +40,8 @@ ehthumbs.db
 # ── Logs ───────────────────────────────────────────────
 *.log
 npm-debug.log*
+
+# Local runtime data (test accounts, moods, journals, chats). Never commit.
+backend/data/*.json
+!backend/data/resources.json
+!backend/data/counsellors.json
