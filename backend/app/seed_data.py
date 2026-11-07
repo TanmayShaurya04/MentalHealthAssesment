@@ -1,5 +1,7 @@
 import uuid
 import datetime
+import json
+import os
 from typing import List, Dict, Any
 from app.database import db_manager
 
@@ -105,6 +107,14 @@ DEFAULT_RESOURCES = [
         "is_crisis_helpline": True
     }
 ]
+
+# Keep fresh MongoDB installs aligned with the curated file-backed catalogue.
+_resource_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "resources.json")
+try:
+    with open(_resource_file, "r", encoding="utf-8") as _file:
+        DEFAULT_RESOURCES = json.load(_file)
+except (OSError, json.JSONDecodeError):
+    pass
 
 async def seed_database_if_empty():
     counsellors_col = db_manager.get_collection("counsellors")

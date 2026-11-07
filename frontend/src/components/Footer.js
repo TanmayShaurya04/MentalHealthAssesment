@@ -5,14 +5,6 @@
  * The disclaimer is critical — this platform is NOT a medical service.
  */
 
-const LOGO_SVG = `
-  <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true"
-       xmlns="http://www.w3.org/2000/svg">
-    <circle cx="14" cy="14" r="13" stroke="rgba(246,241,232,0.45)" stroke-width="1.5"/>
-    <circle cx="14" cy="14" r="5"  fill="rgba(246,241,232,0.70)"/>
-  </svg>
-`;
-
 export const Footer = {
   render() {
     const year = new Date().getFullYear();
@@ -26,7 +18,7 @@ export const Footer = {
             <!-- Brand column -->
             <div class="footer-brand">
               <div class="footer-logo">
-                <span class="footer-logo-mark">${LOGO_SVG}</span>
+                <span class="footer-logo-mark"><img class="brand-mark-image" src="/serenova-mark.svg" alt="" aria-hidden="true" /></span>
                 <span class="footer-logo-text">Serenova</span>
               </div>
               <p class="footer-tagline">

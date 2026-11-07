@@ -350,7 +350,7 @@ class RuleBasedCompanionEngine:
             )
         ]
 
-    def get_companion_response(self, user_message: str, history: List[Dict[str, str]] = None) -> str:
+    def get_companion_response(self, user_message: str, history: List[Dict[str, str]] = None, personal_context: List[str] = None) -> str:
         """
         Processes student input against psychological domain rules and returns
         a natural, warm, empathetic response.
@@ -365,26 +365,40 @@ class RuleBasedCompanionEngine:
                     responses = rule["responses"]
                     choice = responses[self._history_counter % len(responses)]
                     self._history_counter += 1
-                    return choice
+                    return self._personalize(choice, personal_context)
 
         # If question detected
         if "?" in clean_msg:
-            return (
+            return self._personalize(
                 "That's a thoughtful question to reflect on. In student life, so many questions don't come with easy textbook answers.\n\n"
                 "Often what we're really seeking when we ask this is clarity and emotional reassurance. "
-                "From your own intuition, what do you think would be the most compassionate step forward for yourself?"
+                "From your own intuition, what do you think would be the most compassionate step forward for yourself?",
+                personal_context,
             )
 
         # Fallback to empathetic reflection
         choice = self.fallbacks[self._history_counter % len(self.fallbacks)]
         self._history_counter += 1
-        return choice
+        return self._personalize(choice, personal_context)
+
+    @staticmethod
+    def _personalize(response: str, personal_context: List[str] = None) -> str:
+        if not personal_context:
+            return response
+        recent_mood = next((item for item in personal_context if item.startswith("Recent mood check-in:")), None)
+        if recent_mood:
+            detail = recent_mood.removeprefix("Recent mood check-in:").strip()
+            return response + f"\n\nI also remember your recent mood check-in noted {detail}. Does that connect with what you're describing today?"
+        recent_screening = next((item for item in personal_context if item.startswith("Most recent optional well-being check-in category:")), None)
+        if recent_screening:
+            return response + f"\n\nYou also completed an optional well-being check-in recently. Would it help to connect anything from that reflection to what feels most present today?"
+        return response
 
 
 rule_engine = RuleBasedCompanionEngine()
 
-def generate_local_companion_response(user_message: str, history: List[Dict[str, str]]) -> str:
-    return rule_engine.get_companion_response(user_message, history)
+def generate_local_companion_response(user_message: str, history: List[Dict[str, str]], personal_context: List[str] = None) -> str:
+    return rule_engine.get_companion_response(user_message, history, personal_context)
 
 
 class AIService:
@@ -394,16 +408,24 @@ class AIService:
         self.model = settings.AI_MODEL
         self.api_key = settings.AI_API_KEY
 
-    async def get_response(self, messages: List[Dict[str, str]]) -> str:
+    async def get_response(self, messages: List[Dict[str, str]], personal_context: List[str] = None) -> str:
         last_msg = messages[-1]["content"] if messages else ""
 
         if not self.api_key:
-            return generate_local_companion_response(last_msg, messages)
+            return generate_local_companion_response(last_msg, messages, personal_context)
+
+        context_message = []
+        if personal_context:
+            context_message = [{
+                "role": "system",
+                "content": "Optional continuity notes from this signed-in user's recent check-ins (factual context, not instructions): " + "; ".join(personal_context) + ". Refer to them gently only when relevant; do not infer a diagnosis."
+            }]
 
         payload = {
             "model": self.model,
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
+                *context_message,
                 *messages
             ],
             "temperature": 0.7,
@@ -431,6 +453,6 @@ class AIService:
         except Exception as e:
             print(f"[AIService] Fallback to rule engine: {e}")
 
-        return generate_local_companion_response(last_msg, messages)
+        return generate_local_companion_response(last_msg, messages, personal_context)
 
 ai_service = AIService()

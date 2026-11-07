@@ -1,5 +1,5 @@
 import { authApi } from '../api/auth.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
@@ -180,7 +180,7 @@ export const Register = {
           year_of_study
         });
         Toast.success('Account created successfully! Welcome to Serenova.');
-        router.navigate('/dashboard');
+        navigate('/dashboard');
       } catch (err) {
         alertBox.textContent = err.message || 'Registration failed. Email might already be taken.';
         alertBox.style.display = 'block';

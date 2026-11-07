@@ -113,7 +113,30 @@ async def send_message(id: str, payload: ChatMessageSend, current_user: dict = D
         await sessions_col.update_one({"_id": id}, {"$set": {"updated_at": assistant_now}})
         return asst_msg_doc
         
-    # 3. Call AI Service with recent context
+    # 3. Add a small, account-scoped continuity cue from the student's own
+    # recent check-ins. Journal text is intentionally never sent to the model.
+    personal_context = []
+    moods_col = db_manager.get_collection("moods")
+    latest_mood_cursor = moods_col.find({"user_id": user_id}).sort("recorded_at", -1).limit(1)
+    latest_moods = await latest_mood_cursor.to_list(length=1)
+    if latest_moods:
+        mood = latest_moods[0]
+        mood_label = str(mood.get("level", "")).replace("_", " ")
+        allowed_tags = {"Exams", "Deadlines", "Sleep", "Friends", "Family", "Rest", "Exercise", "Burnout"}
+        tags = [tag for tag in mood.get("tags", []) if tag in allowed_tags][:4]
+        if mood_label:
+            personal_context.append(f"Recent mood check-in: {mood_label}" + (f"; themes: {', '.join(tags)}" if tags else ""))
+
+    assessments_col = db_manager.get_collection("assessments")
+    latest_assessment_cursor = assessments_col.find({"user_id": user_id}).sort("taken_at", -1).limit(1)
+    latest_assessments = await latest_assessment_cursor.to_list(length=1)
+    if latest_assessments:
+        assessment = latest_assessments[0]
+        category = assessment.get("category")
+        if category in {"minimal", "mild", "moderate", "elevated"}:
+            personal_context.append(f"Most recent optional well-being check-in category: {category}")
+
+    # 4. Call AI Service with recent conversation and optional check-in context
     history_cursor = messages_col.find({"session_id": id}).sort("timestamp", 1).limit(10)
     history_docs = await history_cursor.to_list(length=10)
     
@@ -121,7 +144,7 @@ async def send_message(id: str, payload: ChatMessageSend, current_user: dict = D
     for d in history_docs:
         llm_messages.append({"role": d["role"], "content": d["content"]})
         
-    ai_reply = await ai_service.get_response(llm_messages)
+    ai_reply = await ai_service.get_response(llm_messages, personal_context=personal_context)
     
     asst_msg_doc = {
         "session_id": id,

@@ -1,7 +1,7 @@
 import { authApi } from '../api/auth.js';
 import { store } from '../store.js';
 import { Toast } from '../components/Toast.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 
@@ -140,7 +140,7 @@ export const Profile = {
     logoutBtn?.addEventListener('click', async () => {
       await authApi.logout();
       Toast.info('You have been signed out.');
-      router.navigate('/');
+      navigate('/');
     });
   },
 

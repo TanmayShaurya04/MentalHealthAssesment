@@ -1,8 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Background circle -->
-  <circle cx="16" cy="16" r="16" fill="#F6F1E8"/>
-  <!-- Soft ring -->
-  <circle cx="16" cy="16" r="11" stroke="#C65D3A" stroke-width="1.5" fill="none" opacity="0.6"/>
-  <!-- Inner dot -->
-  <circle cx="16" cy="16" r="4" fill="#C65D3A"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <rect width="256" height="256" rx="64" fill="#F6F1E8"/>
+
+  <defs>
+    <linearGradient id="serenova-warm" x1="40" y1="30" x2="199" y2="216" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8A447"/>
+      <stop offset=".52" stop-color="#C65D3A"/>
+      <stop offset="1" stop-color="#9E452D"/>
+    </linearGradient>
+    <linearGradient id="serenova-soft" x1="56" y1="126" x2="127" y2="210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C98F86"/>
+      <stop offset="1" stop-color="#8A9E8A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Open crescent: a calm, continuous orbit around the profile. -->
+  <path d="M190 31C136 4 75 19 42 66C4 120 25 191 82 222C48 195 38 157 47 119C59 70 102 37 151 35C165 34 178 36 190 41" stroke="url(#serenova-warm)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Flowing hair / leaf forms, kept in the site's restrained accent palette. -->
+  <path d="M67 103C67 58 101 32 137 34C165 35 183 53 190 78C174 62 158 56 141 58C111 61 94 84 94 111C94 140 106 163 126 181C112 203 88 207 69 192C53 179 47 157 51 135C54 122 60 111 67 103Z" fill="url(#serenova-warm)"/>
+  <path d="M43 132C66 142 89 164 111 196C83 205 57 193 45 173C38 160 37 145 43 132Z" fill="#8A9E8A"/>
+  <path d="M48 142C70 154 87 171 101 190" stroke="#F6F1E8" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M87 193C108 211 142 215 168 198C150 222 119 232 91 221" fill="url(#serenova-soft)"/>
+
+  <!-- Right-facing profile, drawn as one quiet contour. -->
+  <path d="M134 58C151 58 164 69 169 85L174 100L188 109L177 118C183 124 181 130 172 134C171 148 161 157 145 160C134 163 121 161 111 168" stroke="#C65D3A" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M153 94C159 90 166 90 171 94" stroke="#C65D3A" stroke-width="4" stroke-linecap="round"/>
+  <path d="M159 137C165 140 170 139 173 136" stroke="#C65D3A" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Spark of insight. -->
+  <path d="M112 58L118 73L133 79L118 85L112 100L106 85L91 79L106 73L112 58Z" fill="#F6F1E8"/>
 </svg>

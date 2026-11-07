@@ -10,15 +10,7 @@
 
 import { store } from '../store.js';
 import { authApi } from '../api/auth.js';
-import { router } from '../router.js';
-
-const LOGO_SVG = `
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"
-       xmlns="http://www.w3.org/2000/svg">
-    <circle cx="14" cy="14" r="13" stroke="#C65D3A" stroke-width="1.5" opacity="0.55"/>
-    <circle cx="14" cy="14" r="5"  fill="#C65D3A"/>
-  </svg>
-`;
+import { navigate } from '../navigation.js';
 
 export const Navbar = {
   render({ transparent = false } = {}) {
@@ -36,7 +28,7 @@ export const Navbar = {
 
           <!-- Logo -->
           <a href="${isAuth ? '/dashboard' : '/'}" class="navbar-logo" aria-label="Serenova — Home">
-            <span class="navbar-logo-mark">${LOGO_SVG}</span>
+            <span class="navbar-logo-mark"><img class="brand-mark-image" src="/serenova-mark.svg" alt="" aria-hidden="true" /></span>
             <span class="navbar-logo-text">Serenova</span>
           </a>
 
@@ -241,7 +233,7 @@ export function initNavbar() {
   // Logout handlers
   const handleLogout = async () => {
     await authApi.logout();
-    router.navigate('/');
+    navigate('/');
   };
 
   document.getElementById('navbar-logout-btn')?.addEventListener('click', handleLogout);

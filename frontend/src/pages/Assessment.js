@@ -1,6 +1,6 @@
 import { assessmentsApi } from '../api/assessments.js';
 import { Toast } from '../components/Toast.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 
@@ -18,7 +18,8 @@ export const Assessment = {
             <span class="section-eyebrow">Self-Reflection</span>
             <h1 class="page-title">Student Well-Being Screening</h1>
             <p class="assessment-disclaimer-banner" role="note">
-              <strong>Notice:</strong> This screening is for general self-reflection and well-being awareness. It is not a medical diagnosis.
+              <strong>Notice:</strong> 20 questions in three short parts, about 4 minutes. The PHQ-9 and GAD-7 are screening tools; the student-life check-in adds context only. This is not a medical diagnosis.
+              <span class="assessment-source-links">Questionnaire references: <a href="https://cde.nlm.nih.gov/formView?tinyId=mJsGoMU1m" target="_blank" rel="noopener noreferrer">PHQ-9</a> · <a href="https://adaa.org/sites/default/files/GAD-7_Anxiety-updated_0.pdf" target="_blank" rel="noopener noreferrer">GAD-7</a></span>
             </p>
           </header>
 
@@ -70,17 +71,22 @@ export const Assessment = {
         </div>
 
         <div class="question-body-wrap mt-6">
+          <span class="assessment-question-kicker">${q.section || 'Private check-in'} · Question ${currentIndex + 1} of ${questions.length}</span>
           <h2 class="question-prompt-text">${q.prompt}</h2>
+          ${q.safety_item ? `<p class="assessment-sensitive-note">This question can feel personal. You may pause at any time. If you are in immediate danger, call <a href="tel:112">112</a> or Tele-MANAS at <a href="tel:14416">14416</a>.</p>` : ''}
+          ${q.safety_item && currentAnswer > 0 ? `<div class="assessment-support-alert" role="alert"><strong>You deserve support right now.</strong><p>If you feel you might act on these thoughts, call <a href="tel:112">112</a> or <a href="tel:14416">14416</a>, and contact someone trusted who can stay with you. This questionnaire cannot assess immediate safety.</p></div>` : ''}
 
           <div class="options-group mt-6" role="radiogroup" aria-label="Answer options">
-            ${scale.map(opt => `
+            ${scale.map((opt, optionIndex) => `
               <button
                 type="button"
                 class="option-choice-btn ${currentAnswer === opt.score ? 'selected' : ''}"
                 data-score="${opt.score}"
+                aria-pressed="${currentAnswer === opt.score}"
               >
-                <span class="option-radio-circle"></span>
-                <span class="option-label-text">${opt.label}</span>
+                <span class="option-feeling" aria-hidden="true">${(q.reverse_context ? ['😟', '😐', '🙂', '😄'] : ['🙂', '😐', '😟', '😣'])[optionIndex] || '•'}</span>
+                <span class="option-label-text">${q.context_only && optionIndex === 0 ? 'Not at all / rarely' : opt.label}</span>
+                <span class="option-choice-check" aria-hidden="true">${currentAnswer === opt.score ? '✓' : '→'}</span>
               </button>
             `).join('')}
           </div>
@@ -108,9 +114,13 @@ export const Assessment = {
         btn.addEventListener('click', () => {
           const score = parseInt(btn.dataset.score, 10);
           answers[q.id] = score;
+          flowCard.querySelectorAll('.option-choice-btn').forEach(option => {
+            option.classList.toggle('selected', option === btn);
+            option.setAttribute('aria-pressed', String(option === btn));
+          });
 
           // Auto-advance if not on last question
-          if (currentIndex < questions.length - 1) {
+          if (currentIndex < questions.length - 1 && !(q.safety_item && score > 0)) {
             setTimeout(() => {
               currentIndex++;
               renderQuestion();
@@ -151,7 +161,7 @@ export const Assessment = {
         try {
           const res = await assessmentsApi.submitAssessment(payload);
           Toast.success('Screening completed.');
-          router.navigate('/assessment/results');
+          navigate('/assessment/results');
         } catch (err) {
           Toast.error(err.message || 'Failed to submit screening.');
           submitBtn.disabled = false;

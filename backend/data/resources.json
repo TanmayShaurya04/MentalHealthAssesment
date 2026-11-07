@@ -51,12 +51,252 @@
     "title": "Verified 24x7 Student Support Helplines",
     "read_time": "Immediate support",
     "summary": "National mental health hotlines, university clinic guides, and crisis hotlines.",
-    "content": "### Immediate, Confidential Support\nIf you or someone you know is in severe distress or thinking of self-harm, please connect immediately with these verified, free services:\n\n- **Tele-MANAS (Govt of India)**: Dial `14416` or `1800-891-4416` (24x7, Toll-Free)\n- **KIRAN Helpline**: Dial `1800-599-0019` (24x7, Ministry of Social Justice)\n- **iCall Psychosocial Helpline**: Dial `9152987821` (Mon\u2013Sat, 10 AM \u2013 8 PM)\n- **Vandrevala Foundation**: Dial `9999 666 555` (24x7, Multi-lingual)\n- **National Emergency Response**: Dial `112`\n\nAll calls are confidential and handled by compassionate counselors.",
+    "content": "### Immediate, Confidential Support\nIf you or someone you know is in severe distress or thinking of self-harm, please connect immediately with these verified, free services:\n\n- **Tele-MANAS (Govt of India)**: Dial `14416` or `1800-891-4416` (24x7, Toll-Free)\n- **KIRAN Helpline**: Dial `1800-599-0019` (24x7, Ministry of Social Justice)\n- **iCall Psychosocial Helpline**: Dial `9152987821` (Mon–Sat, 10 AM – 8 PM)\n- **Vandrevala Foundation**: Dial `9999 666 555` (24x7, Multi-lingual)\n- **National Emergency Response**: Dial `112`\n\nAll calls are confidential and handled by compassionate counselors.",
     "tags": [
       "Helpline",
       "Emergency",
       "Support"
     ],
     "is_crisis_helpline": true
+  },
+  {
+    "_id": "res-05",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "Turn a Deadline Pile into a First Step",
+    "read_time": "3 min read",
+    "summary": "A simple way to sort tasks by urgency, effort, and what you can begin in ten minutes.",
+    "content": "### Turn a Deadline Pile into a First Step\nWrite every task down, then mark what is due soon and what depends on someone else. Choose one small action that can be completed in ten minutes. After that, pause and choose the next step. A plan is a guide, not a promise to finish everything today.",
+    "tags": [
+      "Planning",
+      "Focus",
+      "Deadlines"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-06",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "A Gentler Study Session",
+    "read_time": "3 min read",
+    "summary": "Build a focused study block with a clear beginning, a real break, and a small finish line.",
+    "content": "### A Gentler Study Session\nBefore opening your notes, decide what “done for now” means: one page of notes, five practice questions, or one section read. Work for a manageable block, then take a short screen-free break. If focus slips, return to the smallest next action without judging yourself.",
+    "tags": [
+      "Study Skills",
+      "Focus",
+      "Breaks"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-07",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "When Perfectionism Stops Progress",
+    "read_time": "3 min read",
+    "summary": "Use a good-enough first draft to move through the fear of getting it wrong.",
+    "content": "### When Perfectionism Stops Progress\nSeparate creating from polishing. Set a short timer and make a rough outline or draft that is allowed to be imperfect. Later, review it against the actual assignment criteria. If the task feels stuck, ask a classmate or instructor one specific question.",
+    "tags": [
+      "Perfectionism",
+      "Self-Compassion",
+      "Assignments"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-08",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "Asking a Professor for Help",
+    "read_time": "3 min read",
+    "summary": "A practical template for reaching out early when a class or assignment feels confusing.",
+    "content": "### Asking a Professor for Help\nKeep the message brief and specific: name the course, explain the point where you got stuck, and ask for a concrete next step or office-hour time. Asking for clarification is part of learning. You do not need to explain your whole situation to request academic guidance.",
+    "tags": [
+      "Communication",
+      "Campus Support",
+      "Learning"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-09",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "Exam Nerves: Prepare, Pause, Begin",
+    "read_time": "3 min read",
+    "summary": "A short before-and-during routine to steady yourself around exams.",
+    "content": "### Exam Nerves: Prepare, Pause, Begin\nBefore the exam, gather what you need and choose a realistic stopping time for revision. When you sit down, place both feet on the floor and take a few slow breaths. Read the instructions once, then start with a question you understand. A difficult exam moment does not define your ability or worth.",
+    "tags": [
+      "Exams",
+      "Grounding",
+      "Confidence"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-10",
+    "category": "sleep",
+    "category_label": "Rest & Recovery",
+    "title": "A Wind-Down That Fits Dorm Life",
+    "read_time": "3 min read",
+    "summary": "Small ways to create a sleep cue even when rooms and schedules are shared.",
+    "content": "### A Wind-Down That Fits Dorm Life\nChoose one repeatable cue: lower the lights, put tomorrow’s essentials by the door, or listen to a quiet audio track. If noise is part of dorm life, consider earplugs or steady background sound if comfortable. A consistent wake time can help anchor the day, even when bedtime varies.",
+    "tags": [
+      "Sleep",
+      "Dorm Life",
+      "Routine"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-11",
+    "category": "sleep",
+    "category_label": "Rest & Recovery",
+    "title": "Rest Without Earning It",
+    "read_time": "3 min read",
+    "summary": "Make room for rest as a basic need, not a reward for finishing everything.",
+    "content": "### Rest Without Earning It\nTry a brief reset between classes: sit somewhere quiet, stretch, drink water, or look away from screens. You do not have to turn every break into a productivity technique. Notice which kinds of rest leave you feeling a little more settled.",
+    "tags": [
+      "Rest",
+      "Burnout",
+      "Boundaries"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-12",
+    "category": "sleep",
+    "category_label": "Rest & Recovery",
+    "title": "Resetting After an All-Nighter",
+    "read_time": "3 min read",
+    "summary": "A gentle next-day plan after sleep has been disrupted.",
+    "content": "### Resetting After an All-Nighter\nKeep the next day simple where possible. Eat something nourishing, hydrate, get daylight, and avoid driving if you feel drowsy. A short nap may help, but very long late-day naps can make it harder to sleep at night. Resume a steady routine gradually rather than trying to “make up” all missed sleep at once.",
+    "tags": [
+      "Sleep",
+      "Recovery",
+      "Self-Care"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-13",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "When Comparing Yourself Takes Over",
+    "read_time": "3 min read",
+    "summary": "Notice comparison thoughts and reconnect with what matters in your own week.",
+    "content": "### When Comparing Yourself Takes Over\nOnline updates and campus conversations show only parts of people’s lives. When comparison shows up, name it gently and ask: what do I need right now, and what is one value I want to act on today? Consider taking a short break from feeds that leave you feeling worse.",
+    "tags": [
+      "Comparison",
+      "Self-Worth",
+      "Values"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-14",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Making Room for a Mixed Day",
+    "read_time": "3 min read",
+    "summary": "A check-in for days that hold relief, stress, excitement, or sadness at once.",
+    "content": "### Making Room for a Mixed Day\nYou can feel more than one thing about the same event. Try naming each feeling without ranking it or forcing it to disappear. Then ask what each feeling might be pointing toward: rest, connection, celebration, or a boundary.",
+    "tags": [
+      "Emotions",
+      "Reflection",
+      "Self-Compassion"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-15",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "A Small Grounding Practice",
+    "read_time": "3 min read",
+    "summary": "Reconnect with the present moment using ordinary details around you.",
+    "content": "### A Small Grounding Practice\nNotice five things you can see, four things you can feel against your body, and three sounds nearby. Move slowly and skip any step that feels uncomfortable. Grounding is an option, not a test; another helpful choice may be texting someone you trust or stepping into a calmer space.",
+    "tags": [
+      "Grounding",
+      "Anxiety",
+      "Present Moment"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-16",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Homesick in a New Place",
+    "read_time": "3 min read",
+    "summary": "Stay connected to home while making a little room for campus to feel familiar.",
+    "content": "### Homesick in a New Place\nChoose one familiar ritual to bring into your week, such as a call at a regular time or a meal you know well. Add one low-pressure campus routine too: a regular library seat, a club visit, or a walk with a classmate. Belonging often grows through repeated small encounters.",
+    "tags": [
+      "Homesickness",
+      "Connection",
+      "Transitions"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-17",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Setting a Boundary with Kindness",
+    "read_time": "3 min read",
+    "summary": "A clear, respectful way to protect time and energy with friends, family, or classmates.",
+    "content": "### Setting a Boundary with Kindness\nA boundary can be short: “I can’t take that on tonight,” or “I need some quiet time; can we talk tomorrow?” You do not need to over-explain. If setting a boundary feels unsafe, consider talking it through with a trusted person or campus counselor first.",
+    "tags": [
+      "Boundaries",
+      "Relationships",
+      "Communication"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-18",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Finding Support on Campus",
+    "read_time": "3 min read",
+    "summary": "A practical first step for connecting with student support services.",
+    "content": "### Finding Support on Campus\nLook for your institution’s counseling center, student wellbeing office, academic advisor, or peer support program. Check confidentiality details, hours, cost, and how to book. If one office is not the right fit, ask them where students usually go next.",
+    "tags": [
+      "Campus Support",
+      "Counselling",
+      "Getting Help"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-19",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "When Motivation Is Low",
+    "read_time": "3 min read",
+    "summary": "Use a compassionate, low-friction start when a task feels hard to begin.",
+    "content": "### When Motivation Is Low\nPick a two-minute version of the task: open the document, put on walking shoes, or send the first message. Then decide whether to continue or pause. Low motivation can have many causes, including stress, sleep, health, or feeling overwhelmed; it is not a character flaw.",
+    "tags": [
+      "Motivation",
+      "Small Steps",
+      "Self-Compassion"
+    ],
+    "is_crisis_helpline": false
+  },
+  {
+    "_id": "res-20",
+    "category": "crisis",
+    "category_label": "Verified Helplines",
+    "title": "Supporting a Friend Who Is Struggling",
+    "read_time": "3 min read",
+    "summary": "Listen without judgment, ask directly what support they want, and connect them to help.",
+    "content": "### Supporting a Friend Who Is Struggling\nMake space for your friend to talk. You can ask, “Would you like me to listen, help find support, or stay with you while you contact someone?” If you believe they may be in immediate danger, stay with them if safe and contact local emergency services or a trusted adult/campus professional. You are not expected to handle a crisis alone.",
+    "tags": [
+      "Friendship",
+      "Support",
+      "Safety"
+    ],
+    "is_crisis_helpline": false
   }
 ]

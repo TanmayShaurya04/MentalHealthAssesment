@@ -291,5 +291,110 @@
     "tags": [],
     "recorded_at": "2026-10-22T08:19:45.017950+00:00",
     "_id": "cfbefd4d-bd8c-420f-9ba4-83c5318fdc76"
+  },
+  {
+    "user_id": "demo-student-01",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-27T14:57:43.344928+00:00",
+    "_id": "e401f00e-6227-47bb-818b-b406135d602d"
+  },
+  {
+    "user_id": "demo-student-01",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-27T14:57:44.576946+00:00",
+    "_id": "a5dffcb4-d385-42dd-9fb0-f5efa8c18935"
+  },
+  {
+    "user_id": "demo-student-01",
+    "level": "very_good",
+    "score": 5,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-27T14:57:46.976313+00:00",
+    "_id": "665b4554-0b4b-4de1-b625-29745fe101ca"
+  },
+  {
+    "user_id": "demo-student-01",
+    "level": "low",
+    "score": 2,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-10-27T14:57:48.695856+00:00",
+    "_id": "ec42ee13-64f1-49fa-9f0b-6ef27c3c758b"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-10-27T14:58:57.391258+00:00",
+    "_id": "6eb2b15b-801f-4c4f-af36-720ce1695634"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-10-31T15:24:06.045060+00:00",
+    "_id": "c3574996-c1b4-4f4d-8520-d4859d47f60f"
+  },
+  {
+    "user_id": "demo-student-01",
+    "level": "neutral",
+    "score": 3,
+    "note": null,
+    "tags": [],
+    "recorded_at": "2026-11-07T09:51:03.007171+00:00",
+    "_id": "f4b9f367-8cb0-449e-a754-4b1964933529"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-11-07T09:55:25.733066+00:00",
+    "_id": "5157b2ac-a81d-457b-896a-b1dab309a4df"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-11-07T09:55:49.041950+00:00",
+    "_id": "5c31501e-3163-4fc8-9dc6-fe789ca98b13"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "level": "good",
+    "score": 4,
+    "note": "Finished my presentation and feel relieved.",
+    "tags": [
+      "Study",
+      "Relief"
+    ],
+    "recorded_at": "2026-11-07T10:06:16.885743+00:00",
+    "_id": "400e657e-9d76-40e8-9a80-d400d4735b43"
   }
 ]

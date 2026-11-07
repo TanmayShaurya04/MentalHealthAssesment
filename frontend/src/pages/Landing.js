@@ -110,7 +110,54 @@ class EmotionalWeather {
   }
 
   setState(name) {
-    if (this.states[name]) this.current = name;
+    if (!this.states[name]) return;
+    this.current = name;
+    const visual = MOOD_VISUALS[name];
+    const photo = document.getElementById('weather-photo');
+    const emoji = document.getElementById('weather-emoji');
+    const caption = document.getElementById('weather-caption');
+    const photoLabel = document.getElementById('weather-photo-label');
+    const featurePhoto = document.getElementById('mood-feature-photo');
+    const featureEmoji = document.getElementById('mood-feature-emoji');
+    const featureMood = document.getElementById('mood-feature-name');
+    const featureTitle = document.getElementById('mood-feature-title');
+    const featureCopy = document.getElementById('mood-feature-copy');
+    const featureScale = document.getElementById('mood-feature-scale');
+    const featureCurrent = document.querySelector('.mood-console-current');
+    if (photo) {
+      photo.style.backgroundImage = `linear-gradient(180deg, rgba(24,29,25,.06), rgba(24,29,25,.58)), url("${visual.image}")`;
+      photo.setAttribute('aria-label', `${visual.label} mood landscape`);
+      photo.classList.remove('is-changing');
+      void photo.offsetWidth;
+      photo.classList.add('is-changing');
+    }
+    if (emoji) emoji.textContent = visual.emoji;
+    if (caption) caption.textContent = visual.caption;
+    if (photoLabel) photoLabel.textContent = `${visual.label} is welcome here`;
+    if (featurePhoto) {
+      featurePhoto.style.backgroundImage = `linear-gradient(90deg,rgba(24,29,25,.68),rgba(24,29,25,.06)),url("${visual.image}")`;
+      featurePhoto.setAttribute('aria-label', `${visual.label} mood landscape`);
+      featurePhoto.classList.remove('is-changing');
+      void featurePhoto.offsetWidth;
+      featurePhoto.classList.add('is-changing');
+    }
+    if (featureEmoji) featureEmoji.textContent = visual.emoji;
+    if (featureMood) featureMood.textContent = visual.level;
+    if (featureTitle) featureTitle.textContent = visual.title;
+    if (featureCopy) featureCopy.textContent = visual.description;
+    if (featureScale) featureScale.style.setProperty('--mood-progress', `${visual.progress}%`);
+    if (featureCurrent) featureCurrent.textContent = visual.label;
+    document.querySelectorAll('[data-mood-action]').forEach((link) => {
+      const action = visual.actions[Number(link.dataset.moodAction)];
+      link.href = action.href;
+      link.querySelector('.mood-action-label').textContent = action.label;
+    });
+    document.querySelector('.weather-frame')?.setAttribute('data-mood', name);
+    document.querySelectorAll('[data-mood-choice]').forEach((choice) => {
+      const active = choice.dataset.state === name;
+      choice.classList.toggle('active', active);
+      choice.setAttribute('aria-pressed', String(active));
+    });
   }
 
   _start() {
@@ -160,6 +207,14 @@ class EmotionalWeather {
   }
 }
 
+const MOOD_VISUALS = {
+  calm: { label: 'Calm', level: 'IN BETWEEN', emoji: '😌', caption: 'A quiet moment, just for you.', title: 'Somewhere in the middle.', description: 'No need to have it all figured out. A small check-in is enough.', progress: 52, image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=85', actions: [{ label: 'Write a reflection', href: '/journal' }, { label: 'Talk it through', href: '/chat' }] },
+  cloudy: { label: 'Cloudy', level: 'A LITTLE LOW', emoji: '🌥️', caption: 'It is okay if today feels a little unclear.', title: 'A little cloudy today.', description: 'You can take this one moment at a time. Pick a small thing that feels manageable.', progress: 28, image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=85', actions: [{ label: 'Try a grounding guide', href: '/resources' }, { label: 'Write it out', href: '/journal' }] },
+  overwhelmed: { label: 'Overwhelmed', level: 'TAKING IT SLOW', emoji: '🌊', caption: 'One breath. One small step at a time.', title: 'One thing at a time.', description: 'You do not have to solve the whole day right now. Choose the support that feels right.', progress: 12, image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=85', actions: [{ label: 'Talk with Serenova', href: '/chat' }, { label: 'Find a counsellor', href: '/counsellors' }] },
+  focused: { label: 'Focused', level: 'FEELING GOOD', emoji: '🌿', caption: 'Come back to what is here, right now.', title: 'Finding your rhythm.', description: 'Notice what is helping you feel present, and give that feeling a little space.', progress: 76, image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85', actions: [{ label: 'Explore student guides', href: '/resources' }, { label: 'Save a reflection', href: '/journal' }] },
+  hopeful: { label: 'Hopeful', level: 'FEELING BRIGHT', emoji: '✨', caption: 'There is room for things to shift.', title: 'Make room for this feeling.', description: 'Notice what has been supporting you today. You can come back to it later.', progress: 94, image: 'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=1200&q=85', actions: [{ label: 'Save a reflection', href: '/journal' }, { label: 'Browse well-being guides', href: '/resources' }] },
+};
+
 /* ──────────────────────────────────────────────────────────────
    HTML SECTIONS
    Each section is a function returning an HTML string.
@@ -200,14 +255,18 @@ function heroSection() {
           </div>
         </div>
 
-        <!-- Visual column: Emotional Weather canvas -->
+        <!-- Visual column: photographic emotional weather, linked to both mood selectors -->
         <div class="hero-visual">
-          <div class="weather-frame">
+          <div class="weather-frame" data-mood="calm">
+            <div class="weather-photo" id="weather-photo" role="img" aria-label="A peaceful student taking a mindful pause" style="background-image:linear-gradient(180deg,rgba(24,29,25,.06),rgba(24,29,25,.58)),url('${MOOD_VISUALS.calm.image}')"></div>
             <canvas
               id="emotional-weather"
-              role="img"
-              aria-label="Abstract visualization of emotional states — soft, shifting shapes representing different moods"
+              aria-hidden="true"
             ></canvas>
+            <div class="weather-photo-overlay" aria-live="polite">
+              <span class="weather-emoji" id="weather-emoji" aria-hidden="true">${MOOD_VISUALS.calm.emoji}</span>
+              <span class="weather-photo-label" id="weather-photo-label">${MOOD_VISUALS.calm.label} is welcome here</span>
+            </div>
           </div>
 
           <!-- State selector -->
@@ -216,19 +275,20 @@ function heroSection() {
             role="group"
             aria-label="Explore emotional states"
           >
-            <button class="weather-state-btn active" data-state="calm">Calm</button>
-            <button class="weather-state-btn" data-state="cloudy">Cloudy</button>
-            <button class="weather-state-btn" data-state="overwhelmed">Overwhelmed</button>
-            <button class="weather-state-btn" data-state="focused">Focused</button>
-            <button class="weather-state-btn" data-state="hopeful">Hopeful</button>
+            <button class="weather-state-btn active" data-mood-choice data-state="calm" aria-pressed="true">😌 Calm</button>
+            <button class="weather-state-btn" data-mood-choice data-state="cloudy" aria-pressed="false">🌥️ Cloudy</button>
+            <button class="weather-state-btn" data-mood-choice data-state="overwhelmed" aria-pressed="false">🌊 Overwhelmed</button>
+            <button class="weather-state-btn" data-mood-choice data-state="focused" aria-pressed="false">🌿 Focused</button>
+            <button class="weather-state-btn" data-mood-choice data-state="hopeful" aria-pressed="false">✨ Hopeful</button>
           </div>
 
-          <p class="weather-caption" aria-hidden="true">
-            Emotions shift. That's human.
+          <p class="weather-caption" id="weather-caption" aria-live="polite">
+            ${MOOD_VISUALS.calm.caption}
           </p>
         </div>
 
       </div>
+      <div class="hero-trust-line"><span>🔒 Private by design</span><i aria-hidden="true"></i><span>🌱 Notice · Reflect · Grow</span></div>
 
       <!-- Animated scroll indicator -->
       <div class="scroll-indicator" aria-hidden="true">
@@ -262,22 +322,22 @@ function philosophySection() {
 function howItWorksSection() {
   const steps = [
     {
-      n: '01',
+      n: '01', icon: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="m5 24 9 9 16-17M18 24l9 9 16-17" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       title: 'Check in',
       body: 'Start by logging how you\'re feeling. A mood level, a short note. No pressure, no judgment. Just a moment for yourself.',
     },
     {
-      n: '02',
+      n: '02', icon: '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="currentColor" d="m8 34 22-22a5 5 0 0 1 7 0l1 1a5 5 0 0 1 0 7L16 42l-11 3z"/><path fill="var(--color-background)" d="m30 16 5 5-17 17-5-5z"/><path fill="currentColor" d="m5 45 11-3-8-8z"/></svg>',
       title: 'Write it out',
       body: 'Your journal is private. Always. Write without self-editing — your thoughts stay between you and the page.',
     },
     {
-      n: '03',
+      n: '03', icon: '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="currentColor" d="M6 7h27a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H20l-10 7v-7H6a6 6 0 0 1-6-6V13a6 6 0 0 1 6-6"/><path fill="var(--color-background)" d="M10 19a2 2 0 1 0 0 4 2 2 0 0 0 0-4m9 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m9 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path fill="currentColor" d="M30 32h7a5 5 0 0 1 5 5v3h-5l-6 4v-4a5 5 0 0 1-4-5v-2z"/></svg>',
       title: 'Talk it through',
       body: 'When you need to think out loud, the AI companion listens. It offers reflection, not diagnosis. Support, not prescription.',
     },
     {
-      n: '04',
+      n: '04', icon: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="currentColor"/><circle cx="24" cy="24" r="14" fill="var(--color-background)"/><circle cx="24" cy="24" r="8" fill="currentColor"/><circle cx="24" cy="24" r="3" fill="var(--color-background)"/><path fill="currentColor" d="M22 2h4v7h-4zm0 37h4v7h-4zM2 22h7v4H2zm37 0h7v4h-7z"/></svg>',
       title: 'Find your footing',
       body: 'Curated resources, well-being guidance, and counselling support when you\'re ready to take the next step.',
     },
@@ -293,12 +353,41 @@ function howItWorksSection() {
         <div class="steps-grid">
           ${steps.map((s) => `
             <div class="step reveal">
-              <span class="step-number" aria-hidden="true">${s.n}</span>
+              <div class="step-mark"><span class="step-number" aria-hidden="true">${s.n}</span><span class="step-icon" aria-hidden="true">${s.icon}</span></div>
               <div>
                 <h3 class="step-title">${s.title}</h3>
                 <p class="step-body">${s.body}</p>
               </div>
             </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function moduleGallerySection() {
+  const modules = [
+    { title: 'Pause', subtitle: 'A gentle mood check-in, at your own pace.', href: '/mood', image: 'photo-1506126613408-eca07ce68773', className: 'module-gallery-card--pause' },
+    { title: 'Write', subtitle: 'A private page for whatever is on your mind.', href: '/journal', image: 'photo-1455390582262-044cdead277a', className: 'module-gallery-card--write' },
+    { title: 'Talk it through', subtitle: 'A thoughtful companion for the in-between moments.', href: '/chat', image: 'photo-1529156069898-49953e39b3ac', className: 'module-gallery-card--companion' },
+    { title: 'Check in', subtitle: 'A reflective screening, never a diagnosis.', href: '/assessment', image: 'photo-1516321318423-f06f85e504b3', className: 'module-gallery-card--screening' },
+    { title: 'Find your footing', subtitle: 'Grounded guides for student life.', href: '/resources', image: 'photo-1507842217343-583bb7270b66', className: 'module-gallery-card--resources' },
+    { title: 'Connect', subtitle: 'Find professional support when you are ready.', href: '/counsellors', image: 'photo-1521737711867-e3b97375f902', className: 'module-gallery-card--connect' },
+  ];
+
+  return `
+    <section class="module-gallery section" aria-labelledby="module-gallery-heading">
+      <div class="container">
+        <div class="module-gallery-heading reveal">
+          <span class="section-eyebrow">Made for student life</span>
+          <h2 class="section-heading" id="module-gallery-heading">Small moments of calm,<br>between everything else.</h2>
+        </div>
+        <div class="module-gallery-grid">
+          ${modules.map((item, index) => `
+            <a class="module-gallery-card ${item.className} reveal" href="${item.href}" style="--module-image:url('https://images.unsplash.com/${item.image}?auto=format&fit=crop&w=1200&q=85');transition-delay:${index * 60}ms" aria-label="${item.title}: ${item.subtitle}">
+              <span class="module-gallery-copy"><strong>${item.title}</strong><small>${item.subtitle}</small></span>
+            </a>
           `).join('')}
         </div>
       </div>
@@ -334,28 +423,23 @@ function moodFeatureSection() {
 
           <div class="feature-visual reveal" aria-hidden="true">
             <div class="feature-visual-box">
-              <!-- Abstract mood constellation -->
-              <div class="mood-constellation" role="presentation">
-                <div class="mood-orb-wrap">
-                  <div class="mood-orb mood-orb--1"></div>
-                  <span class="mood-orb-label">Very low</span>
+              <!-- Interactive mood selector, synchronized with the emotional weather above -->
+              <div class="mood-console">
+                <div class="mood-console-topline"><span>YOUR EMOTIONAL WEATHER</span><span id="mood-feature-name">IN BETWEEN</span></div>
+                <div class="mood-console-photo" id="mood-feature-photo" role="img" aria-label="Calm mood landscape" style="background-image:linear-gradient(90deg,rgba(24,29,25,.68),rgba(24,29,25,.06)),url('${MOOD_VISUALS.calm.image}')">
+                  <span class="mood-console-emoji" id="mood-feature-emoji" aria-hidden="true">${MOOD_VISUALS.calm.emoji}</span>
+                  <div class="mood-console-copy"><h3 id="mood-feature-title">${MOOD_VISUALS.calm.title}</h3><p id="mood-feature-copy">${MOOD_VISUALS.calm.description}</p></div>
+                  <span class="mood-console-mark" aria-hidden="true">SERENOVA · NOTICE · REFLECT · GROW</span>
                 </div>
-                <div class="mood-orb-wrap">
-                  <div class="mood-orb mood-orb--2"></div>
-                  <span class="mood-orb-label">Low</span>
+                <div class="mood-console-scale-row"><span>HOW ARE YOU FEELING?</span><div class="mood-console-track" id="mood-feature-scale" style="--mood-progress:${MOOD_VISUALS.calm.progress}%"><span></span></div><span class="mood-console-current">Neutral</span></div>
+                <div class="mood-constellation" role="group" aria-label="Choose a feeling to update the emotional weather">
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--low" data-mood-choice data-state="overwhelmed" aria-pressed="false" aria-label="Very low, overwhelmed"><span class="mood-orb">😮‍💨</span><span class="mood-orb-label">Very low</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--soft" data-mood-choice data-state="cloudy" aria-pressed="false" aria-label="Low, cloudy"><span class="mood-orb">😔</span><span class="mood-orb-label">Low</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--neutral active" data-mood-choice data-state="calm" aria-pressed="true" aria-label="Neutral, calm"><span class="mood-orb">😌</span><span class="mood-orb-label">Neutral</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--good" data-mood-choice data-state="focused" aria-pressed="false" aria-label="Good, focused"><span class="mood-orb">🙂</span><span class="mood-orb-label">Good</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--bright" data-mood-choice data-state="hopeful" aria-pressed="false" aria-label="Very good, hopeful"><span class="mood-orb">😊</span><span class="mood-orb-label">Very good</span></button>
                 </div>
-                <div class="mood-orb-wrap">
-                  <div class="mood-orb mood-orb--3"></div>
-                  <span class="mood-orb-label">Neutral</span>
-                </div>
-                <div class="mood-orb-wrap">
-                  <div class="mood-orb mood-orb--4"></div>
-                  <span class="mood-orb-label">Good</span>
-                </div>
-                <div class="mood-orb-wrap">
-                  <div class="mood-orb mood-orb--5"></div>
-                  <span class="mood-orb-label">Very good</span>
-                </div>
+                <div class="mood-next-step"><div class="mood-next-intro"><span>ONE GENTLE NEXT STEP</span><p>Choose a space that feels helpful</p></div><a href="/journal" data-mood-action="0"><span class="mood-action-label">Write a reflection</span><span aria-hidden="true">↗</span></a><a href="/chat" data-mood-action="1"><span class="mood-action-label">Talk it through</span><span aria-hidden="true">↗</span></a></div>
               </div>
             </div>
           </div>
@@ -393,16 +477,11 @@ function journalFeatureSection() {
           </div>
 
           <div class="feature-visual reveal" aria-hidden="true">
-            <div class="feature-visual-box">
-              <!-- Abstract journal notebook -->
-              <div class="journal-notebook" role="presentation">
-                <p class="journal-date-label">Today</p>
-                <div class="journal-line journal-line--full"></div>
-                <div class="journal-line journal-line--full"></div>
-                <div class="journal-line journal-line--partial"></div>
-                <div class="journal-line journal-line--full"></div>
-                <div class="journal-line journal-line--short"></div>
-                <span class="journal-cursor" aria-hidden="true"></span>
+            <div class="feature-visual-box feature-visual-box--photo">
+              <div class="feature-photo-card feature-photo-card--journal" style="--feature-image:url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=85')">
+                <span class="feature-photo-kicker">PRIVATE BY DESIGN <span aria-hidden="true">↗</span></span>
+                <div class="journal-prompt-float"><span aria-hidden="true">✍️</span><div><small>A GENTLE START</small><p>One thing I handled today, however small, was…</p></div></div>
+                <div class="feature-photo-copy"><h3>A page that stays yours.</h3><p>Write a little. Write a lot. Begin anywhere.</p></div>
               </div>
             </div>
           </div>
@@ -441,24 +520,11 @@ function aiFeatureSection() {
           </div>
 
           <div class="feature-visual reveal" aria-hidden="true">
-            <div class="feature-visual-box">
-              <!-- Abstract chat preview -->
-              <div class="chat-preview" role="presentation">
-                <div class="chat-bubble chat-bubble--user">
-                  <span class="chat-label">You</span>
-                  <div class="bubble-line bubble-line--full"></div>
-                  <div class="bubble-line bubble-line--partial"></div>
-                </div>
-                <div class="chat-bubble chat-bubble--ai">
-                  <span class="chat-label">Serenova</span>
-                  <div class="bubble-line bubble-line--full"></div>
-                  <div class="bubble-line bubble-line--full"></div>
-                  <div class="bubble-line bubble-line--short"></div>
-                </div>
-                <div class="chat-bubble chat-bubble--user">
-                  <span class="chat-label">You</span>
-                  <div class="bubble-line bubble-line--partial"></div>
-                </div>
+            <div class="feature-visual-box feature-visual-box--photo">
+              <div class="feature-photo-card feature-photo-card--companion" style="--feature-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85')">
+                <span class="feature-photo-kicker">A THOUGHTFUL COMPANION <span aria-hidden="true">✦</span></span>
+                <div class="companion-message-float"><span class="companion-avatar" aria-hidden="true">S</span><p>What feels most important to you right now?</p><span class="companion-message-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+                <div class="feature-photo-copy"><h3>You can start wherever you are.</h3><p>Reflection and support, without judgement.</p></div>
               </div>
             </div>
           </div>
@@ -496,29 +562,11 @@ function assessmentFeatureSection() {
           </div>
 
           <div class="feature-visual reveal" aria-hidden="true">
-            <div class="feature-visual-box">
-              <!-- Abstract assessment card -->
-              <div class="assessment-preview-card" role="presentation">
-                <div class="assessment-progress-row">
-                  <div class="assessment-progress-dot done"></div>
-                  <div class="assessment-progress-dot done"></div>
-                  <div class="assessment-progress-dot active"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                  <div class="assessment-progress-dot"></div>
-                </div>
-                <div class="assessment-q-line assessment-q-line--full"     style="margin-top:1.5rem;"></div>
-                <div class="assessment-q-line assessment-q-line--partial"  style="margin-top:0.5rem;"></div>
-                <div class="assessment-options-row">
-                  <span class="assessment-option-chip">Rarely</span>
-                  <span class="assessment-option-chip selected">Sometimes</span>
-                  <span class="assessment-option-chip">Often</span>
-                  <span class="assessment-option-chip">Nearly always</span>
-                </div>
+            <div class="feature-visual-box feature-visual-box--photo">
+              <div class="feature-photo-card feature-photo-card--screening" style="--feature-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85')">
+                <span class="feature-photo-kicker">A CHECK-IN, NOT A DIAGNOSIS <span aria-hidden="true">◌</span></span>
+                <div class="screening-stat-float"><strong>04</strong><span>MINUTES<br>FOR YOU</span><i aria-hidden="true">✦</i></div>
+                <div class="feature-photo-copy"><h3>Understand your own patterns.</h3><p>Private, reflective and always on your terms.</p></div>
               </div>
             </div>
           </div>
@@ -535,16 +583,19 @@ function resourcesPreviewSection() {
       tag: 'Study stress',
       title: 'When exam pressure becomes too much',
       excerpt: 'Practical strategies for managing academic stress before it manages you.',
+      image: 'photo-1434030216411-0b793f4b4173', icon: '✎',
     },
     {
       tag: 'Rest & routine',
       title: 'Building a sleep rhythm that actually works',
       excerpt: 'Small, sustainable changes that help your body and mind recover.',
+      image: 'photo-1470770841072-f978cf4d019e', icon: '☾',
     },
     {
       tag: 'Emotional well-being',
       title: 'Why feeling lost doesn\'t mean you\'re failing',
       excerpt: 'On navigating uncertainty, identity, and the messy middle of university life.',
+      image: 'photo-1470252649378-9c29740c9fa8', icon: '✦',
     },
   ];
 
@@ -572,6 +623,7 @@ function resourcesPreviewSection() {
               style="transition-delay: ${i * 80}ms"
               aria-label="${c.title}"
             >
+              <span class="resource-card-photo" style="--resource-image:url('https://images.unsplash.com/${c.image}?auto=format&fit=crop&w=900&q=80')"><span aria-hidden="true">${c.icon}</span></span>
               <span class="resource-category-tag">${c.tag}</span>
               <h3 class="resource-title">${c.title}</h3>
               <p class="resource-excerpt">${c.excerpt}</p>
@@ -741,6 +793,7 @@ export const Landing = {
         ${heroSection()}
         ${philosophySection()}
         ${howItWorksSection()}
+        ${moduleGallerySection()}
         ${moodFeatureSection()}
         ${journalFeatureSection()}
         ${aiFeatureSection()}
@@ -764,15 +817,9 @@ export const Landing = {
       this._weather = new EmotionalWeather(canvas);
 
       // Wire state selector buttons
-      const buttons = document.querySelectorAll('.weather-state-btn');
+      const buttons = document.querySelectorAll('[data-mood-choice]');
       buttons.forEach((btn) => {
         btn.addEventListener('click', () => {
-          buttons.forEach((b) => {
-            b.classList.remove('active');
-            b.setAttribute('aria-pressed', 'false');
-          });
-          btn.classList.add('active');
-          btn.setAttribute('aria-pressed', 'true');
           this._weather.setState(btn.dataset.state);
         });
         // Initial aria state

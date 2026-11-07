@@ -37,8 +37,8 @@ export const Chat = {
               </button>
             </header>
 
-            <div class="chat-disclaimer-pill" role="note">
-              <span>Serenova is an AI support companion, not a doctor or therapist. It cannot provide a clinical diagnosis or medical prescriptions.</span>
+          <div class="chat-disclaimer-pill" role="note">
+              <span>Serenova is a support companion, not a doctor or therapist. It cannot diagnose or prescribe. Replies use what you share in this conversation and your recent check-in themes.</span>
             </div>
 
             <!-- Messages Stream -->
@@ -258,7 +258,7 @@ export const Chat = {
       typingRow.id = 'chat-typing-indicator';
       typingRow.innerHTML = `
         <div class="chat-bubble chat-bubble--assistant typing-bubble">
-          <span>Serenova is reflecting...</span>
+          <span class="typing-copy">Serenova is reflecting</span><span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
       `;
       messagesEl.appendChild(typingRow);
@@ -266,6 +266,8 @@ export const Chat = {
 
       try {
         await chatApi.sendMessage(activeSessionId, content);
+        // Thoughtful reflection delay for a calm, natural conversational pace
+        await new Promise(r => setTimeout(r, 650));
         const updatedMsgs = await chatApi.getMessages(activeSessionId);
         renderMessages(updatedMsgs);
       } catch (err) {

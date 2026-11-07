@@ -1,6 +1,6 @@
 import { journalsApi } from '../api/journals.js';
 import { Toast } from '../components/Toast.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 
@@ -59,6 +59,12 @@ export const JournalEntry = {
             </div>
 
             <div class="form-group mt-4">
+              <div class="editor-prompt-heading"><label class="form-label text-xs">Need a starting point?</label><span>Pick a prompt or write your own way</span></div>
+              <div class="editor-prompt-row" id="editor-prompt-row">
+                <button type="button" class="editor-prompt-btn" data-prompt="What has been taking up space in my mind today?">What’s on my mind?</button>
+                <button type="button" class="editor-prompt-btn" data-prompt="One thing I handled today, however small, was…">A small win</button>
+                <button type="button" class="editor-prompt-btn" data-prompt="Something I need more of this week is…">What I need</button>
+              </div>
               <textarea
                 id="entry-content"
                 class="editor-content-textarea"
@@ -66,6 +72,7 @@ export const JournalEntry = {
                 required
               ></textarea>
             </div>
+            <div class="editor-writing-meta"><span>Take your time. This page is yours.</span><span id="journal-word-count">0 words</span></div>
 
             <div class="editor-actions-row">
               ${!isNew ? `
@@ -97,6 +104,25 @@ export const JournalEntry = {
     const saveBtn = document.getElementById('btn-save-entry');
     const deleteBtn = document.getElementById('btn-delete-entry');
 
+    const draftPrompt = sessionStorage.getItem('serenova_journal_prompt');
+    if (isNew && draftPrompt) {
+      contentInput.value = `${draftPrompt}\n\n`;
+      sessionStorage.removeItem('serenova_journal_prompt');
+    }
+    const updateWordCount = () => {
+      const words = contentInput.value.trim().split(/\s+/).filter(Boolean).length;
+      document.getElementById('journal-word-count').textContent = `${words} ${words === 1 ? 'word' : 'words'}`;
+    };
+    updateWordCount();
+    contentInput?.addEventListener('input', updateWordCount);
+    document.querySelectorAll('.editor-prompt-btn').forEach(btn => btn.addEventListener('click', () => {
+      const prompt = btn.dataset.prompt;
+      contentInput.value = `${contentInput.value.trim()}${contentInput.value.trim() ? '\n\n' : ''}${prompt} `;
+      contentInput.focus();
+      contentInput.setSelectionRange(contentInput.value.length, contentInput.value.length);
+      updateWordCount();
+    }));
+
     // If editing existing entry, load it
     if (!isNew) {
       try {
@@ -107,7 +133,7 @@ export const JournalEntry = {
         contentInput.value = entry.content || '';
       } catch (e) {
         Toast.error('Could not load journal entry.');
-        router.navigate('/journal');
+        navigate('/journal');
       }
     }
 
@@ -139,7 +165,7 @@ export const JournalEntry = {
           });
           Toast.success('Reflection updated.');
         }
-        router.navigate('/journal');
+        navigate('/journal');
       } catch (err) {
         Toast.error(err.message || 'Failed to save reflection.');
         saveBtn.disabled = false;
@@ -152,7 +178,7 @@ export const JournalEntry = {
       try {
         await journalsApi.deleteJournal(params.id);
         Toast.info('Journal entry removed.');
-        router.navigate('/journal');
+        navigate('/journal');
       } catch (err) {
         Toast.error('Failed to delete entry.');
       }

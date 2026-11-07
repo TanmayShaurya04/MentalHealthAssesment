@@ -50,5 +50,70 @@
     "created_at": "2026-10-21T14:32:22.118121+00:00",
     "updated_at": "2026-10-21T14:32:22.118121+00:00",
     "_id": "62d55b75-3d48-4d70-ace1-20d16975cb09"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-10-27T14:58:57.395604+00:00",
+    "updated_at": "2026-10-27T14:58:57.395604+00:00",
+    "_id": "9113625c-eddb-4061-bc71-864bb87bb50f"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-10-31T15:24:06.050161+00:00",
+    "updated_at": "2026-10-31T15:24:06.050161+00:00",
+    "_id": "9e7d37c9-294d-47b8-98bd-3ebfa73f7de5"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-11-07T09:55:25.736031+00:00",
+    "updated_at": "2026-11-07T09:55:25.736031+00:00",
+    "_id": "192d137e-c7f2-4ab7-8355-5b473784a06e"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-11-07T09:55:49.044865+00:00",
+    "updated_at": "2026-11-07T09:55:49.044865+00:00",
+    "_id": "dad3adb8-7ac0-4b6a-b7ed-608b5a156b6e"
+  },
+  {
+    "user_id": "696bd839-0c42-4d29-a0ca-7483b6da1994",
+    "title": "A quiet evening after exams",
+    "content": "Today was the first day in weeks where my phone did not buzz with project alerts.",
+    "mood_level": "good",
+    "tags": [
+      "Reflection",
+      "Rest"
+    ],
+    "created_at": "2026-11-07T10:06:16.889055+00:00",
+    "updated_at": "2026-11-07T10:06:16.889055+00:00",
+    "_id": "3a2f78a3-66d1-491b-9cd7-f585a83fea6a"
   }
 ]

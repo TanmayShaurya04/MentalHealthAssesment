@@ -1,5 +1,5 @@
 import { authApi } from '../api/auth.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
@@ -22,16 +22,18 @@ export const Login = {
             </div>
 
             <!-- Demo Account Helper Banner -->
-            <div class="demo-credentials-banner" style="background: rgba(198, 93, 58, 0.08); border: 1px solid rgba(198, 93, 58, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.85rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <strong style="color: var(--color-ink);">🔑 Quick Demo Login</strong>
-                <button type="button" id="btn-fill-demo" style="background: var(--color-accent); color: #fff; border: none; border-radius: 4px; padding: 3px 10px; font-size: 0.75rem; cursor: pointer;">
-                  Autofill Demo
+            <div class="demo-credentials-banner" style="background: rgba(198, 93, 58, 0.08); border: 1px solid rgba(198, 93, 58, 0.28); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; font-size: 0.88rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                <strong style="color: var(--color-ink); display: flex; align-items: center; gap: 6px;">
+                  <span>🔑</span> Ready-to-Use Demo Account
+                </strong>
+                <button type="button" id="btn-fill-demo" style="background: var(--color-accent); color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: transform 0.15s ease;">
+                  ⚡ 1-Click Demo Sign-In
                 </button>
               </div>
-              <p style="margin: 0; color: var(--color-ink-80); line-height: 1.4;">
-                Email: <code>student@university.edu</code><br>
-                Password: <code>password123</code>
+              <p style="margin: 0; color: var(--color-ink-80); font-size: 0.82rem; line-height: 1.5;">
+                Email: <code style="background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;">student@university.edu</code> &nbsp;•&nbsp; 
+                Password: <code style="background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-weight: 600;">password123</code>
               </p>
             </div>
 
@@ -102,13 +104,14 @@ export const Login = {
       toggleBtn.textContent = isPwd ? 'Hide' : 'Show';
     });
 
-    // Autofill demo credentials
+    // 1-Click Demo Login: autofill & immediately submit
     document.getElementById('btn-fill-demo')?.addEventListener('click', () => {
       if (emailInput && pwdInput) {
         emailInput.value = 'student@university.edu';
         pwdInput.value = 'password123';
-        pwdInput.type = 'text';
-        if (toggleBtn) toggleBtn.textContent = 'Hide';
+        pwdInput.type = 'password';
+        if (toggleBtn) toggleBtn.textContent = 'Show';
+        form?.dispatchEvent(new Event('submit', { cancelable: true }));
       }
     });
 
@@ -131,7 +134,7 @@ export const Login = {
       try {
         await authApi.login({ email, password });
         Toast.success('Welcome back to Serenova.');
-        router.navigate('/dashboard');
+        navigate('/dashboard');
       } catch (err) {
         alertBox.textContent = err.message || 'Incorrect email or password.';
         alertBox.style.display = 'block';

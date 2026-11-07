@@ -21,7 +21,9 @@ import { Profile } from './pages/Profile.js';
 
 const ROUTES = [
   { path: '/',                   page: Landing,           requiresAuth: false },
+  { path: '/login',              page: Login,             guestOnly: true },
   { path: '/auth/login',         page: Login,             guestOnly: true },
+  { path: '/register',           page: Register,          guestOnly: true },
   { path: '/auth/register',      page: Register,          guestOnly: true },
   { path: '/dashboard',          page: Dashboard,         requiresAuth: true },
   { path: '/mood',               page: MoodTracker,       requiresAuth: true },
@@ -84,16 +86,15 @@ class Router {
     let matched = this.match(path) || this.match('/');
     let targetRoute = matched;
 
-    // 1. Auth Guard: Requires Auth
+    // Resolve guards in-place so redirects never recurse through navigate().
     if (targetRoute.requiresAuth && !isAuth) {
-      this.navigate('/auth/login', pushState);
-      return;
-    }
-
-    // 2. Guest Guard: Redirect logged-in users away from login/register to dashboard
-    if (targetRoute.guestOnly && isAuth) {
-      this.navigate('/dashboard', pushState);
-      return;
+      path = '/auth/login';
+      matched = this.match(path);
+      targetRoute = matched;
+    } else if (targetRoute.guestOnly && isAuth) {
+      path = '/dashboard';
+      matched = this.match(path);
+      targetRoute = matched;
     }
 
     // Tear down previous page

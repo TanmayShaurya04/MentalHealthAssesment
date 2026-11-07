@@ -83,13 +83,13 @@ async def test_full_student_journey():
         # 6. Assessment questions & submission
         q_res = await client.get("/api/assessments/questions")
         assert q_res.status_code == 200
-        assert len(q_res.json()["questions"]) == 15
+        assert len(q_res.json()["questions"]) == 20
         
         assess_submit = await client.post("/api/assessments", json={
-            "answers": [{"question_id": i, "score": 1} for i in range(1, 16)]
+            "answers": [{"question_id": i, "score": 1} for i in range(1, 21)]
         }, headers=headers)
         assert assess_submit.status_code == 200
-        assert assess_submit.json()["total_score"] == 15
+        assert assess_submit.json()["total_score"] == 16
         assert assess_submit.json()["category"] == "mild"
         
         # 7. Counsellor Directory

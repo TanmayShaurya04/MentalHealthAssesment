@@ -11,6 +11,7 @@ import { renderMoodArtwork } from './MoodTracker.js';
 
 export const Dashboard = {
   _cleanupNavbar: null,
+  _heroTimer: null,
 
   render() {
     const user = store.getUser() || { name: 'Student' };
@@ -27,16 +28,22 @@ export const Dashboard = {
       <main class="dashboard-page page-root" id="main-content">
         <div class="container dashboard-container">
           
-          <!-- Top Greeting Section -->
-          <header class="dashboard-header">
-            <div>
+          <!-- Rotating photo welcome panel -->
+          <header class="dashboard-hero" aria-roledescription="carousel" aria-label="Student sanctuary">
+            <div class="dashboard-hero-photo" id="dashboard-hero-photo" aria-hidden="true"></div>
+            <div class="dashboard-hero-content">
               <span class="dashboard-eyebrow">Student Sanctuary</span>
               <h1 class="dashboard-greeting">${greeting}, ${firstName}.</h1>
               <p class="dashboard-tagline">How is your mind feeling today? There are no right or wrong answers.</p>
+              <div class="dashboard-header-actions">
+                <a href="/chat" class="btn btn-primary btn-sm">Talk with AI Companion</a>
+                <a href="/counsellors" class="btn btn-secondary btn-sm">Counselling & Support</a>
+              </div>
             </div>
-            <div class="dashboard-header-actions">
-              <a href="/chat" class="btn btn-primary btn-sm">Talk with AI Companion</a>
-              <a href="/counsellors" class="btn btn-secondary btn-sm">Counselling & Support</a>
+            <div class="hero-carousel-controls" role="group" aria-label="Welcome photos">
+              <button type="button" class="hero-carousel-dot active" data-slide="0" aria-label="Show photo 1" aria-pressed="true"></button>
+              <button type="button" class="hero-carousel-dot" data-slide="1" aria-label="Show photo 2" aria-pressed="false"></button>
+              <button type="button" class="hero-carousel-dot" data-slide="2" aria-label="Show photo 3" aria-pressed="false"></button>
             </div>
           </header>
 
@@ -59,23 +66,23 @@ export const Dashboard = {
                 <div class="mood-selector-bar" role="radiogroup" aria-label="Select mood level">
                   <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="Very Low">
                     <div class="mood-image-wrapper">${renderMoodArtwork('very_low', 40)}</div>
-                    <span class="mood-pick-label">Very Low</span>
+                    <span class="mood-pick-label">Very Low</span><span class="mood-state-caption">Feeling heavy</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="Low">
                     <div class="mood-image-wrapper">${renderMoodArtwork('low', 40)}</div>
-                    <span class="mood-pick-label">Low</span>
+                    <span class="mood-pick-label">Low</span><span class="mood-state-caption">A little low</span>
                   </button>
                   <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="Neutral">
                     <div class="mood-image-wrapper">${renderMoodArtwork('neutral', 40)}</div>
-                    <span class="mood-pick-label">Neutral</span>
+                    <span class="mood-pick-label">Neutral</span><span class="mood-state-caption">In between</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="Good">
                     <div class="mood-image-wrapper">${renderMoodArtwork('good', 40)}</div>
-                    <span class="mood-pick-label">Good</span>
+                    <span class="mood-pick-label">Good</span><span class="mood-state-caption">Feeling brighter</span>
                   </button>
                   <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="Very Good">
                     <div class="mood-image-wrapper">${renderMoodArtwork('very_good', 40)}</div>
-                    <span class="mood-pick-label">Very Good</span>
+                    <span class="mood-pick-label">Very Good</span><span class="mood-state-caption">Feeling hopeful</span>
                   </button>
                 </div>
 
@@ -139,9 +146,9 @@ export const Dashboard = {
               <!-- Self-Assessment Screening Card -->
               <section class="card dashboard-card assessment-widget" aria-labelledby="screening-widget-title">
                 <span class="card-eyebrow">Self-reflection</span>
-                <h3 id="screening-widget-title" class="card-title">10-Question Well-Being Screening</h3>
+                <h3 id="screening-widget-title" class="card-title">20-Question Well-Being Screening</h3>
                 <p class="assessment-widget-desc">
-                  A gentle non-diagnostic tool to check your stress, sleep, and emotional balance.
+                  PHQ-9 and GAD-7 screening with a short student-life check-in for context.
                 </p>
                 <div id="latest-assessment-status" class="assessment-status-box">
                   <span class="status-loading">Checking history...</span>
@@ -202,6 +209,30 @@ export const Dashboard = {
 
   async afterRender() {
     this._cleanupNavbar = initNavbar();
+
+    const heroImages = [
+      'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1800&q=85',
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85',
+      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1800&q=85',
+    ];
+    let heroIndex = 0;
+    const heroPhoto = document.getElementById('dashboard-hero-photo');
+    const heroDots = [...document.querySelectorAll('.hero-carousel-dot')];
+    const showHero = (index) => {
+      heroIndex = index % heroImages.length;
+      heroPhoto.style.backgroundImage = `linear-gradient(90deg, rgba(24, 29, 25, .76), rgba(24, 29, 25, .18)), url("${heroImages[heroIndex]}")`;
+      heroDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === heroIndex);
+        dot.setAttribute('aria-pressed', String(i === heroIndex));
+      });
+    };
+    showHero(0);
+    heroDots.forEach(dot => dot.addEventListener('click', () => {
+      showHero(Number(dot.dataset.slide));
+      clearInterval(this._heroTimer);
+      this._heroTimer = setInterval(() => showHero(heroIndex + 1), 6500);
+    }));
+    this._heroTimer = setInterval(() => showHero(heroIndex + 1), 6500);
 
     // 1. Fetch user profile if needed
     try {
@@ -313,7 +344,7 @@ export const Dashboard = {
           });
           assessBox.innerHTML = `
             <div class="assessment-status-badge badge-${a.category}">
-              <strong>${a.level_label}</strong> (${a.total_score}/30)
+              <strong>${a.level_label}</strong>${a.score_schema_version === 2 ? `<span class="assessment-mini-scores">PHQ-9 ${a.phq9_score}/27 · GAD-7 ${a.gad7_score}/21</span>` : ''}
             </div>
             <p class="text-xs text-ink-60 mt-1">Last taken on ${dateStr}</p>
           `;
@@ -364,5 +395,6 @@ export const Dashboard = {
 
   destroy() {
     if (this._cleanupNavbar) this._cleanupNavbar();
+    if (this._heroTimer) clearInterval(this._heroTimer);
   }
 };

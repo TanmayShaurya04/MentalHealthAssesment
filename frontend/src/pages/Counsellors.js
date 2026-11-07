@@ -2,7 +2,7 @@ import { store } from '../store.js';
 import { counsellorsApi } from '../api/counsellors.js';
 import { appointmentsApi } from '../api/appointments.js';
 import { Toast } from '../components/Toast.js';
-import { router } from '../router.js';
+import { navigate } from '../navigation.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 
@@ -26,6 +26,12 @@ export const Counsellors = {
               Confidential, student-centered consultations with certified campus psychologists and well-being specialists. Affordable student rates (all under ₹2,000) with instant video consultation support.
             </p>
           </div>
+
+          <section class="counsellor-care-strip" aria-label="How counselling works">
+            <article><span class="care-strip-icon">01</span><div><strong>Choose your support</strong><p>Filter by specialty, language, or fee.</p></div></article>
+            <article><span class="care-strip-icon">02</span><div><strong>Pick a day and time</strong><p>See each counsellor’s listed availability.</p></div></article>
+            <article><span class="care-strip-icon">03</span><div><strong>Request a private session</strong><p>Your request stays in your account.</p></div></article>
+          </section>
 
           <!-- Navigation Tabs -->
           <div class="counsellors-tabs-bar" role="tablist">
@@ -168,6 +174,7 @@ export const Counsellors = {
                 <div class="form-group">
                   <label for="booking-date" class="form-label">Preferred Date</label>
                   <input type="date" id="booking-date" class="form-input" required />
+                  <span class="form-hint" id="booking-availability-note" aria-live="polite">Choose a date to check this counsellor’s weekly availability.</span>
                 </div>
                 <div class="form-group">
                   <label for="booking-time-slot" class="form-label">Time Slot</label>
@@ -400,7 +407,7 @@ export const Counsellors = {
         btn.addEventListener('click', () => {
           if (!store.isAuthenticated()) {
             Toast.info('Please sign in or create an account to book an appointment.');
-            router.navigate('/auth/login');
+            navigate('/auth/login');
             return;
           }
           const cId = btn.dataset.id;
@@ -443,6 +450,8 @@ export const Counsellors = {
     const counsellorIdInput = document.getElementById('booking-counsellor-id');
     const dateInput = document.getElementById('booking-date');
     const slotSelect = document.getElementById('booking-time-slot');
+    const availabilityNote = document.getElementById('booking-availability-note');
+    let selectedCounsellorDays = [];
 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -455,6 +464,7 @@ export const Counsellors = {
     function openBookingModal(c) {
       if (!c || !modal) return;
       counsellorIdInput.value = c.id;
+      selectedCounsellorDays = c.available_days || [];
       const fee = c.fee || 800;
 
       counsellorInfoBox.innerHTML = `
@@ -472,10 +482,23 @@ export const Counsellors = {
       if (c.available_slots && c.available_slots.length > 0) {
         slotSelect.innerHTML = c.available_slots.map(s => `<option value="${s}">${s}</option>`).join('');
       }
+      validateBookingDate();
 
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
     }
+
+    function validateBookingDate() {
+      if (!dateInput?.value || !availabilityNote) return true;
+      const weekday = new Date(`${dateInput.value}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short' });
+      const available = selectedCounsellorDays.includes(weekday);
+      availabilityNote.textContent = available
+        ? `Available on ${weekday}. Choose one of the listed session times.`
+        : `This counsellor is not listed for ${weekday}. Available days: ${selectedCounsellorDays.join(', ')}.`;
+      availabilityNote.classList.toggle('availability-unavailable', !available);
+      return available;
+    }
+    dateInput?.addEventListener('change', validateBookingDate);
 
     function closeBookingModal() {
       modal?.classList.remove('open');
@@ -490,6 +513,10 @@ export const Counsellors = {
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!validateBookingDate()) {
+        Toast.info('Please choose one of this counsellor’s available days.');
+        return;
+      }
       const submitBtn = document.getElementById('confirm-booking-btn');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting request...';

@@ -78,6 +78,11 @@ class AssessmentResponse(BaseModel):
     id: str
     user_id: str
     total_score: int
+    score_schema_version: Optional[int] = None
+    phq9_score: Optional[int] = None
+    gad7_score: Optional[int] = None
+    student_life_answers: Optional[List[Dict[str, int]]] = None
+    safety_item_score: Optional[int] = None
     category: str
     level_label: str
     interpretation: str

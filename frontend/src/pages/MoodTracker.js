@@ -4,77 +4,19 @@ import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import Chart from 'chart.js/auto';
 
-/**
- * Expressive Vector Artwork Images for Mood States
- * Hand-crafted SVG illustrations representing emotional states.
- */
+/** Custom, animated Serenova emoticons shared by check-in and mood history. */
 export function renderMoodArtwork(level, size = 48) {
-  const s = size;
-  switch (level) {
-    case 'very_low':
-      return `
-        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--very-low" aria-label="Very Low mood illustration">
-          <circle cx="32" cy="32" r="30" fill="#E8EEF5" stroke="#4A6FA5" stroke-width="2.5"/>
-          <path d="M22 26C24 23 27 24 27 24" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M42 26C40 23 37 24 37 24" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="24" cy="30" r="3" fill="#2B4C7E"/>
-          <circle cx="40" cy="30" r="3" fill="#2B4C7E"/>
-          <path d="M43 36C43 36 45 39 45 40.5C45 41.8 44 43 42.5 43C41 43 40 41.8 40 40.5C40 39 42 36 42 36" fill="#64B5F6"/>
-          <path d="M24 44C27 40 37 40 40 44" stroke="#2B4C7E" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      `;
-
-    case 'low':
-      return `
-        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--low" aria-label="Low mood illustration">
-          <circle cx="32" cy="32" r="30" fill="#EDEAF2" stroke="#7E6B8F" stroke-width="2.5"/>
-          <circle cx="23" cy="29" r="3" fill="#58456B"/>
-          <circle cx="41" cy="29" r="3" fill="#58456B"/>
-          <path d="M25 41C29 39 35 39 39 41" stroke="#58456B" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="20" cy="35" r="3" fill="#D7C9E3" opacity="0.6"/>
-          <circle cx="44" cy="35" r="3" fill="#D7C9E3" opacity="0.6"/>
-        </svg>
-      `;
-
-    case 'neutral':
-      return `
-        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--neutral" aria-label="Neutral mood illustration">
-          <circle cx="32" cy="32" r="30" fill="#EBF2ED" stroke="#5B8266" stroke-width="2.5"/>
-          <circle cx="23" cy="30" r="3" fill="#385440"/>
-          <circle cx="41" cy="30" r="3" fill="#385440"/>
-          <line x1="25" y1="41" x2="39" y2="41" stroke="#385440" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="19" cy="36" r="3" fill="#A8D5BA" opacity="0.5"/>
-          <circle cx="45" cy="36" r="3" fill="#A8D5BA" opacity="0.5"/>
-        </svg>
-      `;
-
-    case 'good':
-      return `
-        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--good" aria-label="Good mood illustration">
-          <circle cx="32" cy="32" r="30" fill="#FBF3E8" stroke="#D97706" stroke-width="2.5"/>
-          <path d="M21 28C22 26 25 26 26 28" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M38 28C39 26 42 26 43 28" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M23 37C25 43 39 43 41 37" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="18" cy="35" r="4" fill="#FCD34D" opacity="0.7"/>
-          <circle cx="46" cy="35" r="4" fill="#FCD34D" opacity="0.7"/>
-        </svg>
-      `;
-
-    case 'very_good':
-    default:
-      return `
-        <svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="mood-svg-art mood-art--very-good" aria-label="Very Good mood illustration">
-          <circle cx="32" cy="32" r="30" fill="#FFF1EE" stroke="#C65D3A" stroke-width="2.5"/>
-          <path d="M20 27C21 24 25 24 26 27" stroke="#872E15" stroke-width="3" stroke-linecap="round"/>
-          <path d="M38 27C39 24 43 24 44 27" stroke="#872E15" stroke-width="3" stroke-linecap="round"/>
-          <path d="M22 36C24 45 40 45 42 36" stroke="#872E15" stroke-width="3" stroke-linecap="round" fill="#C65D3A"/>
-          <circle cx="17" cy="36" r="4.5" fill="#F87171" opacity="0.6"/>
-          <circle cx="47" cy="36" r="4.5" fill="#F87171" opacity="0.6"/>
-          <path d="M12 16L14 12L16 16L20 18L16 20L14 24L12 20L8 18L12 16Z" fill="#FBBF24"/>
-          <path d="M50 14L51.5 11L53 14L56 15.5L53 17L51.5 20L50 17L47 15.5L50 14Z" fill="#FBBF24"/>
-        </svg>
-      `;
-  }
+  const faces = {
+    very_low: { label: 'Very low mood', skin: '#DDD5D1', cheek: '#C98F86', eyes: '<path d="M22 34q4-5 8 0m20 0q4-5 8 0"/><path d="m21 28 8 2m21-2-8 2"/>', mouth: '<path d="M31 54q9-8 18 0"/>', extra: '<path class="face-tear" d="M56 39c0 4-4 7-4 10a4 4 0 0 0 8 0c0-3-4-6-4-10Z" fill="#8A9E8A" stroke="none"/>' },
+    low: { label: 'Low mood', skin: '#E6D5D1', cheek: '#CC988E', eyes: '<path d="M22 34q4 4 8 0m20 0q4 4 8 0"/><path d="m21 29 8 2m21-2-8 2"/>', mouth: '<path d="M31 51q9 7 18 0"/>', extra: '' },
+    neutral: { label: 'Neutral mood', skin: '#E9E3D8', cheek: '#CBB89D', eyes: '<ellipse cx="26" cy="33" rx="2.2" ry="3.2"/><ellipse cx="54" cy="33" rx="2.2" ry="3.2"/>', mouth: '<path d="M32 49h16"/>', extra: '' },
+    good: { label: 'Good mood', skin: '#F0E1C5', cheek: '#D8A447', eyes: '<path d="M22 34q4-4 8 0m20 0q4-4 8 0"/>', mouth: '<path d="M29 46q11 14 22 0"/>', extra: '<path class="face-glint" d="m62 19 2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#C65D3A" stroke="none"/>' },
+    very_good: { label: 'Very good mood', skin: '#DFE8DD', cheek: '#8A9E8A', eyes: '<path d="M20 34q5-8 10 0m20 0q5-8 10 0"/>', mouth: '<path d="M27 44q13 19 26 0"/>', extra: '<path class="face-glint" d="m62 20 2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#D8A447" stroke="none"/>' },
+  };
+  const face = faces[level] || faces.neutral;
+  const safeLevel = faces[level] ? level : 'neutral';
+  const artSize = size + 32;
+  return `<span class="mood-emoticon-art mood-emoticon-art--${safeLevel}" role="img" aria-label="${face.label}" style="--emoticon-size:${artSize}px"><svg viewBox="0 0 80 80" width="${artSize}" height="${artSize}" aria-hidden="true" focusable="false"><circle class="face-halo" cx="40" cy="40" r="37"/><circle class="face-disc" cx="40" cy="40" r="30" fill="${face.skin}"/><path class="face-shine" d="M20 25q7-12 19-12"/><ellipse cx="25" cy="45" rx="4.5" ry="2.6" fill="${face.cheek}" opacity=".55"/><ellipse cx="55" cy="45" rx="4.5" ry="2.6" fill="${face.cheek}" opacity=".55"/><g class="face-eyes" fill="none" stroke="#51463E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">${face.eyes}</g><g class="face-mouth" fill="none" stroke="#51463E" stroke-width="2.8" stroke-linecap="round">${face.mouth}</g>${face.extra}<circle class="face-freckle" cx="18" cy="54" r="1"/><circle class="face-freckle" cx="62" cy="54" r="1"/></svg></span>`;
 }
 
 export const MoodTracker = {
@@ -103,41 +45,41 @@ export const MoodTracker = {
               <span class="card-eyebrow">Visual Check-in</span>
               <h2 id="new-mood-heading" class="card-title">How does your mind feel right now?</h2>
 
-              <!-- Visual Mood Selector Bar with Images -->
+              <!-- Animated Mood Emoticons -->
               <div class="mood-selector-bar mt-4" role="radiogroup" aria-label="Select mood state">
                 <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="Very Low">
                   <div class="mood-image-wrapper">
                     ${renderMoodArtwork('very_low', 48)}
                   </div>
-                  <span class="mood-pick-label">Very Low</span>
+                  <span class="mood-pick-label">Very Low</span><span class="mood-state-caption">Feeling heavy</span>
                 </button>
 
                 <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="Low">
                   <div class="mood-image-wrapper">
                     ${renderMoodArtwork('low', 48)}
                   </div>
-                  <span class="mood-pick-label">Low</span>
+                  <span class="mood-pick-label">Low</span><span class="mood-state-caption">A little low</span>
                 </button>
 
                 <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="Neutral">
                   <div class="mood-image-wrapper">
                     ${renderMoodArtwork('neutral', 48)}
                   </div>
-                  <span class="mood-pick-label">Neutral</span>
+                  <span class="mood-pick-label">Neutral</span><span class="mood-state-caption">In between</span>
                 </button>
 
                 <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="Good">
                   <div class="mood-image-wrapper">
                     ${renderMoodArtwork('good', 48)}
                   </div>
-                  <span class="mood-pick-label">Good</span>
+                  <span class="mood-pick-label">Good</span><span class="mood-state-caption">Feeling brighter</span>
                 </button>
 
                 <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="Very Good">
                   <div class="mood-image-wrapper">
                     ${renderMoodArtwork('very_good', 48)}
                   </div>
-                  <span class="mood-pick-label">Very Good</span>
+                  <span class="mood-pick-label">Very Good</span><span class="mood-state-caption">Feeling hopeful</span>
                 </button>
               </div>
 
@@ -183,6 +125,9 @@ export const MoodTracker = {
 
               <div class="chart-wrapper">
                 <canvas id="mood-trend-canvas" role="img" aria-label="Mood trend line graph"></canvas>
+              </div>
+              <div class="mood-chart-detail" id="mood-chart-detail" aria-live="polite">
+                <span>Hover over or tap a mood point to revisit that check-in.</span>
               </div>
             </section>
 
@@ -297,13 +242,13 @@ export const MoodTracker = {
             const dateStr = new Date(m.recorded_at).toLocaleDateString(undefined, {
               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
             });
-            const moodIllustration = renderMoodArtwork(m.level, 40);
+            const moodEmoticon = renderMoodArtwork(m.level, 40);
 
             return `
               <div class="card mood-history-item" id="mood-item-${m.id}">
                 <div class="mood-item-left">
                   <div class="mood-history-image">
-                    ${moodIllustration}
+                    ${moodEmoticon}
                   </div>
                   <div style="flex-grow:1;">
                     <div class="mood-item-header">
@@ -349,6 +294,51 @@ export const MoodTracker = {
           });
           const scores = trendData.map(d => d.score);
 
+          const levelLabels = { very_low: 'Very Low', low: 'Low', neutral: 'Neutral', good: 'Good', very_good: 'Very Good' };
+          const moodFaceImages = {};
+          ['very_low', 'low', 'neutral', 'good', 'very_good'].forEach(level => {
+            const svgMarkup = renderMoodArtwork(level, 20).match(/<svg\b[\s\S]*?<\/svg>/)?.[0];
+            if (!svgMarkup) return;
+            const image = new Image();
+            const svgWithStyles = svgMarkup
+              .replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')
+              .replace(' aria-hidden="true" focusable="false">', '><style>.face-halo{fill:rgba(255,255,255,.46);stroke:rgba(198,93,58,.2);stroke-width:1}.face-disc{stroke:rgba(81,70,62,.12);stroke-width:1}.face-shine{fill:none;stroke:rgba(255,255,255,.76);stroke-width:3;stroke-linecap:round}.face-freckle{fill:rgba(81,70,62,.35)}</style>');
+            image.onload = () => this._chartInstance?.draw();
+            image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgWithStyles)}`;
+            moodFaceImages[level] = image;
+          });
+
+          const moodFacePlugin = {
+            id: 'serenovaMoodFaceMarkers',
+            afterDatasetsDraw: chart => {
+              const points = chart.getDatasetMeta(0).data;
+              const activeIndex = chart.getActiveElements().find(item => item.datasetIndex === 0)?.index;
+              const context = chart.ctx;
+              points.forEach((point, index) => {
+                const record = trendData[index];
+                if (!record) return;
+                const image = moodFaceImages[record.level];
+                if (!image?.complete || !image.naturalWidth) return;
+                const isActive = activeIndex === index;
+                const diameter = isActive ? 34 : 29;
+                context.save();
+                context.beginPath();
+                context.arc(point.x, point.y, diameter / 2 + 2, 0, Math.PI * 2);
+                context.fillStyle = '#F6F1E8';
+                context.shadowColor = isActive ? 'rgba(198,93,58,.28)' : 'rgba(52,42,34,.14)';
+                context.shadowBlur = isActive ? 9 : 5;
+                context.fill();
+                context.shadowBlur = 0;
+                context.lineWidth = isActive ? 2 : 1;
+                context.strokeStyle = isActive ? '#C65D3A' : 'rgba(198,93,58,.32)';
+                context.stroke();
+                context.drawImage(image, point.x - diameter / 2, point.y - diameter / 2, diameter, diameter);
+                context.restore();
+              });
+            }
+          };
+
+          const chartDetail = document.getElementById('mood-chart-detail');
           this._chartInstance = new Chart(canvas, {
             type: 'line',
             data: {
@@ -360,14 +350,34 @@ export const MoodTracker = {
                 backgroundColor: 'rgba(198, 93, 58, 0.08)',
                 fill: true,
                 tension: 0.35,
-                pointBackgroundColor: '#C65D3A',
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointBackgroundColor: 'rgba(198,93,58,.22)',
+                pointBorderColor: '#C65D3A',
+                pointRadius: trendData.length ? 12 : 0,
+                pointHoverRadius: 8,
+                pointHitRadius: 14,
               }]
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              interaction: { mode: 'nearest', intersect: true },
+              hover: { mode: 'nearest', intersect: true },
+              onHover: (_event, activeElements) => {
+                canvas.style.cursor = activeElements.length ? 'pointer' : 'default';
+              },
+              onClick: (_event, activeElements) => {
+                const point = activeElements[0];
+                if (!point || !chartDetail) return;
+                const record = trendData[point.index];
+                if (!record) return;
+                const label = levelLabels[record.level] || 'Mood check-in';
+                const date = new Date(record.recorded_at).toLocaleString(undefined, {
+                  month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+                });
+                chartDetail.innerHTML = `${renderMoodArtwork(record.level, 28)}<div class="mood-chart-detail-copy"><strong>${label}</strong><span>${date} · ${record.score}/5</span></div>`;
+                chartDetail.classList.add('has-selection');
+              },
+              animation: { duration: 700, easing: 'easeOutQuart' },
               scales: {
                 y: {
                   min: 1,
@@ -391,14 +401,19 @@ export const MoodTracker = {
                 legend: { display: false },
                 tooltip: {
                   callbacks: {
-                    label: (ctx) => {
-                      const map = { 1: 'Very Low', 2: 'Low', 3: 'Neutral', 4: 'Good', 5: 'Very Good' };
-                      return `Mood: ${map[ctx.parsed.y] || ctx.parsed.y}`;
-                    }
+                    title: contexts => {
+                      const record = trendData[contexts[0]?.dataIndex];
+                      return record ? new Date(record.recorded_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'No check-in yet';
+                    },
+                    label: ctx => {
+                      const record = trendData[ctx.dataIndex];
+                      return record ? `${levelLabels[record.level] || 'Mood'} · ${record.score}/5` : 'No recorded mood';
+                    },
                   }
                 }
               }
-            }
+            },
+            plugins: [moodFacePlugin]
           });
         }
 

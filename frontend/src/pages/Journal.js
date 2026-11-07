@@ -1,6 +1,5 @@
 import { journalsApi } from '../api/journals.js';
 import { Toast } from '../components/Toast.js';
-import { router } from '../router.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 
@@ -113,12 +112,35 @@ export const Journal = {
       });
 
       if (filtered.length === 0) {
+        if (allEntries.length > 0) {
+          grid.innerHTML = `<div class="journal-no-results"><span aria-hidden="true">⌕</span><p>No reflections match this search yet.</p><button type="button" class="btn btn-ghost btn-sm" id="clear-journal-search">Clear search and filters</button></div>`;
+          grid.querySelector('#clear-journal-search')?.addEventListener('click', () => {
+            searchInput.value = '';
+            selectedTag = null;
+            renderTags();
+            filterAndRender();
+          });
+          return;
+        }
         grid.innerHTML = `
-          <div class="empty-state">
-            <p>No journal reflections found.</p>
-            <a href="/journal/new" class="btn btn-primary btn-sm mt-3">Start your first reflection</a>
+          <div class="journal-welcome-card">
+            <span class="journal-welcome-art" aria-hidden="true">✍️</span>
+            <div class="journal-welcome-copy">
+              <span class="section-eyebrow">A page of your own</span>
+              <h2>Your thoughts can arrive just as they are.</h2>
+              <p>Write a little or a lot. Choose a prompt, or begin anywhere. This space is for every kind of day and every student.</p>
+              <div class="journal-prompt-row" aria-label="Writing prompts">
+                <a href="/journal/new" class="journal-prompt-chip" data-prompt="What has been taking up space in my mind today?">What’s on my mind?</a>
+                <a href="/journal/new" class="journal-prompt-chip" data-prompt="One thing I handled today, however small, was…">A small win</a>
+                <a href="/journal/new" class="journal-prompt-chip" data-prompt="Something I need more of this week is…">What I need</a>
+              </div>
+              <a href="/journal/new" class="btn btn-primary btn-sm mt-4">Start a reflection →</a>
+            </div>
           </div>
         `;
+        grid.querySelectorAll('.journal-prompt-chip').forEach(link => link.addEventListener('click', () => {
+          sessionStorage.setItem('serenova_journal_prompt', link.dataset.prompt);
+        }));
         return;
       }
 
