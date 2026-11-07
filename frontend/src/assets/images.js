@@ -6,7 +6,7 @@
  * Find IDs on unsplash.com: the long part of an images.unsplash.com/photo-XXXX URL.
  *
  * Every <img> is rendered inside a `.photo` frame that has a soft gradient background,
- * so if a photo fails to load (offline, ID removed) the layout stays intact and the
+ * (main.js removes broken images and fades loaded ones in), so if a photo fails to load (offline, ID removed) the layout stays intact and the
  * frame simply shows the gradient.
  */
 
@@ -50,8 +50,6 @@ export function photo(key, { w = 900, cls = '', eager = false } = {}) {
         style="object-position:${p.pos}"
         ${eager ? '' : 'loading="lazy"'}
         decoding="async"
-        onload="this.classList.add('is-loaded')"
-        onerror="this.remove()"
       />
     </figure>
   `;

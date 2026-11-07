@@ -1,7 +1,10 @@
 import uuid
 import datetime
 from typing import List, Dict, Any
+import datetime
+from app.config import settings
 from app.database import db_manager
+from app.auth import hash_password
 
 DEFAULT_COUNSELLORS: List[Dict[str, Any]] = [
     {
@@ -73,7 +76,7 @@ DEFAULT_COUNSELLORS: List[Dict[str, Any]] = [
 DEFAULT_RESOURCES = [
     {
         "_id": "res-01",
-        "category": "academic",
+        "category": "study_stress",
         "category_label": "Academic Pressures",
         "title": "The Pomodoro & Task-Triage Protocol for Finals",
         "read_time": "3 min read",
@@ -85,7 +88,7 @@ DEFAULT_RESOURCES = [
     {
         "_id": "res-02",
         "category": "sleep",
-        "category_label": "Sleep & Rest",
+        "category_label": "Rest & Recovery",
         "title": "Circadian Re-anchoring for College Students",
         "read_time": "4 min read",
         "summary": "Evidence-backed bedtime wind-down protocols, caffeine half-life awareness, and screen dimming tips.",
@@ -96,7 +99,7 @@ DEFAULT_RESOURCES = [
     {
         "_id": "res-03",
         "category": "crisis",
-        "category_label": "Emergency Helplines",
+        "category_label": "Verified Helplines",
         "title": "Official Student Mental Health Helplines (India)",
         "read_time": "Immediate support",
         "summary": "Free, confidential, certified 24x7 crisis hotlines and counseling centers.",
@@ -121,3 +124,56 @@ async def seed_database_if_empty():
         for r in DEFAULT_RESOURCES:
             await resources_col.insert_one(r)
         print("[Database] Seeded default resources.")
+
+
+DEMO_COUNSELLOR_LOGINS = {
+    "counsellor-01": ("Dr. Ananya Sen", "ananya.sen@serenova.demo"),
+    "counsellor-02": ("Dr. Rohan Mehta", "rohan.mehta@serenova.demo"),
+    "counsellor-03": ("Meera Nambiar", "meera.nambiar@serenova.demo"),
+    "counsellor-04": ("Dr. Kabir Rao", "kabir.rao@serenova.demo"),
+}
+DEMO_ADMIN_EMAIL = "admin@serenova.demo"
+
+
+async def ensure_demo_data():
+    """
+    Demo mode only. Marks the four sample counsellor profiles as demo data and creates logins for them
+    plus one admin, so every part of the site can be tried. Does nothing when DEMO_MODE is off.
+    To go live: set DEMO_MODE=false, replace the counsellor documents with real people, and create their
+    logins from the admin panel (or POST /api/admin/counsellor-accounts).
+    """
+    if not settings.DEMO_MODE:
+        return
+    users = db_manager.get_collection("users")
+    counsellors = db_manager.get_collection("counsellors")
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+    for cid in DEMO_COUNSELLOR_LOGINS:
+        if await counsellors.find_one({"_id": cid}):
+            await counsellors.update_one({"_id": cid}, {"$set": {"is_demo": True}})
+
+    for cid, (name, email) in DEMO_COUNSELLOR_LOGINS.items():
+        if not await counsellors.find_one({"_id": cid}) or await users.find_one({"email": email}):
+            continue
+        await users.insert_one({
+            "name": name, "email": email, "password_hash": hash_password(settings.DEMO_PASSWORD),
+            "role": "counsellor", "counsellor_id": cid, "email_verified": True,
+            "created_at": now, "updated_at": now, "profile": {"language": "en"},
+        })
+    if not await users.find_one({"email": DEMO_ADMIN_EMAIL}):
+        await users.insert_one({
+            "name": "Demo Admin", "email": DEMO_ADMIN_EMAIL, "password_hash": hash_password(settings.DEMO_PASSWORD),
+            "role": "admin", "email_verified": True,
+            "created_at": now, "updated_at": now, "profile": {"language": "en"},
+        })
+    # Make the original demo student a verified, consented account so the demo isn't interrupted
+    demo_student = await users.find_one({"email": "student@university.edu"})
+    if not demo_student:
+        await users.insert_one({
+            "name": "Demo Student", "email": "student@university.edu", "password_hash": hash_password(settings.DEMO_PASSWORD),
+            "role": "student", "email_verified": True, "consent": {"version": "2026-11", "accepted_at": now},
+            "created_at": now, "updated_at": now, "profile": {"language": "en", "university": "Demo University"},
+        })
+    elif "role" not in demo_student:
+        await users.update_one({"_id": demo_student["_id"]}, {"$set": {"role": "student", "email_verified": True}})
+    print("[Database] Demo accounts ready (demo mode).")

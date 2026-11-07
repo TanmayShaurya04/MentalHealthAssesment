@@ -19,23 +19,51 @@ import { Chat } from './pages/Chat.js';
 import { Counsellors } from './pages/Counsellors.js';
 import { Resources } from './pages/Resources.js';
 import { Profile } from './pages/Profile.js';
+import { NotFound } from './pages/NotFound.js';
+import { Privacy, Terms } from './pages/Legal.js';
+import { About } from './pages/About.js';
+import { ForgotPassword, ResetPassword, VerifyEmail } from './pages/AccountLinks.js';
+import { Settings } from './pages/Settings.js';
+import { CounsellorPortal } from './pages/CounsellorPortal.js';
+import { AdminInsights } from './pages/AdminInsights.js';
+import { ConsentModal, CONSENT_VERSION } from './components/ConsentModal.js';
 
+const SITE = 'Serenova';
+const STUDENT = ['student'];
+
+// title: shown in the browser tab and announced to screen readers on navigation
 const ROUTES = [
-  { path: '/',                   page: Landing,           requiresAuth: false },
-  { path: '/auth/login',         page: Login,             guestOnly: true },
-  { path: '/auth/register',      page: Register,          guestOnly: true },
-  { path: '/dashboard',          page: Dashboard,         requiresAuth: true },
-  { path: '/mood',               page: MoodTracker,       requiresAuth: true },
-  { path: '/journal',            page: Journal,           requiresAuth: true },
-  { path: '/journal/:id',        page: JournalEntry,      requiresAuth: true },
-  { path: '/assessment',         page: Assessment,        requiresAuth: true },
-  { path: '/assessment/results', page: AssessmentResults, requiresAuth: true },
-  { path: '/chat',               page: Chat,              requiresAuth: true },
-  { path: '/counsellors',        page: Counsellors,       requiresAuth: false },
-  { path: '/appointments',       page: Counsellors,       requiresAuth: true },
-  { path: '/resources',          page: Resources,         requiresAuth: false },
-  { path: '/profile',            page: Profile,           requiresAuth: true },
+  { path: '/',                   page: Landing,           title: 'Student Well-Being',  requiresAuth: false },
+  { path: '/auth/login',         page: Login,             title: 'Sign in',             guestOnly: true },
+  { path: '/auth/register',      page: Register,          title: 'Create your account', guestOnly: true },
+  { path: '/auth/forgot',        page: ForgotPassword,    title: 'Forgot password' },
+  { path: '/auth/reset',         page: ResetPassword,     title: 'Choose a new password' },
+  { path: '/auth/verify',        page: VerifyEmail,       title: 'Confirm your email' },
+  { path: '/dashboard',          page: Dashboard,         title: 'Dashboard',           requiresAuth: true, roles: STUDENT },
+  { path: '/mood',               page: MoodTracker,       title: 'Mood Tracker',        requiresAuth: true, roles: STUDENT },
+  { path: '/journal',            page: Journal,           title: 'Private Journal',     requiresAuth: true, roles: STUDENT },
+  { path: '/journal/:id',        page: JournalEntry,      title: 'Journal entry',       requiresAuth: true, roles: STUDENT },
+  { path: '/assessment',         page: Assessment,        title: 'Well-Being Screening', requiresAuth: true, roles: STUDENT },
+  { path: '/assessment/results', page: AssessmentResults, title: 'Your results',        requiresAuth: true, roles: STUDENT },
+  { path: '/chat',               page: Chat,              title: 'AI Companion',        requiresAuth: true, roles: STUDENT },
+  { path: '/counsellors',        page: Counsellors,       title: 'Counsellors',         requiresAuth: false },
+  { path: '/appointments',       page: Counsellors,       title: 'My appointments',     requiresAuth: true, roles: STUDENT },
+  { path: '/resources',          page: Resources,         title: 'Resources',           requiresAuth: false },
+  { path: '/profile',            page: Profile,           title: 'My profile',          requiresAuth: true },
+  { path: '/settings',           page: Settings,          title: 'Settings',            requiresAuth: true },
+  { path: '/counsellor',         page: CounsellorPortal,  title: 'Counsellor portal',   requiresAuth: true, roles: ['counsellor'] },
+  { path: '/admin',              page: AdminInsights,     title: 'Insights',            requiresAuth: true, roles: ['admin'] },
+  { path: '/privacy',            page: Privacy,           title: 'Privacy Policy' },
+  { path: '/terms',              page: Terms,             title: 'Terms of Use' },
+  { path: '/about',              page: About,             title: 'About' },
 ];
+
+const NOT_FOUND = { path: '*', page: NotFound, title: 'Page not found' };
+
+/** Where each role lands after signing in */
+export function homeFor(user) {
+  return user?.role === 'counsellor' ? '/counsellor' : user?.role === 'admin' ? '/admin' : '/dashboard';
+}
 
 class Router {
   constructor() {
@@ -78,22 +106,29 @@ class Router {
     this.navigate(location.pathname, false);
   }
 
-  navigate(path, pushState = true) {
+  navigate(path, pushState = true, replace = false) {
     const isAuth = store.isAuthenticated();
 
-    // Match route
-    let matched = this.match(path) || this.match('/');
-    let targetRoute = matched;
+    // Match route (unknown addresses get a proper 404 page instead of silently showing the home page)
+    const [pathOnly] = path.split(/[?#]/);
+    let targetRoute = this.match(pathOnly) || { ...NOT_FOUND, params: {} };
+    const user = store.getUser();
 
     // 1. Auth Guard: Requires Auth
     if (targetRoute.requiresAuth && !isAuth) {
-      this.navigate('/auth/login', pushState);
+      this.navigate('/auth/login', pushState, !pushState);
       return;
     }
 
     // 2. Guest Guard: Redirect logged-in users away from login/register to dashboard
     if (targetRoute.guestOnly && isAuth) {
-      this.navigate('/dashboard', pushState);
+      this.navigate(homeFor(user), pushState, !pushState);
+      return;
+    }
+
+    // 3. Role guard: counsellors and admins have their own area; students can't open it (and vice versa)
+    if (targetRoute.roles && isAuth && !targetRoute.roles.includes(user?.role || 'student')) {
+      this.navigate(homeFor(user), pushState, !pushState);
       return;
     }
 
@@ -111,9 +146,12 @@ class Router {
     // Update history
     if (pushState) {
       history.pushState({}, '', path);
+    } else if (replace) {
+      history.replaceState({}, '', path);   // redirected on first load: fix the address bar too
     }
 
-    // Reset scroll
+    // Per-page title, then reset scroll and move keyboard focus to the new page (helps screen-reader users)
+    document.title = targetRoute.path === '/' ? `${SITE} — ${targetRoute.title}` : `${targetRoute.title} · ${SITE}`;
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     // Execute lifecycle hooks
@@ -124,6 +162,13 @@ class Router {
 
     // Shared entrance / scroll-reveal animations
     initAnimations(this.appEl);
+    const main = this.appEl.querySelector('main, #main-content');
+    if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+
+    // First visit after sign-up: ask for consent before using anything that stores personal reflections
+    if (targetRoute.requiresAuth && user?.role === 'student' && user.consent?.version !== CONSENT_VERSION) {
+      ConsentModal.open();
+    }
   }
 
   match(path) {

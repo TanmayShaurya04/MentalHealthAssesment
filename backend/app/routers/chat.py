@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.models import ChatSessionCreate, ChatSessionResponse, ChatMessageSend, ChatMessageResponse
 from app.auth import get_current_user
 from app.database import db_manager
-from app.services.safety_layer import check_message_safety
+from app.services.safety_layer import check_message_safety, check_ai_reply_safety
+from app.services.crisis_log import log_crisis_event
 from app.services.ai_service import ai_service
 from app.services.topic_classifier import classify_topic, topic_choices, DEFAULT_TOPIC
 
@@ -139,6 +140,7 @@ async def send_message(id: str, payload: ChatMessageSend, current_user: dict = D
             {"_id": id},
             {"$set": {"updated_at": assistant_now, "has_crisis": True}},
         )
+        await log_crisis_event(user_id, "chat", id)
         return asst_msg_doc
 
     # 3. Call AI Service with the most recent turns only
@@ -151,6 +153,9 @@ async def send_message(id: str, payload: ChatMessageSend, current_user: dict = D
         llm_messages.append({"role": d["role"], "content": d["content"]})
         
     ai_reply = await ai_service.get_response(llm_messages)
+    unsafe, ai_reply = check_ai_reply_safety(ai_reply)
+    if unsafe:
+        print("[Safety] AI reply replaced by the safe fallback.")
     
     asst_msg_doc = {
         "session_id": id,

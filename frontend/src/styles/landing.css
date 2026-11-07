@@ -618,7 +618,7 @@
 
 .assessment-option-chip.selected {
   background: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   border-color: var(--color-accent);
 }
 

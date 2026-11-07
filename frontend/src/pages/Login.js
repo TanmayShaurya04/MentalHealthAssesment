@@ -1,5 +1,7 @@
 import { authApi } from '../api/auth.js';
-import { router } from '../router.js';
+import { router, homeFor } from '../router.js';
+import { t } from '../i18n/index.js';
+import { icon } from '../components/icons.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
@@ -23,24 +25,13 @@ export const Login = {
           <div class="auth-card">
             
             <div class="auth-header">
-              <span class="auth-eyebrow">Welcome back</span>
-              <h1 class="auth-title">Sign in to your private space</h1>
-              <p class="auth-subtitle">Your reflections and records are confidential and secure.</p>
+              <span class="auth-eyebrow">${t('auth.welcomeBack')}</span>
+              <h1 class="auth-title">${t('auth.signInTitle')}</h1>
+              <p class="auth-subtitle">${t('auth.signInSub')}</p>
             </div>
 
-            <!-- Demo Account Helper Banner -->
-            <div class="demo-credentials-banner" style="background: rgba(198, 93, 58, 0.08); border: 1px solid rgba(198, 93, 58, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.85rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <strong style="color: var(--color-ink);">🔑 Quick Demo Login</strong>
-                <button type="button" id="btn-fill-demo" style="background: var(--color-accent); color: #fff; border: none; border-radius: 4px; padding: 3px 10px; font-size: 0.75rem; cursor: pointer;">
-                  Autofill Demo
-                </button>
-              </div>
-              <p style="margin: 0; color: var(--color-ink-80); line-height: 1.4;">
-                Email: <code>student@university.edu</code><br>
-                Password: <code>password123</code>
-              </p>
-            </div>
+            <!-- Filled in only when the server runs in demo mode (see /api/config) -->
+            <div id="demo-slot"></div>
 
             <form class="auth-form" id="login-form" novalidate>
               <div id="auth-error-alert" class="auth-alert" style="display:none;" role="alert"></div>
@@ -59,26 +50,27 @@ export const Login = {
 
               <div class="form-group">
                 <div class="form-label-row">
-                  <label for="login-password" class="form-label">Password</label>
-                  <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn">Show</button>
+                  <label for="login-password" class="form-label">${t('auth.password')}</label>
+                  <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn" aria-controls="login-password">${t('auth.show')}</button>
                 </div>
                 <input
                   type="password"
                   id="login-password"
                   class="form-input"
-                  placeholder="••••••••••••"
+                  placeholder="Your password"
                   required
                   autocomplete="current-password"
                 />
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg auth-submit-btn" id="login-submit-btn">
-                <span>Sign in</span>
+                <span>${t('auth.signInBtn')}</span>
               </button>
+              <p class="auth-forgot"><a href="/auth/forgot" class="auth-link">${t('auth.forgot')}</a></p>
             </form>
 
             <div class="auth-footer">
-              <p>Don't have an account yet? <a href="/auth/register" class="auth-link">Create one here</a></p>
+              <p>${t('auth.noAccount')} <a href="/auth/register" class="auth-link">${t('auth.createAccount')}</a></p>
               <p class="auth-disclaimer">
                 Serenova is a non-diagnostic well-being support platform.
               </p>
@@ -106,18 +98,26 @@ export const Login = {
     toggleBtn?.addEventListener('click', () => {
       const isPwd = pwdInput.type === 'password';
       pwdInput.type = isPwd ? 'text' : 'password';
-      toggleBtn.textContent = isPwd ? 'Hide' : 'Show';
+      toggleBtn.textContent = isPwd ? t('auth.hide') : t('auth.show');
     });
 
-    // Autofill demo credentials
-    document.getElementById('btn-fill-demo')?.addEventListener('click', () => {
-      if (emailInput && pwdInput) {
+    // Demo helper: only when the server says it is running in demo mode
+    authApi.getConfig().then((cfg) => {
+      if (!cfg.demo_mode) return;
+      const slot = document.getElementById('demo-slot');
+      if (!slot) return;
+      slot.innerHTML = `
+        <div class="demo-banner">
+          <div class="demo-banner-head"><strong>${icon('key', { size: 16 })} Demo mode</strong>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-fill-demo">Use demo student</button></div>
+          <p>This is a test environment with sample data. Student: <code>student@university.edu</code>.
+          Counsellor and admin demo logins use the same password.</p>
+        </div>`;
+      document.getElementById('btn-fill-demo').addEventListener('click', () => {
         emailInput.value = 'student@university.edu';
-        pwdInput.value = 'password123';
-        pwdInput.type = 'text';
-        if (toggleBtn) toggleBtn.textContent = 'Hide';
-      }
-    });
+        pwdInput.value = cfg.demo_password || '';
+      });
+    }).catch(() => {});
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -136,9 +136,9 @@ export const Login = {
       submitBtn.innerHTML = '<span>Signing in...</span>';
 
       try {
-        await authApi.login({ email, password });
+        const res = await authApi.login({ email, password });
         Toast.success('Welcome back to Serenova.');
-        router.navigate('/dashboard');
+        router.navigate(homeFor(res.user));
       } catch (err) {
         alertBox.textContent = err.message || 'Incorrect email or password.';
         alertBox.style.display = 'block';

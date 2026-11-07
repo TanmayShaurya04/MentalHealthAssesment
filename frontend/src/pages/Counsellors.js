@@ -1,4 +1,7 @@
 import { store } from '../store.js';
+import { confirmDialog } from '../components/Dialog.js';
+import { icon } from '../components/icons.js';
+import { esc } from '../utils/html.js';
 import { counsellorsApi } from '../api/counsellors.js';
 import { appointmentsApi } from '../api/appointments.js';
 import { Toast } from '../components/Toast.js';
@@ -30,7 +33,7 @@ export const Counsellors = {
           <!-- Navigation Tabs -->
           <div class="counsellors-tabs-bar" role="tablist">
             <button type="button" class="tab-btn active" id="tab-counsellors-btn" role="tab" aria-selected="true" aria-controls="panel-counsellors">
-              Verified Counsellors Directory
+              Counsellors Directory
             </button>
             <button type="button" class="tab-btn" id="tab-appointments-btn" role="tab" aria-selected="false" aria-controls="panel-appointments">
               My Appointments & Consultations
@@ -65,7 +68,7 @@ export const Counsellors = {
 
             <!-- Counsellor Table Container -->
             <div id="counsellors-table-wrapper" class="counsellors-table-container">
-              <div class="loading-spinner">Loading verified counsellors directory...</div>
+              <div class="loading-spinner">Loading counsellors...</div>
             </div>
           </section>
 
@@ -97,7 +100,7 @@ export const Counsellors = {
                 <span class="modal-eyebrow text-success">● Live Consultation Room</span>
                 <h3 id="video-modal-title" class="modal-title">Secure Video Consultation</h3>
               </div>
-              <button type="button" class="modal-close-btn" id="close-video-modal-btn" aria-label="Close modal">✕</button>
+              <button type="button" class="modal-close-btn" id="close-video-modal-btn" aria-label="Close modal">${icon('x', { size: 18 })}</button>
             </div>
 
             <div class="video-modal-body">
@@ -108,7 +111,7 @@ export const Counsellors = {
               <div class="video-preview-screen">
                 <div class="video-cam-box">
                   <div class="video-cam-placeholder">
-                    <span class="video-cam-icon">📹</span>
+                    <span class="video-cam-icon">${icon('video', { size: 28 })}</span>
                     <p class="font-medium text-ink">Encrypted 1-on-1 Consultation Space</p>
                     <span class="text-xs text-ink-60 mt-1">End-to-end private • No recordings • Peer-to-peer audio & video</span>
                   </div>
@@ -144,7 +147,7 @@ export const Counsellors = {
                 <span class="modal-eyebrow">Confidential Booking</span>
                 <h3 id="booking-modal-title" class="modal-title">Schedule a Consultation</h3>
               </div>
-              <button type="button" class="modal-close-btn" id="close-booking-modal-btn" aria-label="Close modal">✕</button>
+              <button type="button" class="modal-close-btn" id="close-booking-modal-btn" aria-label="Close modal">${icon('x', { size: 18 })}</button>
             </div>
 
             <form id="booking-form" class="modal-form">
@@ -323,7 +326,7 @@ export const Counsellors = {
                           ${c.avatar || 'DR'}
                         </div>
                         <div>
-                          <strong class="counsellor-table-name">${c.name}</strong>
+                          <strong class="counsellor-table-name">${esc(c.name)}</strong>${c.is_demo ? ' <span class="pill" title="Sample profile for demonstration">Demo</span>' : ''}
                           <span class="counsellor-table-title">${c.title}</span>
                         </div>
                       </div>
@@ -362,19 +365,11 @@ export const Counsellors = {
                       <div class="table-actions-cell">
                         <button
                           type="button"
-                          class="btn btn-video btn-sm btn-video-chat"
-                          data-id="${c.id}"
-                          title="Start live video consultation with ${c.name}"
-                        >
-                          📹 Video Chat
-                        </button>
-                        <button
-                          type="button"
                           class="btn btn-primary btn-sm btn-book"
                           data-id="${c.id}"
                           title="Book an appointment"
                         >
-                          📅 Book
+                          ${icon('calendar', { size: 16 })} Book
                         </button>
                       </div>
                     </td>
@@ -385,15 +380,6 @@ export const Counsellors = {
           </table>
         </div>
       `;
-
-      // Wire Video Chat buttons
-      tableWrapper.querySelectorAll('.btn-video-chat').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const cId = btn.dataset.id;
-          const counsellor = allCounsellors.find(item => item.id === cId);
-          openVideoModal(counsellor);
-        });
-      });
 
       // Wire Book buttons
       tableWrapper.querySelectorAll('.btn-book').forEach(btn => {
@@ -539,7 +525,7 @@ export const Counsellors = {
         }
 
         container.innerHTML = list.map(a => {
-          const isCancelled = a.status === 'cancelled';
+          const isCancelled = a.status === 'cancelled' || a.status === 'declined';
           return `
             <div class="appointment-card card ${isCancelled ? 'appointment-cancelled' : ''}">
               <div class="appointment-header-row">
@@ -547,8 +533,8 @@ export const Counsellors = {
                   <h4 class="appointment-counsellor">${a.counsellor_name || 'Counsellor'}</h4>
                   <p class="appointment-type">${a.support_type.replace('_', ' ').toUpperCase()}</p>
                 </div>
-                <span class="badge badge-${a.status === 'confirmed' ? 'sage' : (a.status === 'pending' ? 'saffron' : 'surface')}">
-                  ${a.status.toUpperCase()}
+                <span class="badge badge-${(a.status === 'confirmed' || a.status === 'completed') ? 'sage' : (a.status === 'pending' ? 'saffron' : 'surface')}">
+                  ${esc({ pending: 'AWAITING CONFIRMATION' }[a.status] || a.status.toUpperCase())}
                 </span>
               </div>
 
@@ -566,26 +552,27 @@ export const Counsellors = {
               ${a.student_notes ? `
                 <div class="appointment-notes-box">
                   <span class="detail-label">Confidential Notes:</span>
-                  <p class="appointment-notes-text">"${a.student_notes}"</p>
+                  <p class="appointment-notes-text">"${esc(a.student_notes)}"</p>
                 </div>
               ` : ''}
 
+              ${a.counsellor_message ? `
+                <div class="appointment-notes-box">
+                  <span class="detail-label">Message from your counsellor:</span>
+                  <p class="appointment-notes-text">${esc(a.counsellor_message)}</p>
+                </div>` : ''}
+
               <div class="appointment-actions-row">
-                ${!isCancelled ? `
-                  <a
-                    href="https://meet.jit.si/serenova-consultation-${a.counsellor_id}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-video btn-sm"
-                  >
-                    📹 Join Video Call
-                  </a>
-                  <button type="button" class="btn btn-ghost btn-sm btn-cancel-appt text-error" data-id="${a.id}">
-                    Cancel appointment
-                  </button>
-                ` : `
-                  <span class="text-xs text-ink-60">Consultation cancelled</span>
-                `}
+                ${a.status === 'confirmed' && a.video_meet_link ? `
+                  <a href="${esc(a.video_meet_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-video btn-sm">
+                    ${icon('video', { size: 16 })} Join video call
+                  </a>` : ''}
+                ${a.status === 'pending' ? `<span class="text-xs text-ink-60">${icon('clock', { size: 14 })} Waiting for the counsellor to confirm. You'll get an email.</span>` : ''}
+                ${a.status === 'declined' ? `<span class="text-xs text-ink-60">The counsellor couldn't take this slot. Please pick another time.</span>` : ''}
+                ${a.status === 'completed' ? `<span class="text-xs text-ink-60">Session completed</span>` : ''}
+                ${a.status === 'cancelled' ? `<span class="text-xs text-ink-60">You cancelled this request</span>` : ''}
+                ${a.status === 'pending' || a.status === 'confirmed' ? `
+                  <button type="button" class="btn btn-ghost btn-sm btn-cancel-appt text-error" data-id="${esc(a.id)}">Cancel appointment</button>` : ''}
               </div>
             </div>
           `;
@@ -593,7 +580,7 @@ export const Counsellors = {
 
         container.querySelectorAll('.btn-cancel-appt').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Are you sure you wish to cancel this appointment request?')) return;
+            if (!(await confirmDialog({ title: 'Cancel this request?', message: 'The counsellor will be told you no longer need this slot.', confirmLabel: 'Cancel request', cancelLabel: 'Keep it', danger: true }))) return;
             try {
               await appointmentsApi.cancelAppointment(btn.dataset.id);
               Toast.info('Appointment has been cancelled.');

@@ -23,6 +23,7 @@ async def list_counsellors(
     results = []
     for d in docs:
         d["id"] = str(d["_id"])
+        d["video_meet_link"] = ""  # shared only with a student whose booking is confirmed
         results.append(d)
     return results
 
@@ -33,4 +34,5 @@ async def get_counsellor(id: str):
     if not c:
         raise HTTPException(status_code=404, detail="Counsellor profile not found")
     c["id"] = str(c["_id"])
+    c["video_meet_link"] = ""
     return c

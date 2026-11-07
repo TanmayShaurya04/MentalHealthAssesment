@@ -16,7 +16,7 @@
 | # | Correction |
 |---|---|
 | A | AI integration is **provider/model agnostic** — configured via `AI_PROVIDER`, `AI_MODEL`, `GROQ_API_KEY` (and equivalent keys for other providers). The AI service sits behind an abstraction layer; switching providers requires no application code changes. Do NOT hardcode any model name. |
-| B | The self-assessment is a **custom 10-question non-diagnostic well-being screening**, clearly labelled: _"This screening is for general self-reflection and well-being awareness. It is not a medical diagnosis."_ It is NOT described as PHQ-9-inspired or clinically validated. |
+| B | The self-assessment is a **20-question screening built from the standard PHQ-9 (depression) and GAD-7 (anxiety) plus a 4-item student check-in**, clearly labelled: _"This screening is for general self-reflection and well-being awareness. It is not a medical diagnosis."_ PHQ-9 and GAD-7 use their published cut-points; the student check-in is context only and not validated. It does not diagnose. |
 | C | Helpline/crisis contact information is **stored in the resource database** (not hardcoded in frontend components). Content must be verified before production deployment. |
 | D | JWT with sessionStorage is a **deliberate v1 architecture decision**, documented as such. Auth logic is isolated in a dedicated module so the token strategy can be changed independently later. |
 | E | **No admin panel** in v1. Appointments are student-facing and request-based (pending / confirmed / cancelled). |
@@ -650,11 +650,11 @@ A feature is complete only when all of the following are true:
 | # | Ambiguity | Decision |
 |---|---|---|
 | A-01 | No LLM provider named | Default Groq (LLaMA 3, free tier); config-driven |
-| A-02 | No specific questionnaire | Custom 10-question PHQ-9-inspired well-being check (non-diagnostic) |
+| A-02 | No specific questionnaire | PHQ-9 + GAD-7 + 4-item student check-in (non-diagnostic, item-9 safety flag) |
 | A-03 | No counsellor admin system | Student request-only workflow; status: pending/confirmed/cancelled |
 | A-04 | Resources static vs DB | Store in MongoDB; seed via script |
 | A-05 | JWT logout server-side? | Client-side token discard in v1 |
-| A-06 | Token storage | sessionStorage (safer than localStorage) |
+| A-06 | Session storage | httpOnly cookie (JavaScript cannot read it); only the user profile is kept in sessionStorage |
 | A-07 | Chat history optional? | Implement it — real value, straightforward |
 | A-08 | No region for helplines | India helplines (iCall, Vandrevala); configurable |
 | A-09 | Admin panel? | No admin panel in v1 |

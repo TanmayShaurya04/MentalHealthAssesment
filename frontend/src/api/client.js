@@ -4,7 +4,7 @@
  * Base fetch wrapper. All API modules use this.
  * Handles:
  *   - Base URL from environment variable (VITE_API_BASE_URL)
- *   - Authorization header injection (from store)
+ *   - Session cookie (credentials) handling
  *   - JSON serialisation / deserialisation
  *   - Consistent error shape
  *   - HTTP status → error mapping
@@ -38,11 +38,8 @@ class ApiError extends Error {
  * @throws {ApiError}
  */
 async function request(path, options = {}) {
-  const token = store.getToken();
-
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
@@ -51,6 +48,8 @@ async function request(path, options = {}) {
     response = await fetch(`${BASE_URL}${path}`, {
       ...options,
       headers,
+      // The session lives in an httpOnly cookie. "include" is only needed when the API is on another domain.
+      credentials: BASE_URL ? 'include' : 'same-origin',
     });
   } catch (networkError) {
     throw new ApiError(0, 'Network error. Please check your connection.');
@@ -75,9 +74,10 @@ async function request(path, options = {}) {
       data?.message ||
       (typeof data === 'string' ? data : `Request failed (${response.status})`);
 
-    // 401 → clear auth state
-    if (response.status === 401) {
+    // 401 on a signed-in page → session expired: clear it and go to sign-in
+    if (response.status === 401 && store.isAuthenticated() && !path.startsWith('/api/auth/')) {
       store.logout();
+      window.router?.navigate('/auth/login');
     }
 
     throw new ApiError(response.status, message, data);
@@ -89,6 +89,8 @@ async function request(path, options = {}) {
 // ── Convenience methods ────────────────────────────────────────
 
 export const apiClient = {
+  request,
+
   get(path, params) {
     const url = params
       ? `${path}?${new URLSearchParams(params)}`

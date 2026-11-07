@@ -3,6 +3,17 @@ import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 
+import datetime
+
+def next_slot_date(counsellor):
+    """The next calendar date that falls on one of the counsellor's working days."""
+    names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    d = datetime.date.today() + datetime.timedelta(days=2)
+    while names[d.weekday()] not in counsellor["available_days"]:
+        d += datetime.timedelta(days=1)
+    return d.isoformat()
+
+
 @pytest.mark.asyncio
 async def test_health_check():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
@@ -115,8 +126,8 @@ async def test_full_student_journey():
         appt_res = await client.post("/api/appointments", json={
             "counsellor_id": selected_counsellor["id"],
             "support_type": "academic_stress",
-            "preferred_date": "2026-10-20",
-            "time_slot": "11:00 AM",
+            "preferred_date": next_slot_date(selected_counsellor),
+            "time_slot": selected_counsellor["available_slots"][0],
             "student_notes": "Would appreciate guidance on managing thesis pressure."
         }, headers=headers)
         assert appt_res.status_code == 200

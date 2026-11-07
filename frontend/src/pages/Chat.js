@@ -1,4 +1,5 @@
 import { chatApi } from '../api/chat.js';
+import { confirmDialog } from '../components/Dialog.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { esc } from '../utils/html.js';
@@ -244,7 +245,7 @@ export const Chat = {
       sidebarEl.querySelectorAll('.btn-delete-session').forEach((btn) => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
-          if (!confirm('Delete this conversation history?')) return;
+          if (!(await confirmDialog({ title: 'Delete this conversation?', message: 'The whole chat will be removed.', confirmLabel: 'Delete', danger: true }))) return;
           try {
             await chatApi.deleteSession(btn.dataset.id);
             if (btn.dataset.id === activeSessionId) activeSessionId = null;

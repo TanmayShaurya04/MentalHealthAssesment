@@ -81,6 +81,16 @@ If you prefer hosting the frontend on Vercel and the backend on Render/Railway:
 |---|---|---|---|
 | `PORT` | Auto | `8000` | Port for the web server (assigned by cloud host) |
 | `ENVIRONMENT` | No | `production` | Runtime mode (`production` or `development`) |
-| `JWT_SECRET` | Recommended | Random | Secret key for signing student authentication tokens |
+| `JWT_SECRET` | **Required in production** | Random 48+ chars | Signs sessions. The app refuses to start in production with the default value |
 | `MONGODB_URL` | Optional | *Empty* | Connection string for MongoDB Atlas. If omitted, uses fast file-backed storage (`data/`). |
 | `AI_API_KEY` | Optional | *Empty* | Groq/OpenAI key. If omitted, uses the comprehensive offline Rule-Based Companion engine. |
+
+## Going live checklist
+
+1. Copy `.env.example` to `.env`; set `JWT_SECRET`, `PUBLIC_URL`, `CORS_ORIGINS`, `DEMO_MODE=false`.
+2. Use MongoDB (`MONGODB_URL`, e.g. a free Atlas cluster). The JSON-file storage is for demos only.
+3. Add SMTP settings so password-reset, confirmation, booking and reminder emails are really sent.
+4. Create real counsellor profiles and logins (Admin page → Counsellor logins). Demo profiles are labelled "Demo".
+5. Serve over HTTPS and keep `COOKIE_SECURE=true`.
+6. Replace the placeholder contact details in the Privacy Policy and Terms and have them reviewed.
+7. Optional: set `SENTRY_DSN` (`pip install sentry-sdk`) for error tracking.

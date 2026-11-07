@@ -3,6 +3,8 @@ import { router } from '../router.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import { esc } from '../utils/html.js';
+import { icon } from '../components/icons.js';
+import Chart from 'chart.js/auto';
 
 export const AssessmentResults = {
   _cleanupNavbar: null,
@@ -109,16 +111,24 @@ export const AssessmentResults = {
           <div class="results-actions-row mt-8">
             <a href="/chat" class="btn btn-primary">Talk with AI Companion</a>
             <a href="/counsellors" class="btn btn-secondary">Consult a Counsellor</a>
-            <button type="button" class="btn btn-secondary" id="btn-print-report">🖨️ Print Report</button>
+            <button type="button" class="btn btn-secondary" id="btn-print-report">${icon('printer', { size: 16 })} Print report</button>
             <a href="/assessment" class="btn btn-ghost btn-sm">Retake Screening</a>
           </div>
         </div>
+
+        <section class="history-card" id="history-card" hidden aria-labelledby="hist-h">
+          <h2 id="hist-h">Your scores over time</h2>
+          <div class="history-canvas"><canvas id="history-chart" role="img" aria-label="Line chart of your total screening score by date"></canvas></div>
+          <p class="text-xs text-ink-60 mt-2">Lower is better. Changes between screenings are a conversation starter, not a diagnosis.</p>
+        </section>
 
         <!-- Support reminder -->
         <div class="results-support-banner mt-6">
           <p>Need immediate support? Connect with our 24x7 verified helpline at <a href="tel:14416" class="underline">14416 (Tele-MANAS)</a>.</p>
         </div>
       `;
+
+      this.drawHistory();
 
       document.getElementById('btn-print-report')?.addEventListener('click', () => {
         window.print();
@@ -128,7 +138,39 @@ export const AssessmentResults = {
     }
   },
 
+  async drawHistory() {
+    try {
+      const all = await assessmentsApi.listAssessments(30);
+      if (all.length < 2) return;
+      const rows = [...all].sort((x, y) => x.taken_at.localeCompare(y.taken_at));
+      const card = document.getElementById('history-card');
+      if (!card) return;
+      card.hidden = false;
+      const css = getComputedStyle(document.documentElement);
+      const accent = css.getPropertyValue('--color-accent').trim() || '#C65D3A';
+      const grid = css.getPropertyValue('--color-border').trim() || '#E0D9CF';
+      const text = css.getPropertyValue('--color-ink-70').trim() || '#555';
+      this._chart?.destroy();
+      this._chart = new Chart(document.getElementById('history-chart'), {
+        type: 'line',
+        data: {
+          labels: rows.map((r) => new Date(r.taken_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })),
+          datasets: [{ label: 'Total score', data: rows.map((r) => r.total_score), borderColor: accent, backgroundColor: accent, tension: 0.3, pointRadius: 4 }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, suggestedMax: rows[0].max_score || 60, grid: { color: grid }, ticks: { color: text } },
+            x: { grid: { display: false }, ticks: { color: text } },
+          },
+        },
+      });
+    } catch (e) { /* history is optional */ }
+  },
+
   destroy() {
+    this._chart?.destroy();
     if (this._cleanupNavbar) this._cleanupNavbar();
   }
 };

@@ -2,34 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Serenova — A private digital space for student well-being. Track your mood, write your thoughts, and find support." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Serenova is a private digital space for student well-being. Track your mood, write your thoughts, take a screening, talk to an AI companion and book a counsellor." />
   <meta name="theme-color" content="#F6F1E8" />
+  <meta name="color-scheme" content="light dark" />
 
   <title>Serenova — Student Well-Being</title>
 
-  <!-- Preconnect for faster font loading -->
+  <!-- Social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Serenova" />
+  <meta property="og:title" content="Serenova — Student Well-Being" />
+  <meta property="og:description" content="A private, gentle space for student mental well-being: mood tracking, journal, screening, AI companion and counsellors." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Installable web app -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Applies the saved theme before first paint (no flash) -->
+  <script src="/theme-init.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!--
-    Fraunces: warm, soft-serif display headings (readable at small sizes, unlike a thin garamond)
-    DM Sans: UI body text, navigation, controls
-  -->
+  <!-- Fraunces: warm soft-serif headings. DM Sans: body and controls. -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..600,0..100&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..600,0..100&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
-
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body>
-  <!-- Accessibility: skip to main content -->
   <a class="skip-link" href="#main-content">Skip to main content</a>
-
-  <!-- SPA mount point -->
   <div id="app"></div>
-
+  <noscript><p style="padding:2rem;font-family:sans-serif">Serenova needs JavaScript to run. If you need support right now, call Tele-MANAS on 14416 (free, 24x7).</p></noscript>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

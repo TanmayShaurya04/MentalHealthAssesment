@@ -13,7 +13,9 @@
   --color-ink:          #20201D;   /* near-black charcoal — primary text */
   --color-surface:      #F2EDE5;   /* slightly darker ivory — cards, panels */
   --color-border:       #E0D9CF;   /* subtle warm border */
-  --color-white:        #FFFFFF;
+  --color-white:        #FFFFFF;   /* card / input background (darkens in dark mode) */
+  --color-on-accent:    #FFFFFF;   /* text on terracotta buttons */
+  --color-on-ink:       #FFFFFF;   /* text on ink-coloured chips */
 
   /* Accent palette — use restrained, not equally */
   --color-accent:       #C65D3A;   /* terracotta — primary CTA, highlights */

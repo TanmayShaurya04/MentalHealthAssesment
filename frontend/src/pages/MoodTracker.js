@@ -1,4 +1,5 @@
 import { moodsApi } from '../api/moods.js';
+import { confirmDialog } from '../components/Dialog.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
@@ -325,7 +326,7 @@ export const MoodTracker = {
 
           listEl.querySelectorAll('.btn-delete-item').forEach(btn => {
             btn.addEventListener('click', async () => {
-              if (!confirm('Delete this mood entry?')) return;
+              if (!(await confirmDialog({ title: 'Delete this mood entry?', message: 'This cannot be undone.', confirmLabel: 'Delete', danger: true }))) return;
               try {
                 await moodsApi.deleteMood(btn.dataset.id);
                 Toast.info('Mood log removed.');

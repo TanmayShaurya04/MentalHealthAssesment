@@ -10,7 +10,12 @@
 
 import { store } from '../store.js';
 import { authApi } from '../api/auth.js';
-import { router } from '../router.js';
+import { router, homeFor } from '../router.js';
+import { icon } from './icons.js';
+import { t, getLang, setLang, LANGS } from '../i18n/index.js';
+import { getTheme, toggleTheme } from '../utils/theme.js';
+import { apiClient } from '../api/client.js';
+import { esc } from '../utils/html.js';
 
 const LOGO_SVG = `
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"
@@ -19,6 +24,30 @@ const LOGO_SVG = `
     <circle cx="14" cy="14" r="5"  fill="#C65D3A"/>
   </svg>
 `;
+
+/** Links per role: [href, i18n key (desktop), i18n key or label (drawer)] */
+function linksFor(user) {
+  if (user?.role === 'counsellor') return [['/counsellor', 'nav.myPortal', 'nav.myPortal'], ['/resources', 'nav.resources', 'nav.resources']];
+  if (user?.role === 'admin') return [['/admin', 'nav.insights', 'nav.insights'], ['/counsellors', 'nav.counsellors', 'nav.counsellors']];
+  return [
+    ['/dashboard', 'nav.dashboard', 'nav.dashboard'], ['/mood', 'nav.mood', 'nav.mobile.mood'],
+    ['/journal', 'nav.journal', 'nav.mobile.journal'], ['/assessment', 'nav.screening', 'nav.mobile.screening'],
+    ['/chat', 'nav.companion', 'nav.mobile.companion'], ['/counsellors', 'nav.counsellors', 'nav.counsellors'],
+    ['/resources', 'nav.resources', 'nav.resources'],
+  ];
+}
+
+function toolButtons() {
+  const dark = getTheme() === 'dark';
+  const other = LANGS.find((l) => l.code !== getLang()) || LANGS[0];
+  return `
+    <button class="navbar-icon-btn" type="button" data-action="theme" aria-label="${esc(t('nav.theme'))}" title="${esc(t('nav.theme'))}">
+      ${icon(dark ? 'sun' : 'moon', { size: 18 })}
+    </button>
+    <button class="navbar-icon-btn navbar-lang-btn" type="button" data-action="lang" data-lang="${other.code}" aria-label="${esc(t('nav.language'))}: ${esc(other.label)}" title="${esc(t('nav.language'))}">
+      ${icon('globe', { size: 18 })}<span>${esc(other.label)}</span>
+    </button>`;
+}
 
 export const Navbar = {
   render({ transparent = false } = {}) {
@@ -30,6 +59,8 @@ export const Navbar = {
       const on = href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
       return on ? ' is-active" aria-current="page' : '';
     };
+    const links = isAuth ? linksFor(user) : [];
+    const home = isAuth ? homeFor(user) : '/';
 
     return `
       <nav
@@ -39,55 +70,45 @@ export const Navbar = {
       >
         <div class="container navbar-inner">
 
-          <!-- Logo -->
-          <a href="${isAuth ? '/dashboard' : '/'}" class="navbar-logo" aria-label="Serenova — Home">
+          <a href="${home}" class="navbar-logo" aria-label="Serenova — Home">
             <span class="navbar-logo-mark">${LOGO_SVG}</span>
             <span class="navbar-logo-text">Serenova</span>
           </a>
 
-          <!-- Desktop links -->
-          <div class="navbar-links" role="list">
+          <div class="navbar-links">
             ${isAuth ? `
-              <a href="/dashboard" class="navbar-link${active('/dashboard')}" role="listitem">Dashboard</a>
-              <a href="/mood" class="navbar-link${active('/mood')}" role="listitem">Mood</a>
-              <a href="/journal" class="navbar-link${active('/journal')}" role="listitem">Journal</a>
-              <a href="/assessment" class="navbar-link${active('/assessment')}" role="listitem">Screening</a>
-              <a href="/chat" class="navbar-link${active('/chat')}" role="listitem">Companion</a>
-              <a href="/counsellors" class="navbar-link${active('/counsellors')}" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link${active('/resources')}" role="listitem">Resources</a>
-              
-              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
-                <span class="helpline-dot" aria-hidden="true"></span>
-                <span>Helpline</span>
-              </button>
+              ${links.map(([href, key]) => `<a href="${href}" class="navbar-link${active(href)}">${t(key)}</a>`).join('')}
 
-              <a href="/profile" class="navbar-user-badge" title="My Profile">
-                <span class="user-avatar-circle">${userName.charAt(0).toUpperCase()}</span>
-                <span class="user-name-text">${userName}</span>
+              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="${esc(t('nav.helplines247'))}">
+                <span class="helpline-dot" aria-hidden="true"></span>
+                <span>${t('nav.helpline')}</span>
+              </button>
+              ${toolButtons()}
+              <a href="/settings" class="navbar-user-badge" title="${esc(t('nav.settings'))}">
+                <span class="user-avatar-circle">${esc(userName.charAt(0).toUpperCase())}</span>
+                <span class="user-name-text">${esc(userName)}</span>
               </a>
-
-              <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">Logout</button>
+              <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">${t('nav.logout')}</button>
             ` : `
-              <a href="/#how-it-works" class="navbar-link" role="listitem">How it works</a>
-              <a href="/counsellors" class="navbar-link${active('/counsellors')}" role="listitem">Counsellors</a>
-              <a href="/resources" class="navbar-link${active('/resources')}" role="listitem">Resources</a>
-              
-              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="Immediate 24x7 Support">
-                <span class="helpline-dot" aria-hidden="true"></span>
-                <span>Helpline</span>
-              </button>
+              <a href="/#how-it-works" class="navbar-link">${t('nav.howItWorks')}</a>
+              <a href="/counsellors" class="navbar-link${active('/counsellors')}">${t('nav.counsellors')}</a>
+              <a href="/resources" class="navbar-link${active('/resources')}">${t('nav.resources')}</a>
 
-              <a href="/auth/login" class="navbar-link" role="listitem">Sign in</a>
-              <a href="/auth/register" class="btn btn-primary btn-sm" role="listitem">Get started</a>
+              <button class="navbar-helpline-btn" id="open-helpline-btn" type="button" title="${esc(t('nav.helplines247'))}">
+                <span class="helpline-dot" aria-hidden="true"></span>
+                <span>${t('nav.helpline')}</span>
+              </button>
+              ${toolButtons()}
+              <a href="/auth/login" class="navbar-link">${t('nav.signIn')}</a>
+              <a href="/auth/register" class="btn btn-primary btn-sm">${t('nav.getStarted')}</a>
             `}
           </div>
 
-          <!-- Mobile toggle -->
           <button
             class="navbar-toggle"
             aria-expanded="false"
             aria-controls="mobile-nav"
-            aria-label="Open navigation menu"
+            aria-label="${esc(t('nav.openMenu'))}"
             id="navbar-toggle-btn"
             type="button"
           >
@@ -98,7 +119,6 @@ export const Navbar = {
         </div>
       </nav>
 
-      <!-- Mobile navigation drawer -->
       <div class="navbar-backdrop" id="navbar-backdrop" aria-hidden="true"></div>
       <div
         class="navbar-mobile"
@@ -109,27 +129,23 @@ export const Navbar = {
         aria-label="Mobile navigation"
       >
         ${isAuth ? `
-          <p class="navbar-mobile-greeting">Hello, ${userName}</p>
-          <a href="/dashboard" class="navbar-mobile-link" style="--i:0">Dashboard</a>
-          <a href="/mood" class="navbar-mobile-link" style="--i:1">Mood Tracker</a>
-          <a href="/journal" class="navbar-mobile-link" style="--i:2">Private Journal</a>
-          <a href="/assessment" class="navbar-mobile-link" style="--i:3">Well-Being Screening</a>
-          <a href="/chat" class="navbar-mobile-link" style="--i:4">AI Companion</a>
-          <a href="/counsellors" class="navbar-mobile-link" style="--i:5">Counsellors</a>
-          <a href="/resources" class="navbar-mobile-link" style="--i:6">Resources</a>
-          <a href="/profile" class="navbar-mobile-link" style="--i:7">My Profile</a>
+          <p class="navbar-mobile-greeting">${esc(t('nav.hello', { name: userName }))}</p>
+          ${links.map(([href, , key], i) => `<a href="${href}" class="navbar-mobile-link" style="--i:${i}">${t(key)}</a>`).join('')}
+          <a href="/settings" class="navbar-mobile-link" style="--i:${links.length}">${t('nav.settings')}</a>
+          <div class="navbar-mobile-tools">${toolButtons()}</div>
           <div class="navbar-mobile-actions">
-            <button type="button" class="btn btn-primary navbar-mobile-cta" id="mobile-helpline-btn">Helplines · 24x7</button>
-            <button type="button" class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">Log out</button>
+            <button type="button" class="btn btn-primary navbar-mobile-cta" id="mobile-helpline-btn">${t('nav.helplines247')}</button>
+            <button type="button" class="btn btn-ghost navbar-mobile-cta" id="mobile-logout-btn">${t('nav.logout')}</button>
           </div>
         ` : `
-          <a href="/#how-it-works" class="navbar-mobile-link" style="--i:0">How it works</a>
-          <a href="/counsellors" class="navbar-mobile-link" style="--i:1">Counsellors</a>
-          <a href="/resources" class="navbar-mobile-link" style="--i:2">Resources</a>
-          <a href="/auth/login" class="navbar-mobile-link" style="--i:3">Sign in</a>
+          <a href="/#how-it-works" class="navbar-mobile-link" style="--i:0">${t('nav.howItWorks')}</a>
+          <a href="/counsellors" class="navbar-mobile-link" style="--i:1">${t('nav.counsellors')}</a>
+          <a href="/resources" class="navbar-mobile-link" style="--i:2">${t('nav.resources')}</a>
+          <a href="/auth/login" class="navbar-mobile-link" style="--i:3">${t('nav.signIn')}</a>
+          <div class="navbar-mobile-tools">${toolButtons()}</div>
           <div class="navbar-mobile-actions">
-            <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">Get started</a>
-            <button type="button" class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">Helplines · 24x7</button>
+            <a href="/auth/register" class="btn btn-primary navbar-mobile-cta">${t('nav.getStarted')}</a>
+            <button type="button" class="btn btn-secondary navbar-mobile-cta" id="mobile-helpline-btn">${t('nav.helplines247')}</button>
           </div>
         `}
       </div>
@@ -142,7 +158,7 @@ export const Navbar = {
               <span class="helpline-badge">Immediate 24x7 Support</span>
               <h3 id="helpline-title" class="helpline-modal-title">You don't have to carry this alone</h3>
             </div>
-            <button class="modal-close-btn" id="close-helpline-btn" aria-label="Close dialog">✕</button>
+            <button class="modal-close-btn" id="close-helpline-btn" aria-label="Close dialog">${icon('x', { size: 18 })}</button>
           </div>
           <p class="helpline-modal-desc">
             If you are in deep distress, feeling unsafe, or needing an immediate human voice, please reach out to these free, verified services:
@@ -220,7 +236,7 @@ export function initNavbar() {
     const isOpen = open ?? (toggleBtn.getAttribute('aria-expanded') !== 'true');
     const wasOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
     toggleBtn.setAttribute('aria-expanded', String(isOpen));
-    toggleBtn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    toggleBtn.setAttribute('aria-label', isOpen ? t('nav.closeMenu') : t('nav.openMenu'));
     mobileNav.classList.toggle('open', isOpen);
     backdrop?.classList.toggle('open', isOpen);
     navbar.classList.toggle('navbar--open', isOpen);
@@ -276,6 +292,23 @@ export function initNavbar() {
     await authApi.logout();
     router.navigate('/');
   };
+
+  // Theme and language toggles (desktop bar + drawer)
+  const onTools = async (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'theme') {
+      toggleTheme();
+      const dark = getTheme() === 'dark';
+      document.querySelectorAll('[data-action="theme"]').forEach((b) => { b.innerHTML = icon(dark ? 'sun' : 'moon', { size: 18 }); });
+    } else if (btn.dataset.action === 'lang') {
+      setLang(btn.dataset.lang);
+      if (store.isAuthenticated()) apiClient.patch('/api/users/me', { language: btn.dataset.lang }).catch(() => {});
+      router.navigate(location.pathname + location.search, false);
+    }
+  };
+  navbar.addEventListener('click', onTools);
+  mobileNav?.addEventListener('click', onTools);
 
   document.getElementById('navbar-logout-btn')?.addEventListener('click', handleLogout);
   document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);

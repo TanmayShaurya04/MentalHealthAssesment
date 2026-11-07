@@ -15,9 +15,5 @@ export const appointmentsApi = {
 
   cancelAppointment(id) {
     return apiClient.patch(`/api/appointments/${id}/cancel`, {});
-  },
-
-  updateStatus(id, status) {
-    return apiClient.patch(`/api/appointments/${id}/status`, { status });
   }
 };

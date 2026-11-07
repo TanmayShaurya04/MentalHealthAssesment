@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models import AssessmentSubmit, AssessmentResponse
 from app.auth import get_current_user
 from app.database import db_manager
+from app.services.crisis_log import log_crisis_event
 
 router = APIRouter(prefix="/api/assessments", tags=["Self-Assessment"])
 
@@ -292,6 +293,8 @@ async def submit_assessment(payload: AssessmentSubmit, current_user: dict = Depe
     col = db_manager.get_collection("assessments")
     res = await col.insert_one(doc)
     doc["id"] = str(res.inserted_id)
+    if result["safety_flag"]:
+        await log_crisis_event(user_id, "assessment", doc["id"])
     return doc
 
 

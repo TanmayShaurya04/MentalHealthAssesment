@@ -1,0 +1,51 @@
+// Hindi translations. Please have a native speaker review these before launch.
+export const hi = {
+  'nav.dashboard': 'डैशबोर्ड', 'nav.mood': 'मूड', 'nav.journal': 'डायरी', 'nav.screening': 'स्क्रीनिंग',
+  'nav.companion': 'साथी', 'nav.counsellors': 'काउंसलर', 'nav.resources': 'संसाधन',
+  'nav.howItWorks': 'कैसे काम करता है', 'nav.signIn': 'साइन इन', 'nav.getStarted': 'शुरू करें', 'nav.logout': 'लॉग आउट',
+  'nav.helpline': 'हेल्पलाइन', 'nav.helplines247': 'हेल्पलाइन · 24x7', 'nav.profile': 'मेरी प्रोफ़ाइल', 'nav.settings': 'सेटिंग्स',
+  'nav.hello': 'नमस्ते, {name}', 'nav.myPortal': 'मेरा पोर्टल', 'nav.insights': 'इनसाइट्स', 'nav.openMenu': 'मेन्यू खोलें',
+  'nav.closeMenu': 'मेन्यू बंद करें', 'nav.theme': 'लाइट और डार्क मोड बदलें', 'nav.language': 'भाषा',
+  'nav.mobile.mood': 'मूड ट्रैकर', 'nav.mobile.journal': 'निजी डायरी', 'nav.mobile.screening': 'वेल-बीइंग स्क्रीनिंग',
+  'nav.mobile.companion': 'AI साथी',
+
+  'footer.tagline': 'छात्रों की मानसिक भलाई के लिए एक निजी डिजिटल जगह। यह कोई चिकित्सा सेवा नहीं है।',
+  'footer.platform': 'प्लेटफ़ॉर्म', 'footer.support': 'सहायता', 'footer.legal': 'कानूनी',
+  'footer.resources': 'वेल-बीइंग संसाधन', 'footer.bookSupport': 'सहायता बुक करें', 'footer.about': 'हमारे बारे में',
+  'footer.privacy': 'गोपनीयता नीति', 'footer.terms': 'उपयोग की शर्तें', 'footer.helplines': 'आपातकालीन हेल्पलाइन',
+  'footer.rights': 'सर्वाधिकार सुरक्षित।',
+  'footer.disclaimer': 'Serenova एक वेल-बीइंग सहायता टूल है, कोई चिकित्सा या क्लिनिकल सेवा नहीं। AI के उत्तर केवल सामान्य सहायक जानकारी हैं और पेशेवर मानसिक स्वास्थ्य सलाह, निदान या उपचार नहीं हैं। संकट में हों या तुरंत मदद चाहिए तो कृपया किसी योग्य पेशेवर या आपातकालीन सेवा से संपर्क करें।',
+
+  'dash.morning': 'सुप्रभात', 'dash.afternoon': 'नमस्ते', 'dash.evening': 'शुभ संध्या',
+  'dash.eyebrow': 'छात्र आश्रय', 'dash.tagline': 'आज आपका मन कैसा है? यहाँ कोई सही या गलत जवाब नहीं है।',
+  'dash.talkAI': 'AI साथी से बात करें', 'dash.counselling': 'काउंसलिंग और सहायता',
+  'dash.streak': 'चेक-इन लगातार', 'dash.avgMood': 'औसत मूड', 'dash.wellbeingCheck': 'वेल-बीइंग जाँच', 'dash.nextSession': 'अगला सत्र',
+  'dash.days': 'दिन', 'dash.logMoodStart': 'शुरू करने के लिए मूड दर्ज करें', 'dash.noLogs': 'अभी कोई लॉग नहीं', 'dash.notTaken': 'अभी नहीं की गई', 'dash.noneBooked': 'कोई बुकिंग नहीं',
+  'dash.recordMood': 'अपना मूड दर्ज करें', 'dash.dailyCheckin': 'रोज़ का चेक-इन', 'dash.logMood': 'आज का मूड दर्ज करें',
+  'dash.tipEyebrow': 'आज की एक छोटी याद', 'dash.immediateSupport': 'तुरंत सहायता',
+
+  'auth.welcomeBack': 'वापसी पर स्वागत है', 'auth.signInTitle': 'अपनी निजी जगह में साइन इन करें',
+  'auth.signInSub': 'आपके विचार और रिकॉर्ड गोपनीय और सुरक्षित हैं।',
+  'auth.email': 'ईमेल', 'auth.password': 'पासवर्ड', 'auth.show': 'दिखाएँ', 'auth.hide': 'छिपाएँ',
+  'auth.signInBtn': 'साइन इन', 'auth.forgot': 'पासवर्ड भूल गए?', 'auth.noAccount': 'खाता नहीं है?',
+  'auth.createAccount': 'नया बनाएँ', 'auth.haveAccount': 'पहले से खाता है?',
+
+  'consent.title': 'शुरू करने से पहले',
+  'consent.intro': 'Serenova निजी और सौम्य होने के लिए बना है। कृपया ये बातें पढ़ें और आगे बढ़ने की सहमति दें।',
+  'consent.p1': 'Serenova एक सहायता टूल है, चिकित्सा या आपातकालीन सेवा नहीं, और AI साथी कोई थेरेपिस्ट नहीं है।',
+  'consent.p2': 'आपके मूड लॉग, डायरी और चैट इसलिए सहेजे जाते हैं कि आप उन्हें दोबारा देख सकें। केवल आप उन्हें पढ़ सकते हैं। काउंसलर सिर्फ़ वही देखते हैं जो आप बुकिंग के समय लिखते हैं।',
+  'consent.p3': 'अगर किसी संदेश से लगे कि आप खतरे में हो सकते हैं, तो Serenova हेल्पलाइन नंबर दिखाता है। यह केवल दर्ज करता है कि ऐसा हुआ, आपने क्या लिखा यह नहीं।',
+  'consent.p4': 'आप कभी भी सेटिंग्स में अपना सारा डेटा डाउनलोड या हमेशा के लिए हटा सकते हैं।',
+  'consent.read': 'गोपनीयता नीति और शर्तें पढ़ें', 'consent.accept': 'मैं समझता/समझती हूँ और सहमत हूँ', 'consent.decline': 'नहीं, मुझे साइन आउट करें',
+
+  'settings.title': 'सेटिंग्स', 'settings.appearance': 'दिखावट', 'settings.theme': 'थीम', 'settings.light': 'लाइट', 'settings.dark': 'डार्क',
+  'settings.language': 'भाषा', 'settings.reminders': 'रिमाइंडर', 'settings.dailyReminder': 'मूड दर्ज करने के लिए रोज़ ईमेल भेजें',
+  'settings.password': 'पासवर्ड बदलें', 'settings.currentPassword': 'मौजूदा पासवर्ड', 'settings.newPassword': 'नया पासवर्ड',
+  'settings.updatePassword': 'पासवर्ड अपडेट करें', 'settings.data': 'आपका डेटा', 'settings.download': 'मेरा डेटा डाउनलोड करें',
+  'settings.downloadHint': 'एक JSON फ़ाइल जिसमें आपका खाता, मूड, डायरी, स्क्रीनिंग, चैट और अपॉइंटमेंट हैं।',
+  'settings.delete': 'मेरा खाता हटाएँ', 'settings.deleteHint': 'आपका खाता और उसमें सब कुछ हमेशा के लिए हट जाएगा। इसे वापस नहीं किया जा सकता।',
+  'settings.emailStatus': 'ईमेल', 'settings.verified': 'पुष्टि हो चुकी', 'settings.notVerified': 'अभी पुष्टि नहीं हुई', 'settings.resend': 'पुष्टि ईमेल दोबारा भेजें',
+
+  'common.save': 'सहेजें', 'common.cancel': 'रद्द करें', 'common.loading': 'लोड हो रहा है…', 'common.back': 'वापस', 'common.demo': 'डेमो प्रोफ़ाइल',
+  'common.skip': 'मुख्य सामग्री पर जाएँ',
+};

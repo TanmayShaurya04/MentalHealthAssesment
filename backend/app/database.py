@@ -6,7 +6,7 @@ from typing import Dict, Any, List, Optional
 from app.config import settings
 
 # In-memory / file-based storage fallback for development without MongoDB
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+DATA_DIR = os.getenv("SERENOVA_DATA_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 class JsonCursor:
@@ -90,6 +90,9 @@ class JsonCollection:
                             return False
                     elif doc_val not in v["$in"]:
                         return False
+                elif "$ne" in v:
+                    if doc.get(k) == v["$ne"]:
+                        return False
                 elif "$gte" in v or "$lte" in v:
                     val = str(doc.get(k, ""))
                     if "$gte" in v and val < str(v["$gte"]):
@@ -143,6 +146,31 @@ class JsonCollection:
         return UpdateResult()
 
     async def delete_one(self, query: Dict[str, Any]):
+        docs = self._load()
+        initial_len = len(docs)
+        docs = [d for d in docs if not self._match(d, query)]
+        deleted = initial_len - len(docs)
+        if deleted:
+            self._save(docs)
+        class DeleteResult:
+            deleted_count = deleted
+        return DeleteResult()
+
+    async def update_many(self, query: Dict[str, Any], update: Dict[str, Any]):
+        docs = self._load()
+        modified = 0
+        for d in docs:
+            if self._match(d, query):
+                if "$set" in update:
+                    d.update(update["$set"])
+                modified += 1
+        if modified:
+            self._save(docs)
+        class UpdateResult:
+            modified_count = modified
+        return UpdateResult()
+
+    async def delete_many(self, query: Dict[str, Any]):
         docs = self._load()
         initial_len = len(docs)
         docs = [d for d in docs if not self._match(d, query)]

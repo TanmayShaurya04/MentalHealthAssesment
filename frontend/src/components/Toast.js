@@ -27,8 +27,9 @@ function createToastEl(message, type) {
   el.setAttribute('role', 'status');
   el.innerHTML = `
     <span class="toast-dot" aria-hidden="true"></span>
-    <span class="toast-message">${message}</span>
+    <span class="toast-message"></span>
   `;
+  el.querySelector('.toast-message').textContent = message; // textContent: API messages can never inject HTML
   return el;
 }
 

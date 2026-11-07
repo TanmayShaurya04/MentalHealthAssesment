@@ -157,8 +157,8 @@ export const Register = {
         return;
       }
 
-      if (password.length < 8) {
-        alertBox.textContent = 'Password must be at least 8 characters long.';
+      if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+        alertBox.textContent = 'Password must be at least 8 characters and include a letter and a number.';
         alertBox.style.display = 'block';
         return;
       }
@@ -179,14 +179,15 @@ export const Register = {
       submitBtn.innerHTML = '<span>Creating account...</span>';
 
       try {
-        await authApi.register({
+        const res = await authApi.register({
           name,
           email,
           password,
           university,
           year_of_study
         });
-        Toast.success('Account created successfully! Welcome to Serenova.');
+        Toast.success('Account created. We sent a confirmation link to your email.', 6000);
+        if (res.dev_verify_link) console.info('[Serenova demo] confirmation link:', res.dev_verify_link);
         router.navigate('/dashboard');
       } catch (err) {
         alertBox.textContent = err.message || 'Registration failed. Email might already be taken.';
