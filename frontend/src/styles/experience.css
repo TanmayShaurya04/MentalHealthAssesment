@@ -1,0 +1,32 @@
+/* experience.css — dashboard slideshow, emoji moods with magnification, typing animation */
+
+/* ── Dashboard hero slideshow ───────────────────────────────── */
+.dash-hero-slides { position: absolute; inset: 0; z-index: -2; background: linear-gradient(135deg, #8a9e8a, #c65d3a); }
+.dash-hero-slide {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  opacity: 0; transform: scale(1.06); transition: opacity 1.4s ease, transform 8s ease-out;
+}
+.dash-hero-slide.is-active { opacity: 1; transform: scale(1); }
+.dash-hero-dots { position: absolute; right: var(--space-5); bottom: var(--space-4); display: flex; gap: 8px; z-index: 2; }
+.dash-hero-dot {
+  width: 10px; height: 10px; padding: 0; border-radius: 999px; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, 0.5); transition: width 0.3s ease, background 0.3s ease;
+}
+.dash-hero-dot.is-active { width: 28px; background: #fff; }
+.dash-hero-dot:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .dash-hero-slide { transition: opacity 0.2s; transform: none; } }
+
+/* ── Real emoji moods, with dock-style magnification ────────── */
+.mood-emoji {
+  display: inline-block; line-height: 1; font-size: var(--emoji-size, 40px);
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', system-ui, sans-serif;
+  transform: scale(var(--dock, 1)); transform-origin: 50% 80%;
+  transition: transform 0.14s ease-out, filter 0.2s;
+  will-change: transform;
+}
+.mood-pick-btn { overflow: visible; }
+.mood-pick-btn:hover .mood-emoji { filter: drop-shadow(0 6px 6px rgba(50, 35, 25, 0.18)); }
+.mood-pick-btn.active .mood-emoji { animation: emoji-pop 0.45s cubic-bezier(.3, 1.6, .5, 1); filter: drop-shadow(0 6px 6px rgba(198, 93, 58, 0.25)); }
+.mood-pick-btn .mood-image-wrapper { min-height: calc(var(--emoji-size, 40px) * 1.6); align-items: flex-end; }
+@keyframes emoji-pop { 0% { transform: scale(0.8); } 60% { transform: scale(calc(var(--dock, 1) * 1.35)); } 100% { transform: scale(var(--dock, 1)); } }
+@media (prefers-reduced-motion: reduce) { .mood-emoji { transition: none; animation: none !important; } }

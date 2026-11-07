@@ -7,6 +7,7 @@ from app.database import db_manager
 from app.services.safety_layer import check_message_safety, check_ai_reply_safety
 from app.services.crisis_log import log_crisis_event
 from app.services.ai_service import ai_service
+from app.services.personalised_companion import build_user_context
 from app.services.topic_classifier import classify_topic, topic_choices, DEFAULT_TOPIC
 
 router = APIRouter(prefix="/api/chat", tags=["AI Companion Chat"])
@@ -152,21 +153,10 @@ async def send_message(id: str, payload: ChatMessageSend, current_user: dict = D
     for d in history_docs:
         llm_messages.append({"role": d["role"], "content": d["content"]})
         
-    # Account-scoped continuity cues from the student's own check-ins (journal text is never used)
-    personal_context = []
-    latest_moods = await db_manager.get_collection("moods").find({"user_id": user_id}).sort("recorded_at", -1).limit(1).to_list(length=1)
-    if latest_moods:
-        mood = latest_moods[0]
-        mood_label = str(mood.get("level", "")).replace("_", " ")
-        allowed_tags = {"Exams", "Deadlines", "Sleep", "Friends", "Family", "Rest", "Exercise", "Burnout"}
-        tags = [t for t in mood.get("tags", []) if t in allowed_tags][:4]
-        if mood_label:
-            personal_context.append(f"Recent mood check-in: {mood_label}" + (f"; themes: {', '.join(tags)}" if tags else ""))
-    latest_assess = await db_manager.get_collection("assessments").find({"user_id": user_id}).sort("taken_at", -1).limit(1).to_list(length=1)
-    if latest_assess and latest_assess[0].get("category") in {"minimal", "mild", "moderate", "elevated"}:
-        personal_context.append(f"Most recent optional well-being check-in category: {latest_assess[0]['category']}")
+    # Privacy-safe summary of this student's own check-ins (never journal text)
+    user_context = await build_user_context(current_user, user_id)
 
-    ai_reply = await ai_service.get_response(llm_messages, personal_context=personal_context)
+    ai_reply = await ai_service.get_response(llm_messages, user_context=user_context)
     unsafe, ai_reply = check_ai_reply_safety(ai_reply)
     if unsafe:
         print("[Safety] AI reply replaced by the safe fallback.")

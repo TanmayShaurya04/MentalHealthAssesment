@@ -7,6 +7,7 @@ import './styles/components.css';
 import './styles/app.css';
 import './styles/polish.css';
 import './styles/platform.css';
+import './styles/experience.css';
 
 import { router } from './router.js';
 import { store } from './store.js';

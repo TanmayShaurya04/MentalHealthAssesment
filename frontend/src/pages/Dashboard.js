@@ -8,7 +8,8 @@ import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import { renderMoodArtwork } from './MoodTracker.js';
-import { photo } from '../assets/images.js';
+import { photo, photoUrl, HERO_POOL } from '../assets/images.js';
+import { attachEmojiDock } from '../utils/emojiDock.js';
 import { esc } from '../utils/html.js';
 
 const DAILY_TIPS = [
@@ -42,8 +43,13 @@ export const Dashboard = {
           
           <!-- Hero banner -->
           <header class="dash-hero">
-            ${photo('sunrise', { w: 1400, cls: 'dash-hero-photo', eager: true })}
+            <div class="dash-hero-slides" id="dash-hero-slides" aria-hidden="true">
+              ${HERO_POOL.map((k, i) => `<div class="dash-hero-slide${i === 0 ? ' is-active' : ''}" style="background-image:url('${photoUrl(k, 1600)}')"></div>`).join('')}
+            </div>
             <div class="dash-hero-overlay"></div>
+            <div class="dash-hero-dots" role="group" aria-label="Background photos">
+              ${HERO_POOL.map((k, i) => `<button type="button" class="dash-hero-dot${i === 0 ? ' is-active' : ''}" data-slide="${i}" aria-label="Show photo ${i + 1}" aria-pressed="${i === 0}"></button>`).join('')}
+            </div>
             <div class="dash-hero-content">
               <span class="dashboard-eyebrow dash-hero-eyebrow">Student Sanctuary</span>
               <h1 class="dash-hero-title">${greeting}, ${esc(firstName)}.</h1>
@@ -249,8 +255,31 @@ export const Dashboard = {
     `;
   },
 
+  _heroTimer: null,
+  _dockOff: null,
+
   async afterRender() {
     this._cleanupNavbar = initNavbar();
+    this._dockOff = attachEmojiDock(document.querySelector('.mood-selector-bar'));
+
+    // Photo slideshow in the welcome banner: changes by itself, pauses on hover, dots to jump
+    const slides = [...document.querySelectorAll('.dash-hero-slide')];
+    const dots = [...document.querySelectorAll('.dash-hero-dot')];
+    const hero = document.querySelector('.dash-hero');
+    let idx = 0;
+    const show = (n) => {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+      dots.forEach((el, i) => { el.classList.toggle('is-active', i === idx); el.setAttribute('aria-pressed', String(i === idx)); });
+    };
+    const start = () => {
+      clearInterval(this._heroTimer);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) this._heroTimer = setInterval(() => show(idx + 1), 6000);
+    };
+    dots.forEach((d) => d.addEventListener('click', () => { show(Number(d.dataset.slide)); start(); }));
+    hero?.addEventListener('mouseenter', () => clearInterval(this._heroTimer));
+    hero?.addEventListener('mouseleave', start);
+    start();
 
     // 1. Fetch user profile if needed
     try {
@@ -453,6 +482,8 @@ export const Dashboard = {
   },
 
   destroy() {
+    clearInterval(this._heroTimer);
+    this._dockOff?.();
     if (this._cleanupNavbar) this._cleanupNavbar();
   }
 };

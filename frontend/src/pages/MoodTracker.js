@@ -4,20 +4,15 @@ import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
 import Chart from 'chart.js/auto';
+import { attachEmojiDock } from '../utils/emojiDock.js';
 
-/** Custom, animated Serenova emoticons shared by check-in and mood history. */
+/** Real emoji for each mood level (rendered by the device's own emoji font). */
+export const MOOD_EMOJI = { very_low: '😢', low: '😔', neutral: '😐', good: '🙂', very_good: '😄' };
+const MOOD_LABEL = { very_low: 'Very low mood', low: 'Low mood', neutral: 'Neutral mood', good: 'Good mood', very_good: 'Very good mood' };
+
 export function renderMoodArtwork(level, size = 48) {
-  const faces = {
-    very_low: { label: 'Very low mood', skin: '#DDD5D1', cheek: '#C98F86', eyes: '<path d="M22 34q4-5 8 0m20 0q4-5 8 0"/><path d="m21 28 8 2m21-2-8 2"/>', mouth: '<path d="M31 54q9-8 18 0"/>', extra: '<path class="face-tear" d="M56 39c0 4-4 7-4 10a4 4 0 0 0 8 0c0-3-4-6-4-10Z" fill="#8A9E8A" stroke="none"/>' },
-    low: { label: 'Low mood', skin: '#E6D5D1', cheek: '#CC988E', eyes: '<path d="M22 34q4 4 8 0m20 0q4 4 8 0"/><path d="m21 29 8 2m21-2-8 2"/>', mouth: '<path d="M31 51q9 7 18 0"/>', extra: '' },
-    neutral: { label: 'Neutral mood', skin: '#E9E3D8', cheek: '#CBB89D', eyes: '<ellipse cx="26" cy="33" rx="2.2" ry="3.2"/><ellipse cx="54" cy="33" rx="2.2" ry="3.2"/>', mouth: '<path d="M32 49h16"/>', extra: '' },
-    good: { label: 'Good mood', skin: '#F0E1C5', cheek: '#D8A447', eyes: '<path d="M22 34q4-4 8 0m20 0q4-4 8 0"/>', mouth: '<path d="M29 46q11 14 22 0"/>', extra: '<path class="face-glint" d="m62 19 2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#C65D3A" stroke="none"/>' },
-    very_good: { label: 'Very good mood', skin: '#DFE8DD', cheek: '#8A9E8A', eyes: '<path d="M20 34q5-8 10 0m20 0q5-8 10 0"/>', mouth: '<path d="M27 44q13 19 26 0"/>', extra: '<path class="face-glint" d="m62 20 2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#D8A447" stroke="none"/>' },
-  };
-  const face = faces[level] || faces.neutral;
-  const safeLevel = faces[level] ? level : 'neutral';
-  const artSize = size + 32;
-  return `<span class="mood-emoticon-art mood-emoticon-art--${safeLevel}" role="img" aria-label="${face.label}" style="--emoticon-size:${artSize}px"><svg viewBox="0 0 80 80" width="${artSize}" height="${artSize}" aria-hidden="true" focusable="false"><circle class="face-halo" cx="40" cy="40" r="37"/><circle class="face-disc" cx="40" cy="40" r="30" fill="${face.skin}"/><path class="face-shine" d="M20 25q7-12 19-12"/><ellipse cx="25" cy="45" rx="4.5" ry="2.6" fill="${face.cheek}" opacity=".55"/><ellipse cx="55" cy="45" rx="4.5" ry="2.6" fill="${face.cheek}" opacity=".55"/><g class="face-eyes" fill="none" stroke="#51463E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">${face.eyes}</g><g class="face-mouth" fill="none" stroke="#51463E" stroke-width="2.8" stroke-linecap="round">${face.mouth}</g>${face.extra}<circle class="face-freckle" cx="18" cy="54" r="1"/><circle class="face-freckle" cx="62" cy="54" r="1"/></svg></span>`;
+  const key = MOOD_EMOJI[level] ? level : 'neutral';
+  return `<span class="mood-emoji mood-emoji--${key}" role="img" aria-label="${MOOD_LABEL[key]}" style="--emoji-size:${size}px">${MOOD_EMOJI[key]}</span>`;
 }
 
 export const MoodTracker = {
@@ -153,7 +148,10 @@ export const MoodTracker = {
     `;
   },
 
+  _dockOff: null,
+
   async afterRender() {
+    this._dockOff = attachEmojiDock(document.querySelector('.mood-selector-bar'));
     this._cleanupNavbar = initNavbar();
 
     let selectedLevel = 'neutral';
@@ -296,19 +294,6 @@ export const MoodTracker = {
           const scores = trendData.map(d => d.score);
 
           const levelLabels = { very_low: 'Very Low', low: 'Low', neutral: 'Neutral', good: 'Good', very_good: 'Very Good' };
-          const moodFaceImages = {};
-          ['very_low', 'low', 'neutral', 'good', 'very_good'].forEach(level => {
-            const svgMarkup = renderMoodArtwork(level, 20).match(/<svg\b[\s\S]*?<\/svg>/)?.[0];
-            if (!svgMarkup) return;
-            const image = new Image();
-            const svgWithStyles = svgMarkup
-              .replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')
-              .replace(' aria-hidden="true" focusable="false">', '><style>.face-halo{fill:rgba(255,255,255,.46);stroke:rgba(198,93,58,.2);stroke-width:1}.face-disc{stroke:rgba(81,70,62,.12);stroke-width:1}.face-shine{fill:none;stroke:rgba(255,255,255,.76);stroke-width:3;stroke-linecap:round}.face-freckle{fill:rgba(81,70,62,.35)}</style>');
-            image.onload = () => this._chartInstance?.draw();
-            image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgWithStyles)}`;
-            moodFaceImages[level] = image;
-          });
-
           const moodFacePlugin = {
             id: 'serenovaMoodFaceMarkers',
             afterDatasetsDraw: chart => {
@@ -318,8 +303,8 @@ export const MoodTracker = {
               points.forEach((point, index) => {
                 const record = trendData[index];
                 if (!record) return;
-                const image = moodFaceImages[record.level];
-                if (!image?.complete || !image.naturalWidth) return;
+                const glyph = MOOD_EMOJI[record.level];
+                if (!glyph) return;
                 const isActive = activeIndex === index;
                 const diameter = isActive ? 34 : 29;
                 context.save();
@@ -333,7 +318,10 @@ export const MoodTracker = {
                 context.lineWidth = isActive ? 2 : 1;
                 context.strokeStyle = isActive ? '#C65D3A' : 'rgba(198,93,58,.32)';
                 context.stroke();
-                context.drawImage(image, point.x - diameter / 2, point.y - diameter / 2, diameter, diameter);
+                context.font = `${Math.round(diameter * 0.68)}px system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif`;
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText(glyph, point.x, point.y + 1);
                 context.restore();
               });
             }
@@ -427,6 +415,7 @@ export const MoodTracker = {
   },
 
   destroy() {
+    this._dockOff?.();
     if (this._cleanupNavbar) this._cleanupNavbar();
     if (this._chartInstance) {
       this._chartInstance.destroy();

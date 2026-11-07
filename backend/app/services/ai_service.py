@@ -408,11 +408,18 @@ class AIService:
         self.model = settings.AI_MODEL
         self.api_key = settings.AI_API_KEY
 
-    async def get_response(self, messages: List[Dict[str, str]], personal_context: List[str] = None) -> str:
+    async def get_response(self, messages: List[Dict[str, str]], personal_context: List[str] = None, user_context: dict = None) -> str:
         last_msg = messages[-1]["content"] if messages else ""
 
         if not self.api_key:
+            if user_context is not None:
+                from app.services.personalised_companion import compose_reply
+                return compose_reply(last_msg, messages[:-1], user_context)
             return generate_local_companion_response(last_msg, messages, personal_context)
+
+        if user_context:
+            from app.services.personalised_companion import context_as_prompt
+            personal_context = (personal_context or []) + [context_as_prompt(user_context)]
 
         context_message = []
         if personal_context:
