@@ -129,11 +129,17 @@ async def seed_database_if_empty():
             await counsellors_col.insert_one(c)
         print("[Database] Seeded default counsellors.")
 
-    r_count = await resources_col.count_documents({})
-    if r_count == 0:
-        for r in DEFAULT_RESOURCES:
+    # Add any guides that are missing and refresh presentation fields, so existing installs pick up new content.
+    added = 0
+    for r in DEFAULT_RESOURCES:
+        existing = await resources_col.find_one({"_id": r["_id"]})
+        if not existing:
             await resources_col.insert_one(r)
-        print("[Database] Seeded default resources.")
+            added += 1
+        else:
+            await resources_col.update_one({"_id": r["_id"]}, {"$set": {k: r[k] for k in ("category", "category_label", "image", "featured", "quick") if k in r}})
+    if added:
+        print(f"[Database] Added {added} resources.")
 
 
 DEMO_COUNSELLOR_LOGINS = {

@@ -195,3 +195,16 @@ async def test_booked_slots_endpoint_hides_student_details():
         assert res.status_code == 200
         for row in res.json():
             assert set(row) == {"date", "slot"}
+
+
+@pytest.mark.asyncio
+async def test_resource_library_is_rich_and_each_guide_has_its_own_photo():
+    await seed_database_if_empty()
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        res = await client.get("/api/resources")
+        assert res.status_code == 200
+        items = res.json()
+        assert len(items) >= 24
+        images = [r["image"] for r in items]
+        assert all(images) and len(set(images)) == len(images)
+        assert {"social", "body", "crisis"} <= {r["category"] for r in items}

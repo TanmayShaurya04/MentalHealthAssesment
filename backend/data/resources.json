@@ -12,7 +12,10 @@
       "Focus",
       "Grounding"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_exam",
+    "featured": true,
+    "quick": false
   },
   {
     "_id": "res-02",
@@ -27,7 +30,10 @@
       "Habits",
       "Recovery"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_sleep",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-03",
@@ -42,7 +48,10 @@
       "Transition",
       "Self-Compassion"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_lost",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-04",
@@ -57,7 +66,10 @@
       "Emergency",
       "Support"
     ],
-    "is_crisis_helpline": true
+    "is_crisis_helpline": true,
+    "image": "r_helpline",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-05",
@@ -72,7 +84,10 @@
       "Focus",
       "Deadlines"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_deadlines",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-06",
@@ -87,7 +102,10 @@
       "Focus",
       "Breaks"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_studysession",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-07",
@@ -102,7 +120,10 @@
       "Self-Compassion",
       "Assignments"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_perfect",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-08",
@@ -117,7 +138,10 @@
       "Campus Support",
       "Learning"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_professor",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-09",
@@ -132,7 +156,10 @@
       "Grounding",
       "Confidence"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_nerves",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-10",
@@ -147,7 +174,10 @@
       "Dorm Life",
       "Routine"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_winddown",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-11",
@@ -162,7 +192,10 @@
       "Burnout",
       "Boundaries"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_rest",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-12",
@@ -177,7 +210,10 @@
       "Recovery",
       "Self-Care"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_allnighter",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-13",
@@ -192,7 +228,10 @@
       "Self-Worth",
       "Values"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_compare",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-14",
@@ -207,7 +246,10 @@
       "Reflection",
       "Self-Compassion"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_mixed",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-15",
@@ -222,12 +264,15 @@
       "Anxiety",
       "Present Moment"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_ground",
+    "featured": false,
+    "quick": true
   },
   {
     "_id": "res-16",
-    "category": "emotional_balance",
-    "category_label": "Emotional Health",
+    "category": "social",
+    "category_label": "Friends & Family",
     "title": "Homesick in a New Place",
     "read_time": "3 min read",
     "summary": "Stay connected to home while making a little room for campus to feel familiar.",
@@ -237,12 +282,15 @@
       "Connection",
       "Transitions"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_homesick",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-17",
-    "category": "emotional_balance",
-    "category_label": "Emotional Health",
+    "category": "social",
+    "category_label": "Friends & Family",
     "title": "Setting a Boundary with Kindness",
     "read_time": "3 min read",
     "summary": "A clear, respectful way to protect time and energy with friends, family, or classmates.",
@@ -252,7 +300,10 @@
       "Relationships",
       "Communication"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_boundary",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-18",
@@ -267,7 +318,10 @@
       "Counselling",
       "Getting Help"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_campus",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-19",
@@ -282,7 +336,10 @@
       "Small Steps",
       "Self-Compassion"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_motivation",
+    "featured": false,
+    "quick": false
   },
   {
     "_id": "res-20",
@@ -297,6 +354,260 @@
       "Support",
       "Safety"
     ],
-    "is_crisis_helpline": false
+    "is_crisis_helpline": false,
+    "image": "r_friend",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-21",
+    "category": "social",
+    "category_label": "Friends & Family",
+    "title": "Making Friends When You Feel Behind",
+    "read_time": "3 min read",
+    "summary": "Everyone looks settled. Most people are quietly looking for one good conversation.",
+    "content": "### You are not late\nBy the second month, it can look like everyone already has a group. Most of those groups are still loose, and most people are hoping someone else starts the conversation.\n\n#### Small things that work\n- Say hello to the same two or three people each day. Familiar faces turn into friends slowly.\n- Join one thing that meets weekly, such as a club, a sports session or a study group. Repetition does the work for you.\n- Ask one real question: \"Which hostel are you in?\" or \"How did you find that lecture?\"\n- Offer a small invitation: \"I am getting chai, want to come?\"\n\n#### If it still feels lonely\nA few awkward conversations are normal. One warm friend is enough. If loneliness is weighing on you for weeks, talking to a counsellor can help.",
+    "tags": [
+      "Friends",
+      "Loneliness",
+      "Campus"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_makefriends",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-22",
+    "category": "social",
+    "category_label": "Friends & Family",
+    "title": "Talking to Your Parents About Pressure",
+    "read_time": "4 min read",
+    "summary": "How to share how you are really doing, without a big fight.",
+    "content": "### Pick the moment, not the argument\nParents often react with worry or advice because they care and do not know what else to do. A calm moment helps more than a heated one.\n\n#### A simple way to start\n- Choose a quiet time, not right after a result or a call about fees.\n- Start with what you need: \"I would like you to just listen for ten minutes.\"\n- Be specific: \"Exam weeks are leaving me exhausted\" lands better than \"everything is too much.\"\n- Say what would help: a call without questions about marks, or a small change in expectations.\n\n#### If it goes badly\nStop, take a break, and try again another day. You can also ask an elder you trust, or a counsellor, to help you find the words.\n\nYou are allowed to be both grateful to your family and tired.",
+    "tags": [
+      "Family",
+      "Communication",
+      "Pressure"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_parents",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-23",
+    "category": "social",
+    "category_label": "Friends & Family",
+    "title": "Group Projects and Roommates Without the Resentment",
+    "read_time": "3 min read",
+    "summary": "Clear, kind agreements early save a lot of stress later.",
+    "content": "### Say it early, say it small\nMost resentment starts with something unsaid for too long.\n\n#### For group projects\n- Write down who does what and by when, in the group chat.\n- Check in halfway, not on the last night.\n- If someone is not delivering, ask first: \"Is something making this hard?\"\n\n#### For roommates\n- Agree on quiet hours, guests and shared items in the first week.\n- Use \"I\" statements: \"I sleep badly when the light is on late.\"\n- Talk about one thing at a time.\n\nIf it does not improve, involve your warden or a faculty member. That is a normal step, not a failure.",
+    "tags": [
+      "Boundaries",
+      "Roommates",
+      "Teamwork"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_groupwork",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-24",
+    "category": "social",
+    "category_label": "Friends & Family",
+    "title": "Keeping Friendships Alive From a Distance",
+    "read_time": "3 min read",
+    "summary": "Low-effort ways to stay close when school or college has moved you apart.",
+    "content": "### Closeness does not need long calls\nWhen you live in different cities, the pressure to catch up properly can make you avoid reaching out at all.\n\n#### Small habits\n- Send a voice note instead of a long message.\n- Share a meme, a song or a photo: \"This made me think of you.\"\n- Keep one standing slot, like a Sunday evening call once a month.\n- Say it when you miss someone. It is almost always welcome.\n\nA friendship can pause and restart. You do not owe anyone a perfect reply time.",
+    "tags": [
+      "Friends",
+      "Connection"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_longdistance",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-25",
+    "category": "body",
+    "category_label": "Body & Habits",
+    "title": "The Ten-Minute Walk",
+    "read_time": "3 min read",
+    "summary": "A short walk is one of the simplest ways to reset a heavy day.",
+    "content": "### Small, doable, and good for you\nYou do not need a gym or a plan. Ten minutes outside can help your mind settle and your body loosen up.\n\n#### How to make it work\n- Leave your phone in your pocket, or listen to one song at a time.\n- Notice three things you can see, two you can hear, one you can feel.\n- Walk after meals or between study blocks.\n- If you cannot go out, walk the corridor or pace while you think.\n\nThere is no right pace. Going a little is better than not going.",
+    "tags": [
+      "Movement",
+      "Mood",
+      "Habits"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_walks",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-26",
+    "category": "body",
+    "category_label": "Body & Habits",
+    "title": "Eating Regularly in Exam Weeks",
+    "read_time": "3 min read",
+    "summary": "Your brain needs fuel. Simple ways to eat properly when you are busy.",
+    "content": "### Skipping meals costs focus\nIt is easy to survive on chai and snacks during exams. Many people notice their mood and concentration dip when they do.\n\n#### Easy habits\n- Eat something at roughly the same times each day.\n- Keep simple, filling snacks handy, like fruit, nuts, curd or a sandwich.\n- Drink water through the day, not only when you are thirsty.\n- Eat with a friend when you can. It makes the meal feel like a break.\n\nIf food or eating has started to feel stressful or out of control, talk to a doctor or counsellor. You do not have to handle that alone.",
+    "tags": [
+      "Food",
+      "Exams",
+      "Energy"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_eating",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-27",
+    "category": "body",
+    "category_label": "Body & Habits",
+    "title": "Caffeine, Screens and Your Sleep",
+    "read_time": "3 min read",
+    "summary": "Small changes to evening habits that can make falling asleep easier.",
+    "content": "### Why evenings matter\nLate caffeine and late screens both make it harder for many people to fall asleep.\n\n#### Try one or two of these\n- Keep tea, coffee and energy drinks to the first half of the day.\n- Dim lights and slow down for the last 30 minutes before bed.\n- Put the phone on the other side of the room so it is not within reach.\n- Use night mode if you must scroll, and stop when you notice you are just filling time.\n\nChange one thing for a week and see how you feel. If sleep stays hard for weeks, a doctor can help.",
+    "tags": [
+      "Sleep",
+      "Screens",
+      "Habits"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_screens",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-28",
+    "category": "body",
+    "category_label": "Body & Habits",
+    "title": "A Two-Minute Desk Stretch",
+    "read_time": "2 min read",
+    "summary": "Loosen your neck, shoulders and back between study blocks.",
+    "content": "### Do it right where you sit\n#### Steps\n- Roll your shoulders back five times, slowly.\n- Drop your right ear toward your right shoulder, hold for five breaths, then the left.\n- Interlace your fingers, turn your palms out and reach forward.\n- Stand, reach up, then fold forward and let your head hang.\n- Take three slow breaths before you sit down again.\n\nStop if anything hurts. Do it whenever you notice you have been hunched for an hour.",
+    "tags": [
+      "Movement",
+      "Focus",
+      "Quick"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_stretch",
+    "featured": false,
+    "quick": true
+  },
+  {
+    "_id": "res-29",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "When Scrolling Takes Over Your Evening",
+    "read_time": "3 min read",
+    "summary": "How to get your time back without a dramatic phone detox.",
+    "content": "### Notice, do not punish\nScrolling is often a way to avoid a feeling, such as boredom, worry or tiredness. That is human.\n\n#### Gentle ways to loosen the habit\n- Ask yourself, \"What am I trying to feel right now?\"\n- Make one phone-free pocket, like meals or the first 20 minutes after waking.\n- Move the most tempting app off your home screen.\n- Decide what you will do instead before you put the phone down.\n\nIf what you see online leaves you low, unfollow or mute it. You are allowed to curate your feed.",
+    "tags": [
+      "Phone",
+      "Attention",
+      "Mood"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_doomscroll",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-30",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "When You Feel Like a Fraud",
+    "read_time": "4 min read",
+    "summary": "Impostor feelings are common among capable students.",
+    "content": "### \"Everyone else belongs here more than I do\"\nImpostor feelings are very common, especially after a big change like joining college. They do not mean you are fooling anyone.\n\n#### What helps\n- Keep a short list of things you have done well. Read it when doubt is loud.\n- Remember that confident people usually hide their uncertainty too.\n- Ask questions. They show curiosity, not weakness.\n- Share the feeling with a friend. You will probably hear \"me too.\"\n\nIf these thoughts are weighing on you every day, a counsellor can help you work through them.",
+    "tags": [
+      "Confidence",
+      "Comparison",
+      "Self-talk"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_impostor",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-31",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Money Worries and Student Life",
+    "read_time": "4 min read",
+    "summary": "Practical steps when finances are adding to your stress.",
+    "content": "### You are not the only one\nFees, rent, travel and small daily costs can add up, and worrying about them is exhausting.\n\n#### Steps to take\n- Write down what comes in and what goes out for one month. Seeing it helps.\n- Ask your college about fee instalments, scholarships and hardship support.\n- Look for campus jobs, tutoring or paid projects that fit your timetable.\n- Talk to someone you trust before the stress piles up.\n\nBeing stressed about money does not say anything about your worth. If worry is affecting your sleep or studies, your counsellor can help you think it through.",
+    "tags": [
+      "Money",
+      "Stress",
+      "Support"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_money",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-32",
+    "category": "study_stress",
+    "category_label": "Academic Pressures",
+    "title": "Procrastination Is Usually a Feeling",
+    "read_time": "3 min read",
+    "summary": "Why we avoid work, and how to start without a lecture to yourself.",
+    "content": "### It is rarely laziness\nWe often put off tasks because they make us feel anxious, bored or not good enough.\n\n#### Try this\n- Name the feeling: \"This feels overwhelming.\"\n- Shrink the task: open the book, write one line, solve one problem.\n- Use a 10-minute timer and let yourself stop after it.\n- Reward the start, not just the finish.\n\nBeing kind to yourself usually works better than being harsh. If you cannot get going for weeks, talk to someone.",
+    "tags": [
+      "Procrastination",
+      "Focus",
+      "Self-compassion"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_procrastinate",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-33",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Music as a Mood Tool",
+    "read_time": "3 min read",
+    "summary": "Using songs to match, lift or settle how you feel.",
+    "content": "### Pick the song for the job\nMusic can help you feel understood, energised or calmer.\n\n#### Ideas\n- To settle: slow, instrumental or familiar songs, low volume.\n- To lift: a song that always makes you move. Two minutes is enough.\n- To feel understood: a sad song can help when you need to let something out.\n- To focus: lyric-free music, played quietly.\n\nIf music keeps you stuck in a low mood, switch to something gentler or take a short walk.",
+    "tags": [
+      "Music",
+      "Mood",
+      "Focus"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_music",
+    "featured": false,
+    "quick": false
+  },
+  {
+    "_id": "res-34",
+    "category": "emotional_balance",
+    "category_label": "Emotional Health",
+    "title": "Five Minutes of Journaling",
+    "read_time": "2 min read",
+    "summary": "A short, low-pressure way to sort out your thoughts.",
+    "content": "### No rules, just a timer\nYou do not have to write well. You only need to write.\n\n#### Try this\n- Set a timer for five minutes.\n- Start with: \"Right now I am feeling...\"\n- Write whatever comes. Do not edit or reread.\n- End with one line: \"One thing I can do next is...\"\n\nYour Serenova journal is private to you, so you can be completely honest.",
+    "tags": [
+      "Journal",
+      "Reflection",
+      "Quick"
+    ],
+    "is_crisis_helpline": false,
+    "image": "r_fivemin",
+    "featured": false,
+    "quick": true
   }
 ]

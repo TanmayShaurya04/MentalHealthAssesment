@@ -257,3 +257,6 @@ class ResourceResponse(BaseModel):
     content: str
     tags: List[str]
     is_crisis_helpline: bool = False
+    image: Optional[str] = None
+    featured: bool = False
+    quick: bool = False

@@ -9,6 +9,7 @@ import './styles/polish.css';
 import './styles/platform.css';
 import './styles/experience.css';
 import './styles/counsellors.css';
+import './styles/resources.css';
 import './styles/journal.css';
 import './styles/screening.css';
 
