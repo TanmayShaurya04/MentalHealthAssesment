@@ -490,7 +490,7 @@ function journalFeatureSection() {
               Private thoughts deserve<br>private pages.
             </h2>
             <p class="feature-body">
-              Your journal is encrypted and visible only to you.
+              Your journal is private and visible only to you.
               Write without self-editing. Return when you're ready.
               No counsellor, no algorithm, reads your entries.
             </p>

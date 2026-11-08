@@ -118,7 +118,7 @@ export const Counsellors = {
                 <div class="video-cam-box">
                   <div class="video-cam-placeholder">
                     <span class="video-cam-icon">${icon('video', { size: 28 })}</span>
-                    <p class="font-medium text-ink">Encrypted 1-on-1 Consultation Space</p>
+                    <p class="font-medium text-ink">Private 1-on-1 consultation space</p>
                     <span class="text-xs text-ink-60 mt-1">End-to-end private • No recordings • Peer-to-peer audio & video</span>
                   </div>
                 </div>

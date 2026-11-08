@@ -1,198 +1,152 @@
+/** Journal home: week strip + streak, a prompt of the day, and colourful entry cards. */
 import { journalsApi } from '../api/journals.js';
 import { confirmDialog } from '../components/Dialog.js';
 import { Toast } from '../components/Toast.js';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
+import { icon } from '../components/icons.js';
+import { esc } from '../utils/html.js';
+import { MOOD_EMOJI } from './MoodTracker.js';
+import { PROMPTS, promptOfTheDay } from '../utils/journalPrompts.js';
+
+const MOODS = [['', 'All moods'], ['very_low', 'Very low'], ['low', 'Low'], ['neutral', 'Neutral'], ['good', 'Good'], ['very_good', 'Very good']];
+const dayKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 export const Journal = {
   _cleanupNavbar: null,
 
   render() {
+    const today = promptOfTheDay();
     return `
       ${Navbar.render()}
+      <main class="journal-page page-root jrn-page" id="main-content">
+        <div class="container jrn-container">
 
-      <main class="journal-page page-root" id="main-content">
-        <div class="container journal-container">
-
-          <header class="page-header flex-between">
-            <div>
-              <span class="section-eyebrow">Private Pages</span>
-              <h1 class="page-title">Personal Journal</h1>
-              <p class="page-subtitle">
-                An encrypted, private sanctuary for your raw, unedited thoughts.
-              </p>
+          <header class="jrn-hero">
+            <div class="jrn-hero-text">
+              <span class="section-eyebrow">Your private pages</span>
+              <h1 class="jrn-title">Journal</h1>
+              <p class="jrn-sub">A soft place to put your thoughts down. Only you can read it.</p>
+              <div class="jrn-actions">
+                <a href="/journal/new" class="btn btn-primary btn-lg">${icon('message', { size: 18 })} Write something</a>
+              </div>
             </div>
-            <div>
-              <a href="/journal/new" class="btn btn-primary btn-lg">+ Write Reflection</a>
+            <div class="jrn-streak" id="jrn-streak" aria-live="polite">
+              <div class="jrn-streak-num" id="jrn-streak-num">0</div>
+              <div class="jrn-streak-label">day streak</div>
+              <div class="jrn-week" id="jrn-week" aria-label="This week"></div>
             </div>
           </header>
 
-          <!-- Search and Filter Bar -->
-          <div class="journal-toolbar">
-            <div class="search-input-wrap">
-              <input
-                type="text"
-                id="journal-search-input"
-                class="form-input"
-                placeholder="Search reflections by title or content..."
-              />
+          <section class="jrn-prompt-card" aria-label="Prompt of the day">
+            <div>
+              <span class="jrn-chip-label">Prompt of the day</span>
+              <p class="jrn-prompt-text">${esc(today.text)}</p>
             </div>
-            <div id="journal-tag-chips" class="journal-tag-chips">
-              <!-- Dynamically populated tags -->
+            <a href="/journal/new" class="btn btn-secondary jrn-use-prompt" data-prompt="${esc(today.text)}">Write about this ${icon('arrow-right', { size: 16 })}</a>
+          </section>
+
+          <section class="jrn-quick" aria-label="Ways to start">
+            ${PROMPTS.slice(0, 6).map((p) => `<a href="/journal/new" class="jrn-quick-chip jrn-quick-chip--${p.tone}" data-prompt="${esc(p.text)}"><span aria-hidden="true">${p.emoji}</span>${esc(p.label)}</a>`).join('')}
+          </section>
+
+          <div class="jrn-toolbar">
+            <label class="jrn-search">${icon('search', { size: 18 })}<input type="search" id="journal-search-input" placeholder="Search your entries" aria-label="Search entries" /></label>
+            <div class="jrn-mood-filter" id="jrn-mood-filter" role="group" aria-label="Filter by mood">
+              ${MOODS.map(([v, l]) => `<button type="button" data-mood="${v}" class="${v === '' ? 'is-on' : ''}" aria-pressed="${v === ''}" title="${l}">${v ? MOOD_EMOJI[v] : 'All'}</button>`).join('')}
             </div>
           </div>
+          <div id="journal-tag-chips" class="jrn-tags"></div>
 
-          <!-- Entries Grid -->
-          <div id="journal-entries-grid" class="journal-entries-grid mt-6">
-            <div class="loading-spinner">Opening your journal...</div>
-          </div>
-
+          <div id="journal-entries-grid" class="jrn-grid" aria-live="polite"><div class="skeleton skeleton-block"></div><div class="skeleton skeleton-block"></div><div class="skeleton skeleton-block"></div></div>
         </div>
       </main>
-
-      ${Footer.render()}
-    `;
+      ${Footer.render()}`;
   },
 
   async afterRender() {
     this._cleanupNavbar = initNavbar();
+    let all = [], mood = '', tag = '';
+    const $ = (id) => document.getElementById(id);
+    const grid = $('journal-entries-grid');
 
-    let allEntries = [];
-    let selectedTag = null;
-    const grid = document.getElementById('journal-entries-grid');
-    const searchInput = document.getElementById('journal-search-input');
-    const tagsContainer = document.getElementById('journal-tag-chips');
+    // Remember a prompt chosen from a chip, then let the link open the editor
+    document.querySelectorAll('[data-prompt]').forEach((a) => a.addEventListener('click', () => {
+      try { sessionStorage.setItem('serenova_journal_prompt', a.dataset.prompt); } catch (e) { /* ignore */ }
+    }));
 
-    async function loadJournals() {
-      try {
-        allEntries = await journalsApi.listJournals();
-        renderTags();
-        filterAndRender();
-      } catch (err) {
-        grid.innerHTML = `<p class="error-text">Unable to load journal reflections at this time.</p>`;
-      }
-    }
-
-    function renderTags() {
-      if (!tagsContainer) return;
-      const tagsSet = new Set();
-      allEntries.forEach(e => (e.tags || []).forEach(t => tagsSet.add(t)));
-
-      if (tagsSet.size === 0) {
-        tagsContainer.innerHTML = '';
-        return;
-      }
-
-      const tagsArray = Array.from(tagsSet);
-      tagsContainer.innerHTML = `
-        <button type="button" class="tag-chip ${!selectedTag ? 'active' : ''}" data-tag="">All</button>
-        ${tagsArray.map(t => `
-          <button type="button" class="tag-chip ${selectedTag === t ? 'active' : ''}" data-tag="${t}">#${t}</button>
-        `).join('')}
-      `;
-
-      tagsContainer.querySelectorAll('.tag-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedTag = btn.dataset.tag || null;
-          renderTags();
-          filterAndRender();
-        });
-      });
-    }
-
-    function filterAndRender() {
-      const q = searchInput?.value.toLowerCase().trim() || '';
-
-      const filtered = allEntries.filter(entry => {
-        const matchesQuery = !q ||
-          entry.title.toLowerCase().includes(q) ||
-          entry.content.toLowerCase().includes(q);
-
-        const matchesTag = !selectedTag || (entry.tags || []).includes(selectedTag);
-        return matchesQuery && matchesTag;
-      });
-
-      if (filtered.length === 0) {
-        if (allEntries.length > 0) {
-          grid.innerHTML = `<div class="journal-no-results"><span aria-hidden="true">⌕</span><p>No reflections match this search yet.</p><button type="button" class="btn btn-ghost btn-sm" id="clear-journal-search">Clear search and filters</button></div>`;
-          grid.querySelector('#clear-journal-search')?.addEventListener('click', () => {
-            searchInput.value = '';
-            selectedTag = null;
-            renderTags();
-            filterAndRender();
-          });
-          return;
-        }
-        grid.innerHTML = `
-          <div class="journal-welcome-card">
-            <span class="journal-welcome-art" aria-hidden="true">✍️</span>
-            <div class="journal-welcome-copy">
-              <span class="section-eyebrow">A page of your own</span>
-              <h2>Your thoughts can arrive just as they are.</h2>
-              <p>Write a little or a lot. Choose a prompt, or begin anywhere. This space is for every kind of day and every student.</p>
-              <div class="journal-prompt-row" aria-label="Writing prompts">
-                <a href="/journal/new" class="journal-prompt-chip" data-prompt="What has been taking up space in my mind today?">What’s on my mind?</a>
-                <a href="/journal/new" class="journal-prompt-chip" data-prompt="One thing I handled today, however small, was…">A small win</a>
-                <a href="/journal/new" class="journal-prompt-chip" data-prompt="Something I need more of this week is…">What I need</a>
-              </div>
-              <a href="/journal/new" class="btn btn-primary btn-sm mt-4">Start a reflection →</a>
-            </div>
-          </div>
-        `;
-        grid.querySelectorAll('.journal-prompt-chip').forEach(link => link.addEventListener('click', () => {
-          sessionStorage.setItem('serenova_journal_prompt', link.dataset.prompt);
-        }));
-        return;
-      }
-
-      grid.innerHTML = filtered.map(j => {
-        const dateStr = new Date(j.created_at).toLocaleDateString(undefined, {
-          weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
-        });
-        return `
-          <article class="card journal-card" id="journal-${j.id}">
-            <div class="journal-card-header">
-              <span class="journal-card-date">${dateStr}</span>
-              ${j.mood_level ? `<span class="badge badge-surface">${j.mood_level.replace('_', ' ')}</span>` : ''}
-            </div>
-
-            <h3 class="journal-card-title">${j.title}</h3>
-            <p class="journal-card-content">${j.content.slice(0, 180)}${j.content.length > 180 ? '...' : ''}</p>
-
-            ${(j.tags || []).length > 0 ? `
-              <div class="journal-card-tags">
-                ${j.tags.map(t => `<span class="badge badge-surface">#${t}</span>`).join('')}
-              </div>
-            ` : ''}
-
-            <div class="journal-card-footer">
-              <a href="/journal/${j.id}" class="btn btn-outline btn-sm">Read & Edit</a>
-              <button type="button" class="btn-ghost btn-sm btn-delete-journal text-error" data-id="${j.id}">Delete</button>
-            </div>
-          </article>
-        `;
+    const streakAndWeek = () => {
+      const days = new Set(all.map((j) => dayKey(new Date(j.created_at))));
+      let streak = 0; const d = new Date();
+      if (!days.has(dayKey(d))) d.setDate(d.getDate() - 1);   // today not written yet: streak is still alive
+      while (days.has(dayKey(d))) { streak++; d.setDate(d.getDate() - 1); }
+      $('jrn-streak-num').textContent = streak;
+      const base = new Date(); base.setDate(base.getDate() - 6);
+      $('jrn-week').innerHTML = Array.from({ length: 7 }, (_, i) => {
+        const x = new Date(base); x.setDate(base.getDate() + i);
+        const on = days.has(dayKey(x));
+        return `<span class="jrn-day${on ? ' is-on' : ''}${i === 6 ? ' is-today' : ''}" title="${x.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' })}${on ? ': written' : ''}"><i>${x.toLocaleDateString(undefined, { weekday: 'narrow' })}</i></span>`;
       }).join('');
+    };
 
-      // Wire delete
-      grid.querySelectorAll('.btn-delete-journal').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          if (!(await confirmDialog({ title: 'Delete this entry?', message: 'This cannot be undone.', confirmLabel: 'Delete', danger: true }))) return;
-          try {
-            await journalsApi.deleteJournal(btn.dataset.id);
-            Toast.info('Journal entry deleted.');
-            loadJournals();
-          } catch (e) {
-            Toast.error('Could not delete journal entry.');
-          }
-        });
-      });
+    const renderTags = () => {
+      const tags = [...new Set(all.flatMap((e) => e.tags || []))];
+      $('journal-tag-chips').innerHTML = tags.length ? `<button type="button" class="jrn-tag${tag ? '' : ' is-on'}" data-tag="">All topics</button>${tags.map((t) => `<button type="button" class="jrn-tag${tag === t ? ' is-on' : ''}" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}` : '';
+    };
+
+    const draw = () => {
+      const q = ($('journal-search-input')?.value || '').toLowerCase().trim();
+      const list = all.filter((e) => (!q || `${e.title} ${e.content}`.toLowerCase().includes(q)) && (!mood || e.mood_level === mood) && (!tag || (e.tags || []).includes(tag)));
+      if (!all.length) {
+        grid.innerHTML = `<div class="jrn-empty">
+          <div class="jrn-empty-art" aria-hidden="true"><span>📓</span><span>✨</span><span>🌿</span></div>
+          <h2>Your first page is waiting</h2>
+          <p>Write a line or a whole page. There is no right way, and nobody is grading it.</p>
+          <a href="/journal/new" class="btn btn-primary">Start writing</a></div>`;
+        return;
+      }
+      if (!list.length) { grid.innerHTML = `<div class="jrn-empty"><h2>Nothing matches</h2><p>Try another word or clear the filters.</p></div>`; return; }
+      grid.innerHTML = list.map((j) => {
+        const date = new Date(j.created_at);
+        const words = j.content.trim().split(/\s+/).filter(Boolean).length;
+        return `
+        <article class="jrn-card jrn-card--${esc(j.mood_level || 'none')}" id="journal-${esc(j.id)}">
+          <div class="jrn-card-top">
+            <time datetime="${esc(j.created_at)}"><b>${date.getDate()}</b> ${date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</time>
+            <span class="jrn-card-mood" title="${esc((j.mood_level || '').replace('_', ' '))}">${j.mood_level ? MOOD_EMOJI[j.mood_level] || '' : '📝'}</span>
+          </div>
+          <h3>${esc(j.title)}</h3>
+          <p>${esc(j.content.slice(0, 170))}${j.content.length > 170 ? '…' : ''}</p>
+          ${(j.tags || []).length ? `<div class="jrn-card-tags">${j.tags.slice(0, 4).map((t) => `<span>#${esc(t)}</span>`).join('')}</div>` : ''}
+          <div class="jrn-card-foot">
+            <span>${words} words</span>
+            <span><a href="/journal/${esc(j.id)}" class="jrn-link">Open</a><button type="button" class="jrn-del btn-delete-journal" data-id="${esc(j.id)}" aria-label="Delete entry">${icon('trash', { size: 16 })}</button></span>
+          </div>
+        </article>`;
+      }).join('');
+    };
+
+    async function load() {
+      try { all = await journalsApi.listJournals(); }
+      catch (e) { grid.innerHTML = `<div class="jrn-empty"><h2>We couldn't open your journal</h2><p>Please check your connection and try again.</p><button class="btn btn-secondary" id="jrn-retry">Try again</button></div>`; $('jrn-retry')?.addEventListener('click', load); return; }
+      streakAndWeek(); renderTags(); draw();
     }
 
-    searchInput?.addEventListener('input', filterAndRender);
-    loadJournals();
+    $('journal-search-input')?.addEventListener('input', draw);
+    $('jrn-mood-filter').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-mood]'); if (!b) return;
+      mood = b.dataset.mood;
+      $('jrn-mood-filter').querySelectorAll('button').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+      draw();
+    });
+    $('journal-tag-chips').addEventListener('click', (e) => { const b = e.target.closest('[data-tag]'); if (!b) return; tag = b.dataset.tag; renderTags(); draw(); });
+    grid.addEventListener('click', async (e) => {
+      const del = e.target.closest('.btn-delete-journal'); if (!del) return;
+      if (!(await confirmDialog({ title: 'Delete this entry?', message: 'This cannot be undone.', confirmLabel: 'Delete', danger: true }))) return;
+      try { await journalsApi.deleteJournal(del.dataset.id); Toast.info('Entry deleted.'); load(); } catch (err) { Toast.error('Could not delete this entry.'); }
+    });
+    load();
   },
 
-  destroy() {
-    if (this._cleanupNavbar) this._cleanupNavbar();
-  }
+  destroy() { this._cleanupNavbar?.(); },
 };
