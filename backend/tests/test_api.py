@@ -185,3 +185,13 @@ async def test_full_student_journey():
         res_list = await client.get("/api/resources")
         assert res_list.status_code == 200
         assert len(res_list.json()) >= 1
+
+
+@pytest.mark.asyncio
+async def test_booked_slots_endpoint_hides_student_details():
+    await seed_database_if_empty()
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        res = await client.get("/api/counsellors/counsellor-01/booked")
+        assert res.status_code == 200
+        for row in res.json():
+            assert set(row) == {"date", "slot"}

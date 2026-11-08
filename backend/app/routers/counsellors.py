@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 from app.models import CounsellorResponse
@@ -36,3 +37,16 @@ async def get_counsellor(id: str):
     c["id"] = str(c["_id"])
     c["video_meet_link"] = ""
     return c
+
+
+@router.get("/{id}/booked")
+async def booked_slots(id: str, days: int = Query(60, ge=1, le=90)):
+    """Slots already requested or confirmed, so the calendar can grey them out. Contains no student information."""
+    today = datetime.date.today()
+    end = today + datetime.timedelta(days=days)
+    rows = await db_manager.get_collection("appointments").find({"counsellor_id": id}).to_list(length=1000)
+    return [
+        {"date": a["preferred_date"], "slot": a["time_slot"]}
+        for a in rows
+        if a.get("status") in ("pending", "confirmed") and today.isoformat() <= a.get("preferred_date", "") <= end.isoformat()
+    ]
