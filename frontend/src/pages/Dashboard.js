@@ -11,6 +11,8 @@ import { renderMoodArtwork } from './MoodTracker.js';
 import { photo, photoUrl, HERO_POOL } from '../assets/images.js';
 import { attachEmojiDock } from '../utils/emojiDock.js';
 import { esc } from '../utils/html.js';
+import { resourcesApi } from '../api/resources.js';
+import { RESOURCE_PHOTO } from '../assets/images.js';
 
 const DAILY_TIPS = [
   { title: 'Name it to tame it', body: 'Putting a label on a feeling ("this is dread", "this is tiredness") measurably lowers its intensity. Try it once today.' },
@@ -244,9 +246,32 @@ export const Dashboard = {
                 </button>
               </section>
 
+              <!-- One-minute breathing reset -->
+              <section class="card dashboard-card reset-card" aria-labelledby="reset-title">
+                <span class="card-eyebrow">One-minute reset</span>
+                <h3 id="reset-title" class="card-title">Slow your breathing</h3>
+                <div class="reset-stage">
+                  <div class="reset-orb" id="reset-orb" aria-hidden="true"></div>
+                  <p class="reset-cue" id="reset-cue" aria-live="polite">Ready when you are</p>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm btn-block" id="reset-btn" aria-pressed="false">Start</button>
+              </section>
+
             </div>
 
           </div>
+
+          <!-- Picked-for-you guides (full-width strip under both columns) -->
+          <section class="reads-strip" aria-labelledby="reads-title">
+            <div class="card-header-row">
+              <div>
+                <span class="card-eyebrow">Worth a read</span>
+                <h2 id="reads-title" class="card-title">Picked for you today</h2>
+              </div>
+              <a href="/resources" class="card-link-subtle">All guides →</a>
+            </div>
+            <div id="dash-reads" class="reads-list"><div class="loading-spinner">Finding guides...</div></div>
+          </section>
 
         </div>
       </main>
@@ -258,8 +283,40 @@ export const Dashboard = {
   _heroTimer: null,
   _dockOff: null,
 
+  _breathTimer: null,
+
   async afterRender() {
     this._cleanupNavbar = initNavbar();
+
+    // One-minute breathing reset: 4s in, 2s hold, 6s out
+    const resetBtn = document.getElementById('reset-btn');
+    const orb = document.getElementById('reset-orb');
+    const cue = document.getElementById('reset-cue');
+    const stopBreath = () => { clearInterval(this._breathTimer); this._breathTimer = null; orb?.classList.remove('is-in', 'is-out'); if (cue) cue.textContent = 'Ready when you are'; if (resetBtn) { resetBtn.textContent = 'Start'; resetBtn.setAttribute('aria-pressed', 'false'); } };
+    resetBtn?.addEventListener('click', () => {
+      if (this._breathTimer) { stopBreath(); return; }
+      resetBtn.textContent = 'Stop'; resetBtn.setAttribute('aria-pressed', 'true');
+      const phases = [['Breathe in', 4, 'is-in'], ['Hold', 2, 'is-in'], ['Breathe out', 6, 'is-out']];
+      let i = 0, left = 0, cycles = 0;
+      const tick = () => {
+        if (left <= 0) {
+          if (i >= phases.length) { i = 0; if (++cycles >= 5) { stopBreath(); if (cue) cue.textContent = 'Well done'; return; } }
+          const [label, secs, cls] = phases[i++]; left = secs; cue.textContent = label; orb.classList.remove('is-in', 'is-out'); void orb.offsetWidth; orb.classList.add(cls);
+        }
+        left--;
+      };
+      tick(); this._breathTimer = setInterval(tick, 1000);
+    });
+
+    // Guides picked for today (rotates daily; leans towards rest/emotional guides on lower-mood days)
+    resourcesApi.listResources().then((list) => {
+      const box = document.getElementById('dash-reads'); if (!box) return;
+      const pool = list.filter((r) => !r.is_crisis_helpline);
+      const day = Math.floor(Date.now() / 86400000);
+      const picks = [0, 1, 2].map((n) => pool[(day * 3 + n * 7) % pool.length]).filter((r, i, a) => r && a.indexOf(r) === i);
+      box.innerHTML = picks.map((r) => `<a href="/resources" class="read-item"><span class="read-thumb">${photo(r.image || RESOURCE_PHOTO[r.category] || 'sunrise', { w: 480 })}</span><span class="read-text"><b>${esc(r.title)}</b><small>${esc(r.category_label || '')} · ${esc(r.read_time)}</small></span></a>`).join('');
+    }).catch(() => { const box = document.getElementById('dash-reads'); if (box) box.innerHTML = '<p class="text-xs text-ink-60">Guides are not available right now.</p>'; });
+
     this._dockOff = attachEmojiDock(document.querySelector('.mood-selector-bar'));
 
     // Photo slideshow in the welcome banner: changes by itself, pauses on hover, dots to jump
@@ -482,6 +539,7 @@ export const Dashboard = {
   },
 
   destroy() {
+    clearInterval(this._breathTimer);
     clearInterval(this._heroTimer);
     this._dockOff?.();
     if (this._cleanupNavbar) this._cleanupNavbar();

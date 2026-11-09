@@ -37,6 +37,7 @@ const PATHS = {
   search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
   'chevron-left': '<path d="m15 18-6-6 6-6"/>',
   'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+  'chevron-down': '<path d="m6 9 6 6 6-6"/>',
   rupee: '<path d="M6 3h12M6 8h12M6 13h4a4 4 0 0 0 0-5M6 13l9 8"/>',
   award: '<circle cx="12" cy="8" r="6"/><path d="m15.5 13.5 1 8.5-4.5-2.5L7.5 22l1-8.5"/>',
   menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',

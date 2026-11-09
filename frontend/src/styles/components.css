@@ -986,3 +986,24 @@ body.nav-open { overflow: hidden; }
   justify-content: center;
 }
 
+
+/* ── Account menu: theme, language, settings and log out live here ── */
+.navbar-account { position: relative; margin-left: var(--space-2); }
+.navbar-account-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-ink-60); cursor: pointer; transition: border-color .15s, background .15s; }
+.navbar-account-btn:hover, .navbar-account-btn[aria-expanded="true"] { border-color: var(--color-ink-40); background: var(--color-white, var(--color-surface)); }
+.navbar-account-btn .user-avatar-circle { width: 30px; height: 30px; font-size: 13px; }
+.navbar-menu { position: absolute; right: 0; top: calc(100% + 10px); min-width: 230px; padding: 6px; border-radius: 14px; background: var(--color-background); border: 1px solid var(--color-border); box-shadow: 0 18px 44px rgba(40, 30, 20, .18); z-index: calc(var(--z-nav, 100) + 5); animation: menu-in .14s ease-out; }
+.navbar-menu[hidden] { display: none; }
+.navbar-menu-head { display: grid; gap: 2px; padding: 10px 12px 12px; border-bottom: 1px solid var(--color-border); margin-bottom: 6px; }
+.navbar-menu-head b { font-family: var(--font-display); font-size: 1rem; font-weight: 500; color: var(--color-ink); }
+.navbar-menu-head span { font-size: .75rem; color: var(--color-ink-60); overflow: hidden; text-overflow: ellipsis; }
+.navbar-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border: 0; border-radius: 9px; background: transparent; font: inherit; font-size: var(--text-sm); color: var(--color-ink-80); text-align: left; text-decoration: none; cursor: pointer; }
+.navbar-menu-item:hover, .navbar-menu-item:focus-visible { background: var(--color-surface); color: var(--color-ink); outline: 0; }
+.navbar-menu-item .icon, .navbar-menu-item svg { flex: none; color: var(--color-ink-60); }
+.navbar-menu-item--danger { color: var(--color-error); }
+.navbar-menu-sep { height: 1px; background: var(--color-border); margin: 6px 4px; }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .navbar-menu { animation: none; } }
+/* Calmer bar: slightly tighter link spacing so the row breathes */
+.navbar--auth .navbar-links { gap: 2px; }
+.navbar--auth .navbar-link { padding-inline: 12px; }

@@ -42,6 +42,26 @@ function toolButtons() {
     </button>`;
 }
 
+function accountMenu(user, userName) {
+  const dark = getTheme() === 'dark';
+  const other = LANGS.find((l) => l.code !== getLang()) || LANGS[0];
+  return `
+    <div class="navbar-account">
+      <button type="button" class="navbar-account-btn" id="account-menu-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="account-menu" title="${esc(userName)}">
+        <span class="user-avatar-circle">${esc(userName.charAt(0).toUpperCase())}</span>
+        ${icon('chevron-down', { size: 14 })}
+      </button>
+      <div class="navbar-menu" id="account-menu" role="menu" hidden>
+        <div class="navbar-menu-head"><b>${esc(user?.name || userName)}</b>${user?.email ? `<span>${esc(user.email)}</span>` : ''}</div>
+        <a href="/settings" role="menuitem" class="navbar-menu-item">${esc(t('nav.settings'))}</a>
+        <button type="button" role="menuitem" class="navbar-menu-item" data-action="theme"><span class="js-theme-ico">${icon(dark ? 'sun' : 'moon', { size: 16 })}</span><span class="js-theme-label">${dark ? 'Light mode' : 'Dark mode'}</span></button>
+        <button type="button" role="menuitem" class="navbar-menu-item" data-action="lang" data-lang="${other.code}">${icon('globe', { size: 16 })}${esc(other.label)}</button>
+        <div class="navbar-menu-sep" role="separator"></div>
+        <button type="button" role="menuitem" class="navbar-menu-item navbar-menu-item--danger" id="navbar-logout-btn">${t('nav.logout')}</button>
+      </div>
+    </div>`;
+}
+
 export const Navbar = {
   render({ transparent = false } = {}) {
     const isAuth = store.isAuthenticated();
@@ -76,12 +96,7 @@ export const Navbar = {
                 <span class="helpline-dot" aria-hidden="true"></span>
                 <span>${t('nav.helpline')}</span>
               </button>
-              ${toolButtons()}
-              <a href="/settings" class="navbar-user-badge" title="${esc(t('nav.settings'))}">
-                <span class="user-avatar-circle">${esc(userName.charAt(0).toUpperCase())}</span>
-                <span class="user-name-text">${esc(userName)}</span>
-              </a>
-              <button class="navbar-link btn-logout" id="navbar-logout-btn" type="button">${t('nav.logout')}</button>
+              ${accountMenu(user, userName)}
             ` : `
               <a href="/#how-it-works" class="navbar-link">${t('nav.howItWorks')}</a>
               <a href="/counsellors" class="navbar-link${active('/counsellors')}">${t('nav.counsellors')}</a>
@@ -293,13 +308,20 @@ export function initNavbar() {
     if (btn.dataset.action === 'theme') {
       toggleTheme();
       const dark = getTheme() === 'dark';
-      document.querySelectorAll('[data-action="theme"]').forEach((b) => { b.innerHTML = icon(dark ? 'sun' : 'moon', { size: 18 }); });
+      document.querySelectorAll('[data-action="theme"]').forEach((b) => { const ico = b.querySelector('.js-theme-ico'); if (ico) { ico.innerHTML = icon(dark ? 'sun' : 'moon', { size: 16 }); const lb = b.querySelector('.js-theme-label'); if (lb) lb.textContent = dark ? 'Light mode' : 'Dark mode'; } else b.innerHTML = icon(dark ? 'sun' : 'moon', { size: 18 }); });
     } else if (btn.dataset.action === 'lang') {
       setLang(btn.dataset.lang);
       if (store.isAuthenticated()) apiClient.patch('/api/users/me', { language: btn.dataset.lang }).catch(() => {});
       router.navigate(location.pathname + location.search, false);
     }
   };
+  const acctBtn = document.getElementById('account-menu-btn');
+  const acctMenu = document.getElementById('account-menu');
+  const setAcct = (open) => { if (!acctBtn || !acctMenu) return; acctMenu.hidden = !open; acctBtn.setAttribute('aria-expanded', String(open)); };
+  acctBtn?.addEventListener('click', (e) => { e.stopPropagation(); setAcct(acctMenu.hidden); if (!acctMenu.hidden) acctMenu.querySelector('a, button')?.focus(); });
+  const onDocClick = (e) => { if (acctMenu && !acctMenu.hidden && !e.target.closest('.navbar-account')) setAcct(false); };
+  document.addEventListener('click', onDocClick);
+  acctMenu?.addEventListener('click', (e) => { if (e.target.closest('[data-action="theme"], a')) setAcct(false); });
   navbar.addEventListener('click', onTools);
   mobileNav?.addEventListener('click', onTools);
 
@@ -308,6 +330,7 @@ export function initNavbar() {
 
   function onKeydown(e) {
     if (e.key === 'Escape') {
+      if (acctMenu && !acctMenu.hidden) { setAcct(false); acctBtn?.focus(); }
       toggleMenu(false);
       closeHelpline();
     }
@@ -317,6 +340,7 @@ export function initNavbar() {
   return function cleanup() {
     window.removeEventListener('scroll', onScroll);
     document.removeEventListener('keydown', onKeydown);
+    document.removeEventListener('click', onDocClick);
     DESKTOP_MQ.removeEventListener('change', onBreakpoint);
     document.body.classList.remove('nav-open');
   };
