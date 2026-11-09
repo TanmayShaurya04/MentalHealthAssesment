@@ -22,7 +22,8 @@
 import '../styles/landing.css';
 import { Navbar, initNavbar } from '../components/Navbar.js';
 import { Footer } from '../components/Footer.js';
-import { photo } from '../assets/images.js';
+import { photo, photoUrl } from '../assets/images.js';
+import { attachEmojiDock } from '../utils/emojiDock.js';
 
 /* ──────────────────────────────────────────────────────────────
    EMOTIONAL WEATHER CANVAS
@@ -449,7 +450,7 @@ function moodFeatureSection() {
             </a>
           </div>
 
-          <div class="feature-visual reveal" aria-hidden="true">
+          <div class="feature-visual reveal">
             <div class="feature-visual-box">
               <!-- Interactive mood selector, synchronized with the emotional weather above -->
               <div class="mood-console">
@@ -461,11 +462,11 @@ function moodFeatureSection() {
                 </div>
                 <div class="mood-console-scale-row"><span>HOW ARE YOU FEELING?</span><div class="mood-console-track" id="mood-feature-scale" style="--mood-progress:${MOOD_VISUALS.calm.progress}%"><span></span></div><span class="mood-console-current">Neutral</span></div>
                 <div class="mood-constellation" role="group" aria-label="Choose a feeling to update the emotional weather">
-                  <button type="button" class="mood-orb-wrap mood-orb-wrap--low" data-mood-choice data-state="overwhelmed" aria-pressed="false" aria-label="Very low, overwhelmed"><span class="mood-orb">😮‍💨</span><span class="mood-orb-label">Very low</span></button>
-                  <button type="button" class="mood-orb-wrap mood-orb-wrap--soft" data-mood-choice data-state="cloudy" aria-pressed="false" aria-label="Low, cloudy"><span class="mood-orb">😔</span><span class="mood-orb-label">Low</span></button>
-                  <button type="button" class="mood-orb-wrap mood-orb-wrap--neutral active" data-mood-choice data-state="calm" aria-pressed="true" aria-label="Neutral, calm"><span class="mood-orb">😌</span><span class="mood-orb-label">Neutral</span></button>
-                  <button type="button" class="mood-orb-wrap mood-orb-wrap--good" data-mood-choice data-state="focused" aria-pressed="false" aria-label="Good, focused"><span class="mood-orb">🙂</span><span class="mood-orb-label">Good</span></button>
-                  <button type="button" class="mood-orb-wrap mood-orb-wrap--bright" data-mood-choice data-state="hopeful" aria-pressed="false" aria-label="Very good, hopeful"><span class="mood-orb">😊</span><span class="mood-orb-label">Very good</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--low" data-mood-choice data-state="overwhelmed" aria-pressed="false" aria-label="Very low, overwhelmed"><span class="mood-orb mood-emoji" style="--emoji-size:34px">😮‍💨</span><span class="mood-orb-label">Very low</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--soft" data-mood-choice data-state="cloudy" aria-pressed="false" aria-label="Low, cloudy"><span class="mood-orb mood-emoji" style="--emoji-size:34px">😔</span><span class="mood-orb-label">Low</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--neutral active" data-mood-choice data-state="calm" aria-pressed="true" aria-label="Neutral, calm"><span class="mood-orb mood-emoji" style="--emoji-size:34px">😌</span><span class="mood-orb-label">Neutral</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--good" data-mood-choice data-state="focused" aria-pressed="false" aria-label="Good, focused"><span class="mood-orb mood-emoji" style="--emoji-size:34px">🙂</span><span class="mood-orb-label">Good</span></button>
+                  <button type="button" class="mood-orb-wrap mood-orb-wrap--bright" data-mood-choice data-state="hopeful" aria-pressed="false" aria-label="Very good, hopeful"><span class="mood-orb mood-emoji" style="--emoji-size:34px">😊</span><span class="mood-orb-label">Very good</span></button>
                 </div>
                 <div class="mood-next-step"><div class="mood-next-intro"><span>ONE GENTLE NEXT STEP</span><p>Choose a space that feels helpful</p></div><a href="/journal" data-mood-action="0"><span class="mood-action-label">Write a reflection</span><span aria-hidden="true">↗</span></a><a href="/chat" data-mood-action="1"><span class="mood-action-label">Talk it through</span><span aria-hidden="true">↗</span></a></div>
               </div>
@@ -476,6 +477,62 @@ function moodFeatureSection() {
       </div>
     </section>
   `;
+}
+
+
+const SKY_TILES = [
+  ['sky1', 'Heavy', 'Some mornings arrive grey. You are allowed to start slowly.'],
+  ['sky2', 'Foggy', 'Not seeing clearly yet is not the same as failing.'],
+  ['sky3', 'Restless', 'Wind before the rain. Notice it, name it, let it pass.'],
+  ['sky4', 'Quiet', 'Overcast but still. Resting counts as doing something.'],
+  ['sky5', 'Clearing', 'A small gap of light. Take it when it comes.'],
+  ['sky6', 'Bright', 'And then a clear day. It does come back around.'],
+];
+
+function skySection() {
+  return `
+    <section class="sky-section section" id="sky" aria-labelledby="sky-heading">
+      <div class="sky-clouds" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="container sky-head reveal">
+        <span class="feature-eyebrow">Emotional weather</span>
+        <h2 class="feature-heading" id="sky-heading">Some days are cloudy.<br>That is part of the sky.</h2>
+        <p class="feature-body">Feelings move like weather. They arrive, they change, and they pass. Scroll through a day and notice where you are.</p>
+      </div>
+      <div class="sky-track-wrap">
+        <ul class="sky-track" id="sky-track">
+          ${SKY_TILES.map(([k, tag, text], i) => `
+            <li class="sky-tile" style="--img:url('${photoUrl(k, 900)}');--tilt:${i % 2 ? 18 : -10}px">
+              <span class="sky-tag">${tag}</span>
+              <p>${text}</p>
+            </li>`).join('')}
+        </ul>
+      </div>
+      <div class="sky-progress" aria-hidden="true"><span id="sky-progress-bar"></span></div>
+    </section>
+  `;
+}
+
+/** Scroll-linked sky: the photo strip slides sideways and the clouds drift as the section crosses the screen. */
+function initSkyScroll() {
+  const sec = document.getElementById('sky');
+  const track = document.getElementById('sky-track');
+  const bar = document.getElementById('sky-progress-bar');
+  if (!sec || !track || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const r = sec.getBoundingClientRect(), vh = window.innerHeight;
+    const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+    const max = Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+    track.style.transform = `translate3d(${(-max * p).toFixed(1)}px,0,0)`;
+    sec.style.setProperty('--sky-p', p.toFixed(3));
+    if (bar) bar.style.transform = `scaleX(${p.toFixed(3)})`;
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+  return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
 }
 
 function journalFeatureSection() {
@@ -824,6 +881,7 @@ export const Landing = {
         ${howItWorksSection()}
         ${moduleGallerySection()}
         ${moodFeatureSection()}
+        ${skySection()}
         ${journalFeatureSection()}
         ${aiFeatureSection()}
         ${assessmentFeatureSection()}
@@ -856,6 +914,10 @@ export const Landing = {
       });
     }
 
+    /* 2b. Emoji magnification on the mood selector, scroll-linked sky strip */
+    this._dockOff = attachEmojiDock(document.querySelector('.mood-constellation'), { max: 1.7, radius: 90 });
+    this._skyOff = initSkyScroll();
+
     /* 3. Scroll-in reveal */
     this._observer = initReveal();
 
@@ -866,6 +928,8 @@ export const Landing = {
   destroy() {
     if (this._cleanupNavbar) this._cleanupNavbar();
     if (this._weather)       this._weather.destroy();
+    if (this._dockOff)       this._dockOff();
+    if (this._skyOff)        this._skyOff();
     if (this._observer)      this._observer.disconnect();
     if (this._cleanupScroll) this._cleanupScroll();
   },

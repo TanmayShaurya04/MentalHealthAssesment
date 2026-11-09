@@ -74,6 +74,14 @@ export const PHOTOS = {
   r_procrastinate: { id: '1501504905252-473c47e087f8', alt: 'A laptop and notebook on a desk', pos: 'center' },
   r_music: { id: '1511379938547-c1f69419868d', alt: 'Headphones resting on a table', pos: 'center' },
   r_fivemin: { id: '1517842645767-c639042777db', alt: 'An open notebook and pen', pos: 'center' },
+
+  // Cloudy-sky photos for the landing "emotional weather" section.
+  sky1: { id: '1534088568595-a066f410bcda', alt: 'Heavy grey clouds', pos: 'center' },
+  sky2: { id: '1483977399921-6cf94f6fdc3a', alt: 'Fog resting over a hillside', pos: 'center' },
+  sky3: { id: '1500740516770-92bd004b996e', alt: 'Storm clouds gathering', pos: 'center' },
+  sky4: { id: '1419833173245-f59e1b93f9ee', alt: 'A soft overcast sky', pos: 'center' },
+  sky5: { id: '1501630834273-4b5604d2ee31', alt: 'Light breaking through clouds', pos: 'center' },
+  sky6: { id: '1504608524841-42fe6f032b4b', alt: 'Blue sky with white clouds', pos: 'center' },
 };
 
 /** Photos that rotate in the dashboard hero. */
