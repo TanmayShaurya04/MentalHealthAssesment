@@ -1,3 +1,11 @@
+// Self-hosted fonts (no requests to Google): Fraunces for headings, DM Sans for text, Noto Sans Devanagari for Hindi.
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
+import '@fontsource-variable/dm-sans/index.css';
+import '@fontsource-variable/dm-sans/standard-italic.css';
+import '@fontsource/noto-sans-devanagari/400.css';
+import '@fontsource/noto-sans-devanagari/500.css';
+import '@fontsource/noto-sans-devanagari/600.css';
 /**
  * main.js — Serenova SPA entry point
  */

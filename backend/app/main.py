@@ -79,7 +79,7 @@ async def security_headers(request: Request, call_next):
         response.headers.setdefault(
             "Content-Security-Policy",
             "default-src 'self'; img-src 'self' data: https://images.unsplash.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; "
+            "style-src 'self' 'unsafe-inline'; font-src 'self' data:; "
             "script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
         )
     return response

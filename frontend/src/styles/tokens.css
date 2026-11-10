@@ -45,8 +45,8 @@
 
   /* ── Typography ──────────────────────────────────────────── */
 
-  --font-display:  'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body:     'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-display:  'Fraunces Variable', 'Fraunces', 'Noto Sans Devanagari', Georgia, 'Times New Roman', serif;
+  --font-body:     'DM Sans Variable', 'DM Sans', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
 
   /* ── Font sizes (major third scale, 16px base) ───────────── */
 

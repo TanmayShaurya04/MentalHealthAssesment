@@ -377,13 +377,13 @@ export const MoodTracker = {
                       const map = { 1: 'Very Low', 2: 'Low', 3: 'Neutral', 4: 'Good', 5: 'Very Good' };
                       return map[val] || '';
                     },
-                    font: { family: 'DM Sans', size: 11 }
+                    font: { family: 'DM Sans Variable', size: 11 }
                   },
                   grid: { color: '#E0D9CF' }
                 },
                 x: {
                   grid: { display: false },
-                  ticks: { font: { family: 'DM Sans', size: 11 } }
+                  ticks: { font: { family: 'DM Sans Variable', size: 11 } }
                 }
               },
               plugins: {

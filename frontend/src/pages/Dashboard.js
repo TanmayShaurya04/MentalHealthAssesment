@@ -11,18 +11,12 @@ import { renderMoodArtwork } from './MoodTracker.js';
 import { photo, photoUrl, HERO_POOL } from '../assets/images.js';
 import { attachEmojiDock } from '../utils/emojiDock.js';
 import { esc } from '../utils/html.js';
+import { t } from '../i18n/index.js';
 import { resourcesApi } from '../api/resources.js';
 import { RESOURCE_PHOTO } from '../assets/images.js';
 
-const DAILY_TIPS = [
-  { title: 'Name it to tame it', body: 'Putting a label on a feeling ("this is dread", "this is tiredness") measurably lowers its intensity. Try it once today.' },
-  { title: 'Twenty-minute rule', body: 'Overwhelmed by a big task? Set a timer for 20 minutes, work on only the first piece, then decide whether to continue.' },
-  { title: 'Protect your wind-down', body: 'Dim the screen and put your phone away 30 minutes before bed. Sleep is the cheapest mood medicine there is.' },
-  { title: 'Move for ten', body: 'A 10-minute walk outside lifts mood and focus for the next couple of hours. It does not need to be exercise.' },
-  { title: 'Tell one person', body: 'You do not need to explain everything. A simple "today was heavy" to a friend can lighten the load.' },
-  { title: 'Lower the bar', body: 'On a hard day, a "good enough" version of your to-do list is still progress. Pick the one thing that matters most.' },
-  { title: 'Breathe longer out', body: 'Breathe in for 4, out for 6, five times. A longer exhale tells your nervous system it is safe to settle.' },
-];
+const TIP_COUNT = 7;
+const tipOfTheDay = () => { const i = new Date().getDate() % TIP_COUNT; return { title: t(`tip.${i}.title`), body: t(`tip.${i}.body`) }; };
 
 
 export const Dashboard = {
@@ -33,9 +27,9 @@ export const Dashboard = {
     const firstName = user.name ? user.name.split(' ')[0] : 'Student';
 
     const hour = new Date().getHours();
-    let greeting = 'Good morning';
-    if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
-    else if (hour >= 17) greeting = 'Good evening';
+    let greeting = t('dash.morning');
+    if (hour >= 12 && hour < 17) greeting = t('dash.afternoon');
+    else if (hour >= 17) greeting = t('dash.evening');
 
     return `
       ${Navbar.render()}
@@ -49,41 +43,41 @@ export const Dashboard = {
               ${HERO_POOL.map((k, i) => `<div class="dash-hero-slide${i === 0 ? ' is-active' : ''}" style="background-image:url('${photoUrl(k, 1600)}')"></div>`).join('')}
             </div>
             <div class="dash-hero-overlay"></div>
-            <div class="dash-hero-dots" role="group" aria-label="Background photos">
+            <div class="dash-hero-dots" role="group" aria-label="${t('dash.bgPhotos')}">
               ${HERO_POOL.map((k, i) => `<button type="button" class="dash-hero-dot${i === 0 ? ' is-active' : ''}" data-slide="${i}" aria-label="Show photo ${i + 1}" aria-pressed="${i === 0}"></button>`).join('')}
             </div>
             <div class="dash-hero-content">
-              <span class="dashboard-eyebrow dash-hero-eyebrow">Student Sanctuary</span>
+              <span class="dashboard-eyebrow dash-hero-eyebrow">${t('dash.eyebrow')}</span>
               <h1 class="dash-hero-title">${greeting}, ${esc(firstName)}.</h1>
-              <p class="dash-hero-tagline">How is your mind feeling today? There are no right or wrong answers.</p>
+              <p class="dash-hero-tagline">${t('dash.tagline')}</p>
               <div class="dash-hero-actions">
-                <a href="/chat" class="btn btn-primary btn-sm">Talk with AI Companion</a>
-                <a href="/counsellors" class="btn btn-glass btn-sm">Counselling &amp; Support</a>
+                <a href="/chat" class="btn btn-primary btn-sm">${t('dash.talkAI')}</a>
+                <a href="/counsellors" class="btn btn-glass btn-sm">${t('dash.counselling')}</a>
               </div>
             </div>
           </header>
 
           <!-- At-a-glance stats -->
-          <section class="stat-strip" aria-label="Your week at a glance" data-stagger>
+          <section class="stat-strip" aria-label="${t('dash.weekGlance')}" data-stagger>
             <div class="stat-tile reveal">
-              <span class="stat-label">Check-in streak</span>
-              <span class="stat-value"><span id="stat-streak" data-count="0">0</span><small> days</small></span>
-              <span class="stat-hint" id="stat-streak-hint">Log a mood to start</span>
+              <span class="stat-label">${t('dash.streak')}</span>
+              <span class="stat-value"><span id="stat-streak" data-count="0">0</span><small> ${t('dash.days')}</small></span>
+              <span class="stat-hint" id="stat-streak-hint">${t('dash.logMoodStart')}</span>
             </div>
             <div class="stat-tile reveal">
-              <span class="stat-label">Average mood</span>
+              <span class="stat-label">${t('dash.avgMood')}</span>
               <span class="stat-value"><span id="stat-avg" data-count="0">0</span><small> / 5</small></span>
-              <span class="stat-hint" id="stat-avg-hint">No logs yet</span>
+              <span class="stat-hint" id="stat-avg-hint">${t('dash.noLogs')}</span>
             </div>
             <div class="stat-tile reveal">
-              <span class="stat-label">Well-being check</span>
+              <span class="stat-label">${t('dash.wellbeingCheck')}</span>
               <span class="stat-value stat-value--text" id="stat-check">—</span>
-              <span class="stat-hint" id="stat-check-hint">Not taken yet</span>
+              <span class="stat-hint" id="stat-check-hint">${t('dash.notTaken')}</span>
             </div>
             <div class="stat-tile reveal">
-              <span class="stat-label">Next session</span>
+              <span class="stat-label">${t('dash.nextSession')}</span>
               <span class="stat-value stat-value--text" id="stat-session">—</span>
-              <span class="stat-hint" id="stat-session-hint">None booked</span>
+              <span class="stat-hint" id="stat-session-hint">${t('dash.noneBooked')}</span>
             </div>
           </section>
 
@@ -97,32 +91,32 @@ export const Dashboard = {
               <section class="card dashboard-card mood-checkin-card" aria-labelledby="mood-checkin-title">
                 <div class="card-header-row">
                   <div>
-                    <span class="card-eyebrow">Daily check-in</span>
-                    <h2 id="mood-checkin-title" class="card-title">Record your mood</h2>
+                    <span class="card-eyebrow">${t('dash.dailyCheckin')}</span>
+                    <h2 id="mood-checkin-title" class="card-title">${t('dash.recordMood')}</h2>
                   </div>
-                  <a href="/mood" class="card-link-subtle">View history & chart →</a>
+                  <a href="/mood" class="card-link-subtle">${t('dash.history')}</a>
                 </div>
 
-                <div class="mood-selector-bar" role="radiogroup" aria-label="Select mood level">
-                  <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="Very Low">
+                <div class="mood-selector-bar" role="radiogroup" aria-label="${t('dash.selectMood')}">
+                  <button type="button" class="mood-pick-btn" data-level="very_low" data-score="1" aria-label="${t('mood.very_low')}">
                     <div class="mood-image-wrapper">${renderMoodArtwork('very_low', 40)}</div>
-                    <span class="mood-pick-label">Very Low</span>
+                    <span class="mood-pick-label">${t('mood.very_low')}</span>
                   </button>
-                  <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="Low">
+                  <button type="button" class="mood-pick-btn" data-level="low" data-score="2" aria-label="${t('mood.low')}">
                     <div class="mood-image-wrapper">${renderMoodArtwork('low', 40)}</div>
-                    <span class="mood-pick-label">Low</span>
+                    <span class="mood-pick-label">${t('mood.low')}</span>
                   </button>
-                  <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="Neutral">
+                  <button type="button" class="mood-pick-btn active" data-level="neutral" data-score="3" aria-label="${t('mood.neutral')}">
                     <div class="mood-image-wrapper">${renderMoodArtwork('neutral', 40)}</div>
-                    <span class="mood-pick-label">Neutral</span>
+                    <span class="mood-pick-label">${t('mood.neutral')}</span>
                   </button>
-                  <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="Good">
+                  <button type="button" class="mood-pick-btn" data-level="good" data-score="4" aria-label="${t('mood.good')}">
                     <div class="mood-image-wrapper">${renderMoodArtwork('good', 40)}</div>
-                    <span class="mood-pick-label">Good</span>
+                    <span class="mood-pick-label">${t('mood.good')}</span>
                   </button>
-                  <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="Very Good">
+                  <button type="button" class="mood-pick-btn" data-level="very_good" data-score="5" aria-label="${t('mood.very_good')}">
                     <div class="mood-image-wrapper">${renderMoodArtwork('very_good', 40)}</div>
-                    <span class="mood-pick-label">Very Good</span>
+                    <span class="mood-pick-label">${t('mood.very_good')}</span>
                   </button>
                 </div>
 
@@ -131,9 +125,9 @@ export const Dashboard = {
                     type="text"
                     id="quick-mood-note"
                     class="form-input"
-                    placeholder="Add an optional brief reflection... (e.g. Wrapped up lab experiment, feeling lighter)"
+                    placeholder="${t('dash.notePlaceholder')}"
                   />
-                  <button type="button" class="btn btn-primary" id="save-quick-mood-btn">Log today's mood</button>
+                  <button type="button" class="btn btn-primary" id="save-quick-mood-btn">${t('dash.logMood')}</button>
                 </div>
 
                 <div id="latest-mood-badge" class="latest-mood-info" style="display:none;"></div>
@@ -143,18 +137,18 @@ export const Dashboard = {
               <section class="card dashboard-card" aria-labelledby="journal-preview-title">
                 <div class="card-header-row">
                   <div>
-                    <span class="card-eyebrow">Private thoughts</span>
-                    <h2 id="journal-preview-title" class="card-title">Latest Journal Reflection</h2>
+                    <span class="card-eyebrow">${t('dash.private')}</span>
+                    <h2 id="journal-preview-title" class="card-title">${t('dash.latestJournal')}</h2>
                   </div>
-                  <a href="/journal" class="card-link-subtle">All entries →</a>
+                  <a href="/journal" class="card-link-subtle">${t('dash.allEntries')}</a>
                 </div>
 
                 <div id="dashboard-journal-preview" class="journal-preview-box">
-                  <div class="loading-spinner">Loading latest reflection...</div>
+                  <div class="loading-spinner">${t('dash.loadingJournal')}</div>
                 </div>
 
                 <div class="card-action-bar">
-                  <a href="/journal/new" class="btn btn-outline btn-sm">+ Write new entry</a>
+                  <a href="/journal/new" class="btn btn-outline btn-sm">${t('dash.writeNew')}</a>
                 </div>
               </section>
 
@@ -162,9 +156,9 @@ export const Dashboard = {
               <section class="card dashboard-card tip-card" aria-labelledby="tip-title">
                 <div class="tip-photo">${photo('walk', { w: 700 })}</div>
                 <div class="tip-body">
-                  <span class="card-eyebrow">Today's gentle reminder</span>
-                  <h2 id="tip-title" class="card-title">${DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length].title}</h2>
-                  <p class="tip-text">${DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length].body}</p>
+                  <span class="card-eyebrow">${t('dash.tipEyebrow')}</span>
+                  <h2 id="tip-title" class="card-title">${tipOfTheDay().title}</h2>
+                  <p class="tip-text">${tipOfTheDay().body}</p>
                 </div>
               </section>
 
@@ -172,19 +166,19 @@ export const Dashboard = {
               <section class="card dashboard-card ai-prompts-card" aria-labelledby="ai-prompts-title">
                 <div class="card-header-row">
                   <div>
-                    <span class="card-eyebrow">Support companion</span>
-                    <h2 id="ai-prompts-title" class="card-title">Need to think out loud?</h2>
+                    <span class="card-eyebrow">${t('dash.companionEyebrow')}</span>
+                    <h2 id="ai-prompts-title" class="card-title">${t('dash.thinkAloud')}</h2>
                   </div>
-                  <span class="badge badge-sage">Safe & Confidential</span>
+                  <span class="badge badge-sage">${t('dash.safe')}</span>
                 </div>
                 <p class="ai-prompts-desc">
-                  Serenova's companion listens with compassion, without diagnosing or evaluating you. Select a prompt to start:
+                  ${t('dash.companionDesc')}
                 </p>
                 <div class="ai-prompt-pills">
-                  <a href="/chat" class="prompt-pill">"I have a lot of deadlines and my brain feels paralyzed."</a>
-                  <a href="/chat" class="prompt-pill">"Can you guide me through a 2-minute grounding exercise?"</a>
-                  <a href="/chat" class="prompt-pill">"I'm feeling like I don't belong in my program."</a>
-                  <a href="/chat" class="prompt-pill">"My sleep schedule is completely upside down."</a>
+                  <a href="/chat" class="prompt-pill">${t('dash.p1')}</a>
+                  <a href="/chat" class="prompt-pill">${t('dash.p2')}</a>
+                  <a href="/chat" class="prompt-pill">${t('dash.p3')}</a>
+                  <a href="/chat" class="prompt-pill">${t('dash.p4')}</a>
                 </div>
               </section>
 
@@ -195,17 +189,17 @@ export const Dashboard = {
 
               <!-- Self-Assessment Screening Card -->
               <section class="card dashboard-card assessment-widget" aria-labelledby="screening-widget-title">
-                <span class="card-eyebrow">Self-reflection</span>
-                <h3 id="screening-widget-title" class="card-title">Well-Being Screening</h3>
+                <span class="card-eyebrow">${t('dash.selfReflection')}</span>
+                <h3 id="screening-widget-title" class="card-title">${t('dash.screeningTitle')}</h3>
                 <p class="assessment-widget-desc">
-                  20 questions based on the PHQ-9 and GAD-7 screening scales, plus a short student-life check. About 4 minutes.
+                  ${t('dash.screeningDesc')}
                 </p>
                 <div id="latest-assessment-status" class="assessment-status-box">
-                  <span class="status-loading">Checking history...</span>
+                  <span class="status-loading">${t('dash.checkingHistory')}</span>
                 </div>
-                <a href="/assessment" class="btn btn-primary btn-sm btn-block">Take / Retake screening</a>
+                <a href="/assessment" class="btn btn-primary btn-sm btn-block">${t('dash.takeScreening')}</a>
                 <p class="text-xs text-ink-60 mt-3" style="text-align:center;">
-                  Screening only — not a clinical diagnosis.
+                  ${t('dash.screeningNote')}
                 </p>
               </section>
 
@@ -213,48 +207,48 @@ export const Dashboard = {
               <section class="card dashboard-card appointments-widget" aria-labelledby="appt-widget-title">
                 <div class="card-header-row">
                   <div>
-                    <span class="card-eyebrow">Human guidance</span>
-                    <h3 id="appt-widget-title" class="card-title">Counselling Sessions</h3>
+                    <span class="card-eyebrow">${t('dash.humanGuidance')}</span>
+                    <h3 id="appt-widget-title" class="card-title">${t('dash.sessionsTitle')}</h3>
                   </div>
-                  <a href="/counsellors" class="card-link-subtle">Counsellors →</a>
+                  <a href="/counsellors" class="card-link-subtle">${t('dash.counsellorsLink')}</a>
                 </div>
                 <div id="dashboard-appointments-list" class="appt-list-box">
-                  <div class="loading-spinner">Checking bookings...</div>
+                  <div class="loading-spinner">${t('dash.checkingBookings')}</div>
                 </div>
-                <a href="/counsellors" class="btn btn-outline btn-sm btn-block mt-3">Book confidential consultation</a>
+                <a href="/counsellors" class="btn btn-outline btn-sm btn-block mt-3">${t('dash.bookConsult')}</a>
               </section>
 
               <!-- 24x7 Immediate Helplines Card -->
               <section class="card dashboard-card helpline-card" aria-label="Crisis helpline notice">
                 <div class="helpline-card-header">
-                  <span class="helpline-card-badge">24x7 Verified Help</span>
-                  <h4>Immediate Support</h4>
+                  <span class="helpline-card-badge">${t('dash.verifiedHelp')}</span>
+                  <h4>${t('dash.immediateSupport')}</h4>
                 </div>
                 <p class="helpline-card-text">
-                  If you are experiencing severe distress or thoughts of self-harm, please connect with a live counselor right away:
+                  ${t('dash.helplineText')}
                 </p>
                 <div class="quick-hotlines">
                   <a href="tel:14416" class="quick-hotline-item">
-                    <strong>Tele-MANAS:</strong> <span>14416 (Toll-free)</span>
+                    <strong>Tele-MANAS:</strong> <span>${t('dash.tollFree')}</span>
                   </a>
                   <a href="tel:9152987821" class="quick-hotline-item">
                     <strong>iCall Helpline:</strong> <span>9152987821</span>
                   </a>
                 </div>
                 <button type="button" class="btn btn-secondary btn-sm btn-block mt-3" id="dash-open-helpline-btn">
-                  View all emergency helplines
+                  ${t('dash.viewAllHelplines')}
                 </button>
               </section>
 
               <!-- One-minute breathing reset -->
               <section class="card dashboard-card reset-card" aria-labelledby="reset-title">
-                <span class="card-eyebrow">One-minute reset</span>
-                <h3 id="reset-title" class="card-title">Slow your breathing</h3>
+                <span class="card-eyebrow">${t('dash.resetEyebrow')}</span>
+                <h3 id="reset-title" class="card-title">${t('dash.resetTitle')}</h3>
                 <div class="reset-stage">
                   <div class="reset-orb" id="reset-orb" aria-hidden="true"></div>
-                  <p class="reset-cue" id="reset-cue" aria-live="polite">Ready when you are</p>
+                  <p class="reset-cue" id="reset-cue" aria-live="polite">${t('dash.resetReady')}</p>
                 </div>
-                <button type="button" class="btn btn-outline btn-sm btn-block" id="reset-btn" aria-pressed="false">Start</button>
+                <button type="button" class="btn btn-outline btn-sm btn-block" id="reset-btn" aria-pressed="false">${t('dash.start')}</button>
               </section>
 
             </div>
@@ -265,12 +259,12 @@ export const Dashboard = {
           <section class="reads-strip" aria-labelledby="reads-title">
             <div class="card-header-row">
               <div>
-                <span class="card-eyebrow">Worth a read</span>
-                <h2 id="reads-title" class="card-title">Picked for you today</h2>
+                <span class="card-eyebrow">${t('dash.worthRead')}</span>
+                <h2 id="reads-title" class="card-title">${t('dash.pickedToday')}</h2>
               </div>
-              <a href="/resources" class="card-link-subtle">All guides →</a>
+              <a href="/resources" class="card-link-subtle">${t('dash.allGuides')}</a>
             </div>
-            <div id="dash-reads" class="reads-list"><div class="loading-spinner">Finding guides...</div></div>
+            <div id="dash-reads" class="reads-list"><div class="loading-spinner">${t('dash.findingGuides')}</div></div>
           </section>
 
         </div>
@@ -292,15 +286,15 @@ export const Dashboard = {
     const resetBtn = document.getElementById('reset-btn');
     const orb = document.getElementById('reset-orb');
     const cue = document.getElementById('reset-cue');
-    const stopBreath = () => { clearInterval(this._breathTimer); this._breathTimer = null; orb?.classList.remove('is-in', 'is-out'); if (cue) cue.textContent = 'Ready when you are'; if (resetBtn) { resetBtn.textContent = 'Start'; resetBtn.setAttribute('aria-pressed', 'false'); } };
+    const stopBreath = () => { clearInterval(this._breathTimer); this._breathTimer = null; orb?.classList.remove('is-in', 'is-out'); if (cue) cue.textContent = t('dash.resetReady'); if (resetBtn) { resetBtn.textContent = t('dash.start'); resetBtn.setAttribute('aria-pressed', 'false'); } };
     resetBtn?.addEventListener('click', () => {
       if (this._breathTimer) { stopBreath(); return; }
-      resetBtn.textContent = 'Stop'; resetBtn.setAttribute('aria-pressed', 'true');
-      const phases = [['Breathe in', 4, 'is-in'], ['Hold', 2, 'is-in'], ['Breathe out', 6, 'is-out']];
+      resetBtn.textContent = t('dash.stop'); resetBtn.setAttribute('aria-pressed', 'true');
+      const phases = [[t('dash.breatheIn'), 4, 'is-in'], [t('dash.hold'), 2, 'is-in'], [t('dash.breatheOut'), 6, 'is-out']];
       let i = 0, left = 0, cycles = 0;
       const tick = () => {
         if (left <= 0) {
-          if (i >= phases.length) { i = 0; if (++cycles >= 5) { stopBreath(); if (cue) cue.textContent = 'Well done'; return; } }
+          if (i >= phases.length) { i = 0; if (++cycles >= 5) { stopBreath(); if (cue) cue.textContent = t('dash.wellDone'); return; } }
           const [label, secs, cls] = phases[i++]; left = secs; cue.textContent = label; orb.classList.remove('is-in', 'is-out'); void orb.offsetWidth; orb.classList.add(cls);
         }
         left--;
@@ -315,7 +309,7 @@ export const Dashboard = {
       const day = Math.floor(Date.now() / 86400000);
       const picks = [0, 1, 2].map((n) => pool[(day * 3 + n * 7) % pool.length]).filter((r, i, a) => r && a.indexOf(r) === i);
       box.innerHTML = picks.map((r) => `<a href="/resources" class="read-item"><span class="read-thumb">${photo(r.image || RESOURCE_PHOTO[r.category] || 'sunrise', { w: 480 })}</span><span class="read-text"><b>${esc(r.title)}</b><small>${esc(r.category_label || '')} · ${esc(r.read_time)}</small></span></a>`).join('');
-    }).catch(() => { const box = document.getElementById('dash-reads'); if (box) box.innerHTML = '<p class="text-xs text-ink-60">Guides are not available right now.</p>'; });
+    }).catch(() => { const box = document.getElementById('dash-reads'); if (box) box.innerHTML = `<p class="text-xs text-ink-60">${t('dash.guidesUnavailable')}</p>`; });
 
     this._dockOff = attachEmojiDock(document.querySelector('.mood-selector-bar'));
 
@@ -363,7 +357,7 @@ export const Dashboard = {
     saveMoodBtn?.addEventListener('click', async () => {
       const note = noteInput.value.trim();
       saveMoodBtn.disabled = true;
-      saveMoodBtn.textContent = 'Saving...';
+      saveMoodBtn.textContent = t('dash.saving');
 
       try {
         await moodsApi.logMood({
@@ -371,14 +365,14 @@ export const Dashboard = {
           score: selectedScore,
           note: note || null,
         });
-        Toast.success("Today's mood recorded.");
+        Toast.success(t('dash.moodSaved'));
         noteInput.value = '';
         saveMoodBtn.disabled = false;
-        saveMoodBtn.textContent = "Log today's mood";
+        saveMoodBtn.textContent = t('dash.logMood');
         loadLatestMood();
         if (typeof loadMoodStats === 'function') loadMoodStats();
       } catch (err) {
-        Toast.error(err.message || 'Failed to save mood log.');
+        Toast.error(err.message || t('dash.moodFailed'));
         saveMoodBtn.disabled = false;
         saveMoodBtn.textContent = "Log today's mood";
       }
@@ -394,7 +388,7 @@ export const Dashboard = {
           });
           latestBadge.style.display = 'block';
           latestBadge.innerHTML = `
-            <span>Last logged: <strong>${m.level.replace('_', ' ')}</strong> (${dateStr})</span>
+            <span>${t('dash.lastLogged')} <strong>${t('mood.' + m.level)}</strong> (${dateStr})</span>
             ${m.note ? `<p class="italic text-xs mt-1">"${esc(m.note)}"</p>` : ''}
           `;
         }
@@ -427,11 +421,11 @@ export const Dashboard = {
           `;
         } else {
           journalBox.innerHTML = `
-            <p class="empty-text">Your private notebook is quiet. Take a moment to capture whatever is on your mind.</p>
+            <p class="empty-text">${t('dash.journalQuiet')}</p>
           `;
         }
       } catch (e) {
-        journalBox.innerHTML = `<p class="error-text">Unable to load journal entries.</p>`;
+        journalBox.innerHTML = `<p class="error-text">${t('dash.journalError')}</p>`;
       }
     }
     loadJournalPreview();
@@ -456,20 +450,20 @@ export const Dashboard = {
               <ul class="status-sections">
                 ${a.sections.map(sec => `<li><span>${esc(sec.instrument)}</span><strong>${sec.score}/${sec.max}</strong><em>${esc(sec.severity)}</em></li>`).join('')}
               </ul>` : ''}
-            <p class="text-xs text-ink-60 mt-1">Last taken on ${dateStr}</p>
+            <p class="text-xs text-ink-60 mt-1">${t('dash.lastTakenOn', { date: dateStr })}</p>
           `;
           const checkEl = document.getElementById('stat-check');
           if (checkEl) {
             checkEl.textContent = a.category.charAt(0).toUpperCase() + a.category.slice(1);
-            document.getElementById('stat-check-hint').textContent = `Taken ${dateStr}`;
+            document.getElementById('stat-check-hint').textContent = t('dash.takenOn', { date: dateStr });
           }
         } else {
           assessBox.innerHTML = `
-            <p class="text-xs text-ink-60">You haven't taken a well-being check yet.</p>
+            <p class="text-xs text-ink-60">${t('dash.noCheckYet')}</p>
           `;
         }
       } catch (e) {
-        assessBox.innerHTML = `<p class="text-xs text-ink-40">Status unavailable.</p>`;
+        assessBox.innerHTML = `<p class="text-xs text-ink-40">${t('dash.statusUnavailable')}</p>`;
       }
     }
     loadAssessmentStatus();
@@ -483,25 +477,25 @@ export const Dashboard = {
         const active = list.filter(a => a.status !== 'cancelled').slice(0, 2);
         if (active.length) {
           document.getElementById('stat-session').textContent = active[0].preferred_date;
-          document.getElementById('stat-session-hint').textContent = `${active[0].time_slot} · ${active[0].counsellor_name || 'Counsellor'}`;
+          document.getElementById('stat-session-hint').textContent = `${active[0].time_slot} · ${active[0].counsellor_name || t('dash.counsellorFallback')}`;
         }
         if (active.length > 0) {
           apptBox.innerHTML = active.map(a => `
             <div class="dash-appt-item">
               <div class="flex-between">
-                <strong>${esc(a.counsellor_name || 'Counsellor')}</strong>
-                <span class="badge badge-${a.status === 'confirmed' ? 'sage' : 'saffron'}">${a.status}</span>
+                <strong>${esc(a.counsellor_name || t('dash.counsellorFallback'))}</strong>
+                <span class="badge badge-${a.status === 'confirmed' ? 'sage' : 'saffron'}">${t('appt.' + a.status)}</span>
               </div>
               <p class="text-xs text-ink-60 mt-1">${a.preferred_date} at ${a.time_slot}</p>
             </div>
           `).join('');
         } else {
           apptBox.innerHTML = `
-            <p class="empty-text">No upcoming consultations booked.</p>
+            <p class="empty-text">${t('dash.noConsults')}</p>
           `;
         }
       } catch (e) {
-        apptBox.innerHTML = `<p class="error-text">Unable to load appointments.</p>`;
+        apptBox.innerHTML = `<p class="error-text">${t('dash.apptError')}</p>`;
       }
     }
     loadAppointments();
@@ -514,7 +508,7 @@ export const Dashboard = {
         if (stats.total_logs > 0 && avgEl) {
           avgEl.setAttribute('data-count', String(stats.average_score));
           avgEl.textContent = stats.average_score.toFixed(1);
-          document.getElementById('stat-avg-hint').textContent = `across ${stats.total_logs} check-ins`;
+          document.getElementById('stat-avg-hint').textContent = t('dash.acrossCheckins', { n: stats.total_logs });
         }
         const days = new Set(list.map(m => new Date(m.recorded_at).toDateString()));
         let streak = 0;
@@ -527,7 +521,7 @@ export const Dashboard = {
           streakEl.textContent = String(streak);
         }
         document.getElementById('stat-streak-hint').textContent =
-          streak === 0 ? 'Log a mood to start' : streak === 1 ? 'Nice start' : 'Keep it going';
+          streak === 0 ? t('dash.logMoodStart') : streak === 1 ? t('dash.niceStart') : t('dash.keepGoing');
       } catch (e) { /* stats are optional */ }
     }
     loadMoodStats();
