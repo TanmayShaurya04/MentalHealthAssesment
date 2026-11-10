@@ -1,6 +1,6 @@
 import datetime
 from fastapi import APIRouter, Depends, HTTPException, Response
-from app.models import UserProfileUpdate, ChangePassword, DeleteAccount, ConsentUpdate
+from app.models import UserProfileUpdate, ChangePassword, DeleteAccount, ConsentUpdate, VerifyPassword, SafetyPlan
 from app.auth import get_current_user, public_user, hash_password, verify_password, clear_session_cookie
 from app.database import db_manager
 
@@ -69,6 +69,37 @@ async def change_password(payload: ChangePassword, current_user: dict = Depends(
     return {"message": "Password updated"}
 
 
+@router.post("/me/verify-password")
+async def verify_my_password(payload: VerifyPassword, current_user: dict = Depends(get_current_user)):
+    """Used by the screen lock: confirms the signed-in user's password without starting a new session."""
+    full = await db_manager.get_collection("users").find_one({"_id": current_user["_id"]})
+    if not verify_password(payload.password, full.get("password_hash", "")):
+        raise HTTPException(status_code=400, detail="That password is not correct")
+    return {"ok": True}
+
+
+def _clean(items):
+    return [s.strip() for s in items if s and s.strip()]
+
+
+@router.get("/me/safety-plan")
+async def get_safety_plan(current_user: dict = Depends(get_current_user)):
+    return current_user.get("safety_plan") or SafetyPlan().model_dump()
+
+
+@router.put("/me/safety-plan")
+async def save_safety_plan(payload: SafetyPlan, current_user: dict = Depends(get_current_user)):
+    plan = payload.model_dump()
+    for key in ("warning_signs", "coping_strategies", "distractions", "safe_places"):
+        plan[key] = _clean(plan[key])
+    plan["contacts"] = [c for c in plan["contacts"] if c["name"].strip() or c["phone"].strip()]
+    plan["reasons_to_live"] = plan["reasons_to_live"].strip()
+    plan["safe_environment"] = plan["safe_environment"].strip()
+    plan["updated_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    await db_manager.get_collection("users").update_one({"_id": current_user["_id"]}, {"$set": {"safety_plan": plan}})
+    return plan
+
+
 @router.post("/me/consent")
 async def record_consent(payload: ConsentUpdate, current_user: dict = Depends(get_current_user)):
     consent = {"version": payload.version, "accepted_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
@@ -83,6 +114,7 @@ async def export_my_data(current_user: dict = Depends(get_current_user)):
     out = {
         "exported_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "account": public_user(current_user),
+        "safety_plan": current_user.get("safety_plan"),
     }
     for name, field in USER_OWNED:
         docs = await db_manager.get_collection(name).find({field: user_id}).to_list(length=100000)

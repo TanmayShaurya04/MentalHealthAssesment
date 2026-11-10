@@ -53,6 +53,7 @@ function accountMenu(user, userName) {
       </button>
       <div class="navbar-menu" id="account-menu" role="menu" hidden>
         <div class="navbar-menu-head"><b>${esc(user?.name || userName)}</b>${user?.email ? `<span>${esc(user.email)}</span>` : ''}</div>
+        ${(user?.role || 'student') === 'student' ? '<a href="/safety-plan" role="menuitem" class="navbar-menu-item">My safety plan</a>' : ''}
         <a href="/settings" role="menuitem" class="navbar-menu-item">${esc(t('nav.settings'))}</a>
         <button type="button" role="menuitem" class="navbar-menu-item" data-action="theme"><span class="js-theme-ico">${icon(dark ? 'sun' : 'moon', { size: 16 })}</span><span class="js-theme-label">${dark ? 'Light mode' : 'Dark mode'}</span></button>
         <button type="button" role="menuitem" class="navbar-menu-item" data-action="lang" data-lang="${other.code}">${icon('globe', { size: 16 })}${esc(other.label)}</button>

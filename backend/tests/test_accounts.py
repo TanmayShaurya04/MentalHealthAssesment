@@ -136,3 +136,32 @@ async def test_security_headers_present():
         assert res.headers["x-content-type-options"] == "nosniff"
         assert res.headers["x-frame-options"] == "DENY"
         assert "frame-ancestors 'none'" in res.headers["content-security-policy"]
+
+
+@pytest.mark.asyncio
+async def test_safety_plan_roundtrip_and_privacy():
+    async with client() as c:
+        await register(c, "plan.user@example.com", password="Passw0rdOK")
+        empty = await c.get("/api/users/me/safety-plan")
+        assert empty.status_code == 200 and empty.json()["warning_signs"] == []
+        saved = await c.put("/api/users/me/safety-plan", json={
+            "warning_signs": ["  can't sleep ", ""], "coping_strategies": ["walk"],
+            "contacts": [{"name": "Riya", "phone": "9999999999"}, {"name": "", "phone": ""}],
+            "reasons_to_live": "my family"})
+        assert saved.status_code == 200
+        plan = (await c.get("/api/users/me/safety-plan")).json()
+        assert plan["warning_signs"] == ["can't sleep"] and len(plan["contacts"]) == 1
+        # Not leaked in the public profile, but included in the data export
+        assert "safety_plan" not in (await c.get("/api/users/me")).json()
+        assert (await c.get("/api/users/me/export")).json()["safety_plan"]["reasons_to_live"] == "my family"
+
+
+@pytest.mark.asyncio
+async def test_verify_password_for_screen_lock():
+    async with client() as c:
+        await register(c, "lock.user@example.com", password="Passw0rdOK")
+        assert (await c.post("/api/users/me/verify-password", json={"password": "Passw0rdOK"})).status_code == 200
+        bad = await c.post("/api/users/me/verify-password", json={"password": "wrong"})
+        assert bad.status_code == 400
+        # A wrong guess must not end the session
+        assert (await c.get("/api/users/me")).status_code == 200

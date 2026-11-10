@@ -27,6 +27,7 @@ import { authApi } from './api/auth.js';
 import { apiClient } from './api/client.js';
 import { initAnimations } from './utils/animations.js';
 import { setLang } from './i18n/index.js';
+import { initGuards } from './components/Guards.js';
 
 window.router = router;
 window.store = store;
@@ -53,6 +54,7 @@ async function start() {
   const lang = store.getUser()?.profile?.language;
   if (lang) setLang(lang);
   router.init();
+  initGuards();
 }
 start();
 

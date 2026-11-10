@@ -24,6 +24,7 @@ import { Privacy, Terms } from './pages/Legal.js';
 import { About } from './pages/About.js';
 import { ForgotPassword, ResetPassword, VerifyEmail } from './pages/AccountLinks.js';
 import { Settings } from './pages/Settings.js';
+import { SafetyPlan } from './pages/SafetyPlan.js';
 import { CounsellorPortal } from './pages/CounsellorPortal.js';
 import { AdminInsights } from './pages/AdminInsights.js';
 import { ConsentModal, CONSENT_VERSION } from './components/ConsentModal.js';
@@ -53,6 +54,7 @@ const ROUTES = [
   { path: '/resources',          page: Resources,         title: 'Resources',           requiresAuth: false },
   { path: '/profile',            page: Profile,           title: 'My profile',          requiresAuth: true },
   { path: '/settings',           page: Settings,          title: 'Settings',            requiresAuth: true },
+  { path: '/safety-plan',       page: SafetyPlan,        title: 'My safety plan',      requiresAuth: true, roles: STUDENT },
   { path: '/counsellor',         page: CounsellorPortal,  title: 'Counsellor portal',   requiresAuth: true, roles: ['counsellor'] },
   { path: '/admin',              page: AdminInsights,     title: 'Insights',            requiresAuth: true, roles: ['admin'] },
   { path: '/privacy',            page: Privacy,           title: 'Privacy Policy' },

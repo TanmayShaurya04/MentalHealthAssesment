@@ -9,6 +9,7 @@ import { icon } from '../components/icons.js';
 import { esc } from '../utils/html.js';
 import { t, setLang, getLang, LANGS } from '../i18n/index.js';
 import { getTheme, setTheme } from '../utils/theme.js';
+import { getGuard, setGuard } from '../components/Guards.js';
 
 export const Settings = {
   _c: null,
@@ -83,6 +84,15 @@ export const Settings = {
             </div>
           </section>` : ''}
 
+          <section class="settings-card" aria-labelledby="s-priv">
+            <h2 id="s-priv">Privacy on shared screens</h2>
+            <div class="settings-row"><span>Quick exit button (press Esc twice to leave instantly)</span>
+              <label class="switch"><input type="checkbox" id="guard-quick" ${getGuard('quick') ? 'checked' : ''}><span class="visually-hidden">Quick exit</span></label></div>
+            <div class="settings-row"><span>Lock the screen after 5 idle minutes</span>
+              <label class="switch"><input type="checkbox" id="guard-lock" ${getGuard('lock') ? 'checked' : ''}><span class="visually-hidden">Screen lock</span></label></div>
+            <p class="form-hint">Saved on this device only.${isStudent ? ' <a href="/safety-plan">Open my safety plan</a>' : ''}</p>
+          </section>
+
           <p class="settings-legal"><a href="/privacy">${t('footer.privacy')}</a> · <a href="/terms">${t('footer.terms')}</a></p>
         </div>
       </main>
@@ -105,6 +115,9 @@ export const Settings = {
       try { await authApi.updateProfile({ language: e.target.value }); } catch (err) { /* offline: local choice still applies */ }
       router.navigate('/settings', false);
     });
+
+    $('guard-quick')?.addEventListener('change', (e) => setGuard('quick', e.target.checked));
+    $('guard-lock')?.addEventListener('change', (e) => setGuard('lock', e.target.checked));
 
     $('reminder-toggle')?.addEventListener('change', async (e) => {
       try {

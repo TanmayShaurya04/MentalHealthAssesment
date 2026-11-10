@@ -53,6 +53,26 @@ class DeleteAccount(BaseModel):
     password: str
 
 
+class VerifyPassword(BaseModel):
+    password: str
+
+
+class SafetyContact(BaseModel):
+    name: str = Field("", max_length=80)
+    phone: str = Field("", max_length=30)
+
+
+class SafetyPlan(BaseModel):
+    """Stanley-Brown style personal safety plan, written by the student for themselves."""
+    warning_signs: List[str] = Field(default_factory=list, max_length=10)
+    coping_strategies: List[str] = Field(default_factory=list, max_length=10)
+    distractions: List[str] = Field(default_factory=list, max_length=10)
+    safe_places: List[str] = Field(default_factory=list, max_length=10)
+    contacts: List[SafetyContact] = Field(default_factory=list, max_length=6)
+    reasons_to_live: str = Field("", max_length=500)
+    safe_environment: str = Field("", max_length=500)
+
+
 class ConsentUpdate(BaseModel):
     version: str = Field(..., max_length=20)
 
