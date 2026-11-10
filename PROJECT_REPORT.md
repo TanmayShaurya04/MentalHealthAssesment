@@ -13,7 +13,7 @@
 
 Unlike generic mental health apps, Serenova combines:
 1. An **offline-first hybrid AI Companion** equipped with safety guardrails and national crisis helpline escalation (Tele-MANAS, Kiran).
-2. A standardized **15-question clinical screening rubric** (adapted from PHQ-9 and GAD-7 standards).
+2. A guided **20-item screening** (the PHQ-9 and GAD-7 self-report questionnaires plus a 4-item student check-in).
 3. A **student-subsidized tele-counselling module** offering verified professional consultations (capped under ₹2,000) with integrated one-click encrypted Jitsi video meetings.
 4. An **expressive mood & journal tracker** with custom vector visual artwork and temporal emotional trend graphing via Chart.js.
 
@@ -53,7 +53,7 @@ Serenova provides an immediate, accessible, and resilient first line of psycholo
 | **Database (Fallback)**| File-Backed JSON Engine | Built-in | Custom transactional JSON engine guaranteeing 100% functionality without external database setup |
 | **Testing Suite** | Pytest + Pytest-Asyncio| 8.0 / 0.23 | Automated test runner covering auth, scoring rubrics, and crisis keyword interception |
 | **Containerization** | Docker & Compose | Multi-Stage | `node:20-slim` build stage + `python:3.11-slim` unified runtime |
-| **Video Telehealth** | Jitsi Meet WebRTC | Free/Open | Browser-native, zero-install encrypted video calling |
+| **Video Telehealth** | Jitsi Meet WebRTC | Free/Open | Browser-based video calling, no install. The counsellor provides the link, e.g. a Jitsi or Meet room |
 
 ---
 
@@ -79,40 +79,38 @@ Serenova provides an immediate, accessible, and resilient first line of psycholo
 - **Hinglish Understanding:** Matches colloquial student vocabulary (`padhai`, `neend nahi aa rahi`, `bohot darr lag raha hai`, `akela`, `thak gaya hoon`).
 - **Cloud LLM Compatibility:** Extensible connector supporting Groq Cloud (Llama 3.3 70B) or OpenAI endpoints whenever an `AI_API_KEY` is provided.
 
-### 5.2 Clinical Screening & Assessment (`app/routers/assessments.py`)
-Provides an evidence-based clinical self-evaluation composed of **15 standardized questions**:
-- **Questions 1–7 (Depressive Core - PHQ-9 alignment):** Anhedonia, persistent low mood, sleep rhythm disturbance, energy depletion, appetite change, feelings of failure/guilt, psychomotor slowing.
-- **Questions 8–13 (Anxiety Core - GAD-7 alignment):** Uncontrollable worry, restlessness, somatic tension, irritability, hypervigilance, anticipation of doom.
-- **Questions 14–15 (Student & Social Functional Impact):** Academic focus impairment, social withdrawal.
+### 5.2 Student Well-Being Screening (`app/routers/assessments.py`)
+A guided, one-question-at-a-time screening made of **20 items** from published instruments plus a short student check-in:
+- **PHQ-9 (9 items):** low mood and its related symptoms, including the item on thoughts of self-harm.
+- **GAD-7 (7 items):** worry, restlessness, irritability and related anxiety symptoms.
+- **Student check-in (4 items):** academic strain, sleep, social connection and overall load. This part is a Serenova addition and is **not** a validated scale.
 
-#### Scoring Algorithm & Severity Scale (0 to 45 Points):
-$$\text{Total Score} = \sum_{i=1}^{15} \text{AnswerValue}_i \quad (\text{where } \text{AnswerValue} \in [0, 3])$$
+Each item is answered 0 to 3 ("Not at all" to "Nearly every day"). Scores are kept per section (PHQ-9 0–27, GAD-7 0–21, check-in 0–12; maximum 60).
 
-| Score Range | Severity Tier | Clinical Guidance & System Action |
-| :---: | :---: | :--- |
-| **0 – 9** | **Minimal / Healthy** | Normal emotional fluctuations. Recommended: Sleep hygiene and mindfulness check-ins. |
-| **10 – 19** | **Mild Stress / Anxiety** | Early symptomatic patterns. Recommended: Daily mood tracking, guided breathing exercises, and journaling. |
-| **20 – 29** | **Moderate Distress** | Clinically relevant strain impacting academics. Recommended: Booking an appointment with a campus counsellor. |
-| **30 – 45** | **Severe Distress** | High clinical concern. Prominently displays emergency helpline banner, priority consultation booking, and print-ready summary for medical professionals. |
+| Section | Bands used |
+| :--- | :--- |
+| PHQ-9 | 0–4 minimal, 5–9 mild, 10–14 moderate, 15–19 moderately severe, 20–27 severe |
+| GAD-7 | 0–4 minimal, 5–9 mild, 10–14 moderate, 15–21 severe |
+| Check-in | low, some, high, very high strain |
 
-### 5.3 Professional Counsellor Directory & Tele-Health (`app/routers/counsellors.py`)
-- **Strict Student Affordability Guarantee:** Every counsellor's consultation fee is capped under ₹2,000 (standardized rates: ₹500, ₹800, ₹1,200, ₹1,500).
-- **Responsive Table Interface:**
-  - Columns: Counsellor Name & Qualification, Focus Area / Context, Years of Experience, Languages Spoken, Fee per session, Availability status.
-  - Quick Search & Filter: Filter by specialty (CBT, Career Stress, Anxiety, Trauma) or spoken language (English, Hindi, Bengali, Tamil, etc.).
-- **Live Video Consultation:**
-  - Integrated WebRTC consultation modal using Jitsi Meet (`https://meet.jit.si/serenova-consultation-...`).
-  - Requires zero third-party software downloads; works directly inside standard mobile and desktop browsers with end-to-end encryption.
+The overall category is the worse of PHQ-9 and GAD-7, nudged up one level when student strain is very high. Any non-zero answer on the self-harm item raises a safety flag, which shows the helpline block immediately. The result is a **self-check to start a conversation, not a diagnosis.** The page itself has a gentle pace (progress ring, keyboard shortcuts 1–4, a short breathing break) and keeps progress in the browser if the student leaves.
 
-### 5.4 Mood Tracking & Affective Journaling (`app/routers/moods.py` & `journals.py`)
-- **Visual Valence Scale:** 5 distinct emotional states accompanied by custom SVG vector illustrations:
-  1. *Rad / Great (Score: 5)* — Vibrant radiant smiling icon
-  2. *Good (Score: 4)* — Warm contented smiling icon
-  3. *Meh / Okay (Score: 3)* — Neutral calm line icon
-  4. *Bad / Down (Score: 2)* — Melancholic downturned icon
-  5. *Awful / Terrible (Score: 1)* — Distressed blue cloud icon
-- **Temporal Analysis:** Chart.js canvas graph dynamically plots a student's 7-day emotional curve against logged dates.
-- **Journaling:** Private textual logs with automated sentiment tagging (`positive`, `neutral`, `negative`) and timestamp indexing.
+### 5.3 Counsellor Directory & Booking (`app/routers/counsellors.py`, `appointments.py`)
+- **Directory:** search, concern chips, language, fee and weekday filters, and sorting by soonest availability, fee or experience. Fees are shown before booking. Counsellors marked "Demo" are sample profiles only.
+- **Profile drawer:** bio, concerns, languages, fee, weekly availability and what to expect.
+- **Calendar booking in three steps:** a month calendar where only days with open times can be chosen (taken and past slots are greyed out), then the kind of support wanted and an optional note, then a review screen. Requests are confirmed by the counsellor.
+- **No double booking:** `GET /api/counsellors/{id}/booked` returns only dates and times, with no student information. The server still rejects clashes.
+- **My sessions:** upcoming and past, with status, cancel, and **Add to calendar** (`.ics` file that opens in Apple, Google and Outlook calendars).
+- **Video link:** set by the counsellor and shown to the student only after the booking is confirmed. Serenova does not host or record calls, and does not claim end-to-end encryption.
+
+### 5.4 Mood Tracking, Journal & Resources
+- **Mood tracker:** five levels shown with real emojis that grow as the pointer nears (dock-style magnification), plus an optional note and a 7-day Chart.js curve.
+- **Journal:** private to the account holder. Streak and week strip, a prompt of the day, ten gentle writing prompts, an emoji mood for each entry, tags, search and mood filters, a live word count, an on-device draft that restores if the page is closed, and a distraction-free Focus mode. The design is deliberately neutral and not gendered.
+- **Resources:** 34 short guides across Academic Pressures, Rest & Recovery, Emotional Health, Friends & Family, Body & Habits and Verified Helplines. Each guide has its own photo. The page has search, topic chips, a featured guide, a quick-relief strip and a reader with previous / next.
+- **Dashboard:** auto-changing hero photos, a one-minute breathing reset, guides picked for the day, and Hindi translations.
+
+### 5.5 Personalised Companion (`app/services/personalised_companion.py`)
+Replies use the student's own data, built fresh for each message: first name, the last 7 mood scores and trend, the tags they picked, the latest screening result and the next appointment. **Journal text is never used.** The rule-based engine uses this to pick and word its reply. When an LLM key is configured, the same summary is passed in as context.
 
 ---
 
@@ -122,7 +120,7 @@ Serenova stores documents in JSON/MongoDB with the following key models:
 - **User:** `id`, `email`, `hashed_password`, `full_name`, `role`, `student_id`, `created_at`
 - **Mood:** `id`, `user_id`, `score` (1-5), `emotion_label`, `notes`, `created_at`
 - **Journal:** `id`, `user_id`, `title`, `content`, `sentiment`, `created_at`
-- **Assessment:** `id`, `user_id`, `total_score` (0-45), `severity`, `answers` (list of 15), `created_at`
+- **Assessment:** `id`, `user_id`, `total_score` (0-60), `category`, `phq9_score`, `gad7_score`, `answers` (list of 20), `created_at`
 - **Counsellor:** `id`, `name`, `title`, `specialisation`, `context`, `experience_years`, `languages`, `fee` (< ₹2000), `rating`, `video_meet_link`
 - **Appointment:** `id`, `user_id`, `counsellor_id`, `date`, `time_slot`, `status`, `video_meet_link`
 - **ChatSession & Message:** `id`, `user_id`, `sender` (user/assistant), `content`, `created_at`
@@ -131,13 +129,12 @@ Serenova stores documents in JSON/MongoDB with the following key models:
 
 ## 7. Verification, Testing & Quality Assurance
 
-### 7.1 Automated Pytest Suite
-Serenova maintains 100% pass status on its backend automated test suite:
-- `test_api.py`: Validates API health endpoints, counsellor retrieval, and 15-question clinical assessment calculation.
-- `test_auth.py`: Validates user registration, duplicate email rejection, bcrypt verification, and JWT issuance.
-- `test_safety.py`: Validates that self-harm keywords trigger Tele-MANAS crisis responses and safety interventions.
+### 7.1 Automated Tests
+- **Backend (pytest, 47 tests):** accounts and roles, authentication, password reset, screening scoring, safety and crisis handling, counsellor portal, booking and booked-slot privacy, resources, admin statistics, and companion personalisation.
+- **Frontend (`npm test`, 4 smoke tests):** routes, translations and build checks.
+- **CI:** GitHub Actions runs both on every push.
 
-All 9 unit and integration tests pass cleanly in under 1.1s.
+Run them with `cd backend && python3 -m pytest -q` and `cd frontend && npm test`.
 
 ---
 
