@@ -22,7 +22,7 @@ Demo logins (demo mode only; password `password123`): `student@university.edu`, 
 
 ## Photos
 
-Guide, dashboard and landing photos come from Unsplash (`frontend/src/assets/images.js`). If a photo fails to load, a soft gradient is shown instead. To change one, replace its `id` there, keeping the key the same.
+Guide, dashboard and landing photos come from Unsplash (`frontend/src/assets/images.js`). If a photo fails to load, a soft gradient is shown instead. To change one, replace its `id` there, keeping the key the same. To find broken ones, run `cd frontend && npm run check:photos` (needs internet).
 
 ## Tests
 
