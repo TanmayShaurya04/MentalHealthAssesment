@@ -26,7 +26,7 @@ function ensureObserver() {
   return observer;
 }
 
-export function countUp(el) {
+function countUp(el) {
   const target = parseFloat(el.getAttribute('data-count'));
   if (Number.isNaN(target)) return;
   const decimals = (el.getAttribute('data-count').split('.')[1] || '').length;

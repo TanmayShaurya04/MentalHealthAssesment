@@ -180,7 +180,7 @@ GENERIC = [
 
 def _data_link(ctx: Dict[str, Any], intents: List[str], seed: str) -> Optional[str]:
     """One sentence that connects the conversation to the student's own data, only when it is relevant."""
-    trend, scores = ctx.get("mood_trend"), ctx.get("mood_scores")
+    trend = ctx.get("mood_trend")
     if trend in ("down", "low") and any(i in intents for i in ("lowmood", "overwhelm", "sleep", "anxiety", "exams", "lonely")):
         return "I noticed your mood check-ins have dipped over the last few days, so this fits. You're not imagining it."
     if trend == "up" and any(i in intents for i in ("gratitude", "lowmood")):

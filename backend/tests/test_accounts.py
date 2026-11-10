@@ -1,5 +1,5 @@
 import pytest
-from tests.helpers import client, register, login, bearer
+from tests.helpers import client, register, bearer
 
 
 @pytest.mark.asyncio

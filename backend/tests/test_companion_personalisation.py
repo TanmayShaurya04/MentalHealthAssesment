@@ -1,4 +1,3 @@
-import pytest
 from app.services.personalised_companion import compose_reply, detect_intents, context_as_prompt
 
 

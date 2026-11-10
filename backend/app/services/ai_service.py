@@ -1,5 +1,4 @@
 import re
-import random
 import httpx
 from typing import List, Dict, Any
 from app.config import settings
@@ -391,7 +390,7 @@ class RuleBasedCompanionEngine:
             return response + f"\n\nI also remember your recent mood check-in noted {detail}. Does that connect with what you're describing today?"
         recent_screening = next((item for item in personal_context if item.startswith("Most recent optional well-being check-in category:")), None)
         if recent_screening:
-            return response + f"\n\nYou also completed an optional well-being check-in recently. Would it help to connect anything from that reflection to what feels most present today?"
+            return response + "\n\nYou also completed an optional well-being check-in recently. Would it help to connect anything from that reflection to what feels most present today?"
         return response
 
 

@@ -1,5 +1,5 @@
 import re
-from typing import Tuple, Dict, Any
+from typing import Tuple
 
 # Crisis keywords & phrases (deterministic pre-screening)
 CRISIS_PATTERNS = [

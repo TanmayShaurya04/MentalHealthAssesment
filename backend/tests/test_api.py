@@ -1,5 +1,4 @@
 import pytest
-import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 
@@ -64,7 +63,6 @@ async def test_full_student_journey():
             "tags": ["Study", "Relief"]
         }, headers=headers)
         assert mood_res.status_code == 200
-        mood_id = mood_res.json()["id"]
         
         # Get moods
         moods_list = await client.get("/api/moods", headers=headers)

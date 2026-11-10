@@ -1,5 +1,4 @@
-import datetime
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 # ── User Models ───────────────────────────────────────────────
@@ -76,13 +75,6 @@ class UserProfileUpdate(BaseModel):
     avatar_color: Optional[str] = None
     daily_reminder: Optional[bool] = None
     language: Optional[str] = Field(None, pattern="^(en|hi)$")
-
-class UserResponse(BaseModel):
-    id: str
-    name: str
-    email: str
-    created_at: str
-    profile: Optional[Dict[str, Any]] = None
 
 # ── Mood Models ───────────────────────────────────────────────
 class MoodCreate(BaseModel):

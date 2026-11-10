@@ -1,4 +1,3 @@
-import pytest
 from app.services.safety_layer import check_message_safety
 
 def test_safe_message():

@@ -13,7 +13,7 @@
 const unsplash = (id, w = 1200) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
 
-export const PHOTOS = {
+const PHOTOS = {
   // id = Unsplash photo id, alt = description for screen readers, pos = CSS object-position
   sunrise:    { id: '1470252649378-9c29740c9fa8', alt: 'Soft sunrise over a quiet field of flowers', pos: 'center 60%' },
   meditation: { id: '1506126613408-eca07ce68773', alt: 'A person meditating on a rock at sunset', pos: 'center 40%' },

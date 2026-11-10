@@ -1,7 +1,6 @@
 import os
 import json
 import uuid
-import datetime
 from typing import Dict, Any, List, Optional
 from app.config import settings
 
@@ -221,5 +220,3 @@ class DatabaseManager:
 
 db_manager = DatabaseManager()
 
-def get_db():
-    return db_manager
