@@ -159,3 +159,17 @@ if frontend_dist and os.path.exists(frontend_dist):
             return FileResponse(file_path)
         # The SPA shows its own friendly 404 page for unknown routes, so serve index.html for any page path.
         return FileResponse(os.path.join(frontend_dist, "index.html"))
+else:
+    # No built frontend next to the API (normal during development): explain instead of a bare 404.
+    from fastapi.responses import HTMLResponse
+
+    @app.get("/", include_in_schema=False)
+    async def dev_home():
+        return HTMLResponse(
+            "<h2>Serenova API is running ✅</h2>"
+            "<p>This port only serves the API. Open the website at "
+            "<a href='http://localhost:5173'>http://localhost:5173</a> "
+            "(run <code>npm run dev</code> in the <code>frontend</code> folder), "
+            "or run <code>npm run build</code> there and restart this server to use this port.</p>"
+            "<p>API docs: <a href='/docs'>/docs</a></p>"
+        )
