@@ -88,6 +88,10 @@ Request flow: `pages/*` call `api/*` (fetch wrapper in `api/client.js`) → `rou
 
 Prerequisites: Python 3.10+, Node 18+.
 
+**Quickest way:** `./run-local.sh` from the project root starts both servers; then open http://localhost:5173.
+
+Or manually:
+
 ```bash
 # Terminal 1: backend
 cd backend
