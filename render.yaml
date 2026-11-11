@@ -10,5 +10,8 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
+      # Showcase deployment: creates the demo accounts. Set to false for real students.
+      - key: DEMO_MODE
+        value: "true"
       - key: PORT
         value: 10000
